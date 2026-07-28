@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1050, initial-scale=1">
+<title>Feed Mockup — 1:1 Terminal Cards</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #08080D; color: #E0E0EC; font-family: 'Courier New', 'Consolas', monospace; padding: 24px; }
+  .page { max-width: 1000px; margin: 0 auto; }
+
+  .header { margin-bottom: 20px; }
+  .header h1 { font-size: 22px; color: #FF3B1D; }
+  .header .sub { font-size: 11px; color: #888; }
+  .header .prompt { font-size: 11px; color: #6C3BFF; margin-top: 4px; }
+
+  .section-title { font-size: 13px; color: #00BFFF; border-bottom: 1px solid #2A2A34; padding-bottom: 6px; margin-bottom: 20px; }
+
+  /* �── 1:1 CARD ␝ 420x420 ── */
+  .card { width: 420px; height: 420px; display: inline-block; margin: 12px; position: relative; vertical-align: top; }
+
+  .dim { color: #666; }
+  .muted { color: #888; }
+
+  .tag { font-size: 10px; padding: 2px 8px; display: inline-block; background: #08080D; border: 1px solid #3A3A44; }
+  .tag-red { border-color: #FF3B1D; color: #FF3B1D; }
+  .tag-orange { border-color: #FF7B2D; color: #FF7B2D; }
+  .tag-yellow { border-color: #FFB02D; color: #FFB02D; }
+  .tag-cyan { border-color: #00BFFF; color: #00BFFF; }
+  .tag-green { border-color: #00C96C; color: #00C96C; }
+  .tag-pink { border-color: #FF44AA; color: #FF44AA; }
+  .tag-blue { border-color: #6C3BFF; color: #6C3BFF; }
+
+  .trow { display: flex; align-items: center; gap: 8px; }
+  .tsep { height: 1px; margin: 4px 0; }
+
+  /* sparkline helper */
+  .spark { font-size: 9px; word-spacing: -2px; letter-spacing: -1px; white-space: nowrap; overflow: hidden; }
+
+  /* fill bar */
+  .fill { height: 10px; display: inline-block; }
+</style>
+</head>
+<body>
+
+<div class="page">
+<div class="header">
+  <h1>🪣 FEED MOCKUP  —  1:1 CARD VARIETY</h1>
+  <div class="sub">every card is a 420x420 terminal square · different data types · same cyberpunk aesthetic</div>
+  <div class="prompt">_ <span class="dim">crypto-feed@jarvis · scroll to explore · 8 card types_</span></div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     ROW 1: PRICE SPIKE + WHALE MOVEMENT
+     ␐══════════════════════════════════════════════════════════ -->
+<div class="section-title"><span>ROW 1</span> — Price Spike Alert  ·  Whale Movement</div>
+
+<div class="card" style="border:1px solid #FF3B1D;">
+  <div style="padding:10px;font-size:11px;line-height:1.6;">
+    <!-- header -->
+    <div class="trow">
+      <span style="font-size:12px;">🤖 PEPE</span>
+      <span class="tag tag-red">● CRITICAL</span>
+      <span class="dim" style="flex:1;text-align:right;">now</span>
+    </div>
+    <div style="color:#555;font-size:10px;margin-top:2px;">ETH · DexScreener · CoinGecko</div>
+
+    <div class="tsep" style="border-top:1px solid #FF3B1D44;"></div>
+
+    <!-- price hero -->
+    <div style="margin-top:8px;">
+      <span style="font-size:36px;color:#00C96C;">$0.000524</span>
+      <span style="font-size:18px;color:#00C96C;">🛡 +112%</span>
+    </div>
+    <div style="color:#888;font-size:10px;">24h change · updated 2m ago</div>
+
+    <!-- sparkline -->
+    <div style="margin-top:10px;border:1px solid #3A3A44;padding:5px;">
+      <div class="dim" style="font-size:9px;">24h price</div>
+      <div style="height:20px;padding:2px;color:#00C96C;font-size:8px;letter-spacing:-1px;word-spacing:-2px;">
+        ▂▁▁▂▂▂▃▃▄▄▄▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▃▃▄▄▄▄▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂
+      </div>
+    </div>
+
+    <!-- stats grid -->
+    <div style="margin-top:8px;">
+      <div class="trow"><span class="dim">volume (24h)</span><span style="flex:1;text-align:right;color:#888;">$12.4M</span></div>
+      <div class="trow"><span class="dim">liquidity</span><span style="flex:1;text-align:right;color:#888;">$14.2K</span></div>
+      <div class="trow"><span class="dim">market cap</span><span style="flex:1;text-align:right;color:#888;">$245.6M</span></div>
+      <div class="trow"><span class="dim">holders</span><span style="flex:1;text-align:right;color:#888;">42,891</span></div>
+    </div>
+
+    <!-- tagline -->
+    <div style="margin-top:6px;border:1px solid #FF3B1D;padding:4px 8px;font-size:10px;background:#FF3B1D11;">
+      <span class="neon-red">◆</span> whales accumulating across 3 DEX pairs. social volume surging on X and Telegram.
+    </div>
+
+    <!-- actions -->
+    <div style="display:flex;gap:4px;margin-top:8px;">
+      <span class="tag tag-green" style="padding:4px 10px;">:watch</span>
+      <span class="tag tag-yellow" style="padding:4px 10px;">:alert -20%</span>
+      <span class="tag tag-cyan" style="padding:4px 10px;">:detail</span>
+    </div>
+
+    <div style="font-size:8px;color:#555;position:absolute;bottom:8px;left:10px;right:10px;">
+      <span>⏺ 2 min ago · PEPE</span>
+      <span style="float:right;">sc: DexScreener</span>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="border:1px solid #FF7B2D;">
+  <div style="padding:10px;font-size:11px;line-height:1.6;">
+    <div class="trow">
+      <span style="font-size:12px;">✦ WHALE</span>
+      <span class="tag tag-orange">○ ALERT</span>
+      <span class="dim" style="flex:1;text-align:right;">4m ago</span>
+    </div>
+    <div style="color:#555;font-size:10px;">BONK · SOL · Etherscan</div>
+
+    <div class="tsep" style="border-top:1px solid #FF7B2D44;"></div>
+
+    <!-- whale alert hero -->
+    <div style="margin-top:8px;">
+      <span style="font-size:26px;color:#FF7B2D;">🐋 $248K</span>
+    </div>
+    <div style="color:#888;font-size:10px;">whale moved BONK tokens</div>
+
+    <!-- whale details -->
+    <div style="margin-top:10px;border:1px solid #3A3A44;padding:8px;font-size:10px;">
+      <div class="trow"><span class="dim">wallet</span><span style="flex:1;text-align:right;color:#888;">DezXA....B263</span></div>
+      <div class="trow"><span class="dim">amount</span><span style="flex:1;text-align:right;color:#888;">248,000,000 BONK</span></div>
+      <div class="trow"><span class="dim">value</span><span style="flex:1;text-align:right;color:#888;">$744</span></div>
+      <div class="trow"><span class="dim">to wallet</span><span style="flex:1;text-align:right;color:#888;">0x9F3E....21A0</span></div>
+    </div>
+
+    <!-- impact -->
+    <div style="margin-top:8px;border:1px solid #FFB02D;padding:4px 8px;font-size:10px;">
+      <span class="neon-yellow">⚠</span> this wallet holds 2.4% of total supply. previous move was 3 months ago.
+    </div>
+
+    <!-- chart bars -->
+    <div style="margin-top:10px;">
+      <div class="dim" style="font-size:9px;">whale tx size distribution</div>
+      <div style="height:22px;padding:4px;font-size:7px;letter-spacing:-1px;display:flex;align-items:flex-end;">
+        <span style="height:4px;background:#FF7B2D;width:4px;display:inline-block;"></span>
+        <span style="height:8px;background:#FF7B2D;width:4px;"></span>
+        <span style="height:3px;background:#3A3A44;width:4px;"></span>
+        <span style="height:12px;background:#FF7B2D;width:4px;"></span>
+        <span style="height:6px;background:#3A3A44;width:4px;"></span>
+        <span style="height:10px;background:#FF7B2D;width:4px;"></span>
+        <span style="height:2px;background:#3A3A44;width:4px;"></span>
+        <span style="height:14px;background:#FF7B2D;width:4px;"></span>
+        <span style="height:5px;background:#3A3A44;width:4px;"></span>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:4px;margin-top:6px;">
+      <span class="tag tag-yellow" style="padding:4px 10px;">:track whale</span>
+      <span class="tag tag-cyan" style="padding:4px 10px;">:source</span>
+    </div>
+
+    <div style="font-size:8px;color:#555;position:absolute;bottom:8px;left:10px;right:10px;">
+      <span>⏺ 4 min ago · BONK/SOL</span>
+      <span style="float:right;">sc: Etherscan</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     ROW 2: NEW PAIR + SOCIAL SURGE
+     ␐══════════════════════════════════════════════════════════ -->
+<div class="section-title" style="margin-top:24px;"><span>ROW 2</span> — New Pair Discovery  ·  Social Sentiment Surge</div>
+
+<div class="card" style="border:1px solid #00BFFF;">
+  <div style="padding:10px;font-size:11px;line-height:1.6;">
+    <div class="trow">
+      <span style="font-size:12px;">🆡 NEW PAIR</span>
+      <span class="tag tag-cyan">✦ INFO</span>
+      <span class="dim" style="flex:1;text-align:right;">12m ago</span>
+    </div>
+    <div style="color:#555;font-size:10px;">PEPE/ETH · Uniswap V3 · DexScreener</div>
+
+    <div class="tsep" style="border-top:1px solid #00BFFF44;"></div>
+
+    <!-- pair hero -->
+    <div style="margin-top:6px;border:1px solid #00BFFF;padding:10px;font-size:12px;">
+      <div class="trow"><span class="neon-cyan">🆡</span> <span style="color:#888;">NEW LIQUIDITY POOL</span></div>
+      <div style="font-size:14px;margin-top:4px;">PEPE / ETH</div>
+      <div style="color:#888;font-size:10px;">Uniswap V3 · 0.3% fee tier</div>
+      <div class="tsep" style="border-top:1px solid #00BFFF22;margin:4px 0;"></div>
+      <div class="trow"><span class="dim">initial liq</span><span style="flex:1;text-align:right;color:#00C96C;">$50.2K</span></div>
+      <div class="trow"><span class="dim">age</span><span style="flex:1;text-align:right;color:#888;">14 minutes</span></div>
+      <div class="trow"><span class="dim">TX count</span><span style="flex:1;text-align:right;color:#888;">47</span></div>
+    </div>
+
+    <!-- dex links -->
+    <div style="margin-top:8px;font-size:10px;">
+      <div class="neon-blue">$ DEX LINKS</div>
+      <div style="color:#888;margin-top:2px;">Uniswap · 0x1a2b....ef3f</div>
+      <div style="color:#888;">DexScreener · /pepe-eth-0.3</div>
+    </div>
+
+    <!-- early warning -->
+    <div style="margin-top:8px;border:1px solid #FFB02D;padding:4px 8px;font-size:10px;">
+      <span class="neon-yellow">⚠</span> very young pool · high risk · verify contract before trading
+    </div>
+
+    <div style="display:flex;gap:4px;margin-top:6px;">
+      <span class="tag tag-red" style="padding:4px 10px;">:track pair</span>
+      <span class="tag tag-cyan" style="padding:4px 10px;">:verify</span>
+    </div>
+
+    <div style="font-size:8px;color:#555;position:absolute;bottom:8px;left:10px;right:10px;">
+      <span>⏺ 12 min ago · PEPE/ETH</span>
+      <span style="float:right;">sc: DexScreener</span>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="border:1px solid #FFB02D;">
+  <div style="padding:10px;font-size:11px;line-height:1.6;">
+    <div class="trow">
+      <span style="font-size:12px;">💬 SOCIAL</span>
+      <span class="tag tag-yellow">○ ALERT</span>
+      <span class="dim" style="flex:1;text-align:right;">18m ago</span>
+    </div>
+    <div style="color:#555;font-size:10px;">PEPE · X.com, Telegram, Reddit</div>
+
+    <div class="tsep" style="border-top:1px solid #FFB02D44;"></div>
+
+    <!-- social metrix -->
+    <div style="margin-top:8px;">
+      <div style="font-size:24px;color:#FFB02D;">💬 0.84</div>
+      <div style="color:#888;font-size:10px;">social confidence score · 12x surge</div>
+    </div>
+
+    <!-- platform breakdown -->
+    <div style="margin-top:8px;border:1px solid #3A3A44;padding:8px;font-size:10px;">
+      <div class="neon-yellow">$ BREAKDOWN</div>
+      <div class="trow" style="margin-top:4px;">
+        <span style="color:#888;">X.com</span>
+        <span style="flex:1;text-align:right;color:#00C96C;">342 posts</span>
+        <span style="text-align:right;color:#888;">+280%</span>
+      </div>
+      <div class="trow">
+        <span style="color:#888;">Telegram</span>
+        <span style="flex:1;text-align:right;color:#00C96C;">891 messages</span>
+        <span style="text-align:right;color:#888;">+450%</span>
+      </div>
+      <div class="trow">
+        <span style="color:#888;">Reddit</span>
+        <span style="flex:1;text-align:right;color:#00C96C;">78 threads</span>
+        <span style="text-align:right;color:#888;">+120%</span>
+      </div>
+    </div>
+
+    <!-- sentiment bar -->
+    <div style="margin-top:8px;">
+      <div class="dim" style="font-size:9px;">sentiment</div>
+      <div style="display:flex;height:12px;border:1px solid #3A3A44;margin-top:2px;">
+        <span style="width:62%;background:#00C96C;font-size:7px;">bullish 62%</span>
+        <span style="width:22%;background:#3A3A44;font-size:7px;">neutral 22%</span>
+        <span style="width:16%;background:#FF4444;font-size:7px;">bear 16%</span>
+      </div>
+    </div>
+
+    <!-- top mention -->
+    <div style="margin-top:6px;border:1px solid #3A3A44;padding:4px 6px;font-size:9px;">
+      <div class="dim">top mention:</div>
+      <div style="color:#888;">"PEPE finally breaking out. whales accumulating hard."</div>
+    </div>
+
+    <div style="display:flex;gap:4px;margin-top:6px;">
+      <span class="tag tag-cyan" style="padding:4px 10px;">:view posts</span>
+      <span class="tag tag-blue" style="padding:4px 10px;">:set alert</span>
+    </div>
+
+    <div style="font-size:8px;color:#555;position:absolute;bottom:8px;left:10px;right:10px;">
+      <span>⏺ 18 min ago · PEPE</span>
+      <span style="float:right;">sc: X + TG + Reddit</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     ROW 3: PORTFOLIO P&L + RISK WARNING
+     ␐══════════════════════════════════════════════════════════ -->
+<div class="section-title" style="margin-top:24px;"><span>ROW 3</span> — Portfolio P&L Alert  ·  Contract Risk Warning</div>
+
+<div class="card" style="border:1px solid #00C96C;">
+  <div style="padding:10px;font-size:11px;line-height:1.6;">
+    <div class="trow">
+      <span style="font-size:12px;">👛 PORTFOLIO</span>
+      <span class="tag tag-green">🟢 P&L</span>
+      <span class="dim" style="flex:1;text-align:right;">25m ago</span>
+    </div>
+    <div style="color:#555;font-size:10px;">wallet-01 · ETH · 12 tokens</div>
+
+    <div class="tsep" style="border-top:1px solid #00C96C44;"></div>
+
+    <!-- p&l hero -->
+    <div style="margin-top:8px;">
+      <span style="font-size:28px;color:#00C96C;">+$1,842</span>
+      <span style="font-size:14px;color:#00C96C;">🛡 +14.8%</span>
+    </div>
+    <div style="color:#888;font-size:10px;">24h P&L · updated 2m ago</div>
+
+    <!-- breakdown -->
+    <div style="margin-top:8px;border:1px solid #3A3A44;padding:8px;font-size:10px;">
+      <div class="trow" style="font-weight:600;">
+        <span class="dim">TOKEN</span>
+        <span class="dim" style="flex:1;text-align:right;">P&L</span>
+        <span class="dim">CHANGE</span>
+      </div>
+      <div style="color:#555;border-top:1px solid #2A2A34;padding:2px 0;"></div>
+      <div class="trow"><span>PEPE</span><span style="flex:1;text-align:right;color:#00C96C;">+$1,240</span><span style="color:#00C96C;">+112%</span></div>
+      <div class="trow"><span>ETH</span><span style="flex:1;text-align:right;color:#888;">+$320</span><span style="color:#888;">+2.1%</span></div>
+      <div class="trow"><span>BONK</span><span style="flex:1;text-align:right;color:#888;">+$82</span><span style="color:#888;">+8.2%</span></div>
+      <div class="trow"><span>USDC</span><span style="flex:1;text-align:right;color:#888;">+$0</span><span style="color:#888;">0.0%</span></div>
+      <div style="color:#555;border-top:1px solid #2A2A34;padding:2px 0;"></div>
+      <div class="trow"><span class="neon-green">total</span><span style="flex:1;text-align:right;color:#00C96C;">+$1,842</span><span style="color:#00C96C;">+14.8%</span></div>
+    </div>
+
+    <!-- spark -->
+    <div style="margin-top:6px;border:1px solid #3A3A44;padding:4px;font-size:8px;letter-spacing:-1px;">
+      <span class="dim">portf. value (24h)</span>
+      <div style="color:#00C96C;">██▆▇▆▇▇▆▇█▇▇█▇▇█▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇█▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇</div>
+    </div>
+
+    <div style="display:flex;gap:4px;margin-top:6px;">
+      <span class="tag tag-cyan" style="padding:4px 10px;">:detail</span>
+      <span class="tag tag-blue" style="padding:4px 10px;">:export csv</span>
+    </div>
+
+    <div style="font-size:8px;color:#555;position:absolute;bottom:8px;left:10px;right:10px;">
+      <span>⏺ 25 min ago · wallet-01</span>
+      <span style="float:right;">TOT: $14,292</span>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="border:1px solid #FF4444;">
+  <div style="padding:10px;font-size:11px;line-height:1.6;">
+    <div class="trow">
+      <span style="font-size:12px;">❗ RISK</span>
+      <span class="tag tag-red">● CRITICAL</span>
+      <span class="dim" style="flex:1;text-align:right;">33m ago</span>
+    </div>
+    <div style="color:#555;font-size:10px;">PEPE · contract audit · RugCheck</div>
+
+    <div class="tsep" style="border-top:1px solid #FF444444;"></div>
+
+    <!-- risk score -->
+    <div style="margin-top:8px;">
+      <span style="font-size:36px;color:#FF4444;">❗ HIGH</span>
+    </div>
+    <div style="color:#FF4444;font-size:10px;">risk score: 72/100 · rug pull potential detected</div>
+
+    <!-- flags -->
+    <div style="margin-top:8px;border:1px solid #FF4444;padding:8px;font-size:10px;">
+      <div class="neon-red">$ RED FLAGS</div>
+      <div style="margin-top:4px;line-height:1.5;">
+        <div><span class="neon-red">◆</span> single owner with mint authority</div>
+        <div><span class="neon-red">◆</span> top wallet holds 12.4% of supply</div>
+        <div><span class="neon-yellow">◇</span> no timelock on critical functions</div>
+        <div><span class="neon-yellow">◇</span> liquidity not locked</div>
+        <div><span class="neon-green">◇</span> contract renounced <span style="color:#888;">(passed)</span></div>
+      </div>
+    </div>
+
+    <!-- checkboxes -->
+    <div style="margin-top:8px;border:1px solid #3A3A44;padding:6px;font-size:9px;">
+      <div>⬣ verified source code</div>
+      <div>�□ social presence > 30 days</div>
+      <div>�□ audited by third party</div>
+    </div>
+
+    <div style="display:flex;gap:4px;margin-top:6px;">
+      <span class="tag tag-red" style="padding:4px 10px;">:full audit</span>
+      <span class="tag tag-cyan" style="padding:4px 10px;">:ignore</span>
+    </div>
+
+    <div style="font-size:8px;color:#555;position:absolute;bottom:8px;left:10px;right:10px;">
+      <span>⏺ 33 min ago · PEPE</span>
+      <span style="float:right;">sc: RugCheck</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     ROW 4: DEPOSIT SUG + MARKET SUMMARY
+     ␐══════════════════════════════════════════════════════════ -->
+<div class="section-title" style="margin-top:24px;"><span>ROW 4</span> — Jarvis AI Suggestion  ·  Market Summary Digest</div>
+
+<div class="card" style="border:1px solid #FF44AA;">
+  <div style="padding:10px;font-size:11px;line-height:1.6;">
+    <div class="trow">
+      <span style="font-size:12px;">🤖 JARVIS</span>
+      <span class="tag tag-pink">✦ AI</span>
+      <span class="dim" style="flex:1;text-align:right;">just now</span>
+    </div>
+    <div style="color:#555;font-size:10px;">suggestion engine · confidence: high</div>
+
+    <div class="tsep" style="border-top:1px solid #FF44AA44;"></div>
+
+    <!-- ai suggestion -->
+    <div style="margin-top:6px;border:1px solid #FF44AA;padding:10px;font-size:11px;background:#FF44AA11;">
+      <div class="trow"><span class="neon-pink">🤖</span> <span style="color:#888;">based on your watching habits...</span></div>
+      <div style="margin-top:6px;color:#E0E0EC;">
+        PEPE is showing classic breakout signals. Similar patterns to the last 3 meme runs that hit +500%.
+      </div>
+      <div style="margin-top:6px;font-size:10px;color:#888;">
+        📊 volume: $12.4M · 🐋 whale activity: high · 💬 conf: 0.84
+      </div>
+    </div>
+
+    <!-- recommended actions -->
+    <div style="margin-top:8px;">
+      <div class="neon-pink">$ RECOMMENDED</div>
+      <div style="margin-top:4px;border:1px solid #3A3A44;padding:6px;font-size:10px;">
+        <div class="trow"><span class="neon-green">▶</span> add PEPE to watchlist <span class="dim">(recommended)</span></div>
+        <div class="trow"><span class="neon-green">▶</span> set 20% drop alert</div>
+        <div class="trow"><span class="neon-green">▶</span> track whale wallet 0x98..59b0</div>
+      </div>
+    </div>
+
+    <!-- reasoning -->
+    <div style="margin-top:6px;border:1px solid #3A3A44;padding:4px 8px;font-size:9px;">
+      <div class="dim">why:</div>
+      <div style="color:#888;">matching 3/5 breakout indicators · social surge · whale accumulation · volume velocity</div>
+    </div>
+
+    <div style="display:flex;gap:4px;margin-top:6px;">
+      <span class="tag tag-green" style="padding:4px 10px;">:do it</span>
+      <span class="tag tag-cyan" style="padding:4px 10px;">:show me</span>
+      <span class="tag" style="padding:4px 10px;">:dismiss</span>
+    </div>
+
+    <div style="font-size:8px;color:#555;position:absolute;bottom:8px;left:10px;right:10px;">
+      <span>_ AI suggestion · conf: 0.84_</span>
+      <span style="float:right;">PID: 4211</span>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="border:1px solid #6C3BFF;">
+  <div style="padding:10px;font-size:11px;line-height:1.6;">
+    <div class="trow">
+      <span style="font-size:12px;">📊 DIGEST</span>
+      <span class="tag tag-blue">⏺ DAILY</span>
+      <span class="dim" style="flex:1;text-align:right;">hourly</span>
+    </div>
+    <div style="color:#555;font-size:10px;">market summary · 50 tracked · 4 chains</div>
+
+    <div class="tsep" style="border-top:1px solid #6C3BFF44;"></div>
+
+    <!-- summary -->
+    <div style="margin-top:6px;">
+      <div style="font-size:14px;color:#00C96C;">📊 MARKET DIGEST</div>
+      <div style="color:#555;font-size:10px;">last hour · all chains</div>
+    </div>
+
+    <!-- metrics -->
+    <div style="margin-top:8px;border:1px solid #3A3A44;padding:8px;font-size:10px;">
+      <div class="trow">
+        <span class="neon-red">● CRITICAL</span><span style="flex:1;text-align:right;color:#888;">2 tokens</span>
+      </div>
+      <div class="trow">
+        <span class="neon-yellow">○ ALERT</span><span style="flex:1;text-align:right;color:#888;">4 tokens</span>
+      </div>
+      <div class="trow">
+        <span>⏹ NORMAL</span><span style="flex:1;text-align:right;color:#888;">44 tokens</span>
+      </div>
+    </div>
+
+    <div style="margin-top:6px;border:1px solid #3A3A44;padding:8px;font-size:10px;">
+      <div class="neon-blue">$ QUICK STATS</div>
+      <div class="trow" style="margin-top:4px;"><span class="dim">total volume</span><span style="flex:1;text-align:right;color:#888;">$28.4M</span></div>
+      <div class="trow"><span class="dim">new pairs</span><span style="flex:1;text-align:right;color:#00C96C;">3</span></div>
+      <div class="trow"><span class="dim">whale moves</span><span style="flex:1;text-align:right;color:#FF7B2D;">2</span></div>
+      <div class="trow"><span class="dim">scan duration</span><span style="flex:1;text-align:right;color:#888;">12.4s</span></div>
+    </div>
+
+    <!-- chains -->
+    <div style="margin-top:6px;border:1px solid #3A3A44;padding:4px 8px;font-size:9px;">
+      <span class="dim">chains:</span>
+      <span style="color:#888;">ETH (24) · SOL (14) · BSC (8) · AVAX (4)</span>
+    </div>
+
+    <div style="display:flex;gap:4px;margin-top:6px;">
+      <span class="tag tag-cyan" style="padding:4px 10px;">:scan now</span>
+      <span class="tag tag-blue" style="padding:4px 10px;">:export</span>
+    </div>
+
+    <div style="font-size:8px;color:#555;position:absolute;bottom:8px;left:10px;right:10px;">
+      <span>_ last scan: 2m ago _</span>
+      <span style="float:right;">4 chains · 50 tokens</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     ROW 5: ON-CHAIN ALERT + TOP MOVERS
+     ␐══════════════════════════════════════════════════════════ -->
+<div class="section-title" style="margin-top:24px;"><span>ROW 5</span> — On-Chain Event  ·  Top Movers Leaderboard</div>
+
+<div class="card" style="border:1px solid #00BFFF;">
+  <div style="padding:10px;font-size:11px;line-height:1.6;">
+    <div class="trow">
+      <span style="font-size:12px;">🔍 ON-CHAIN</span>
+      <span class="tag tag-cyan">✦ EVENT</span>
+      <span class="dim" style="flex:1;text-align:right;">1h ago</span>
+    </div>
+    <div style="color:#555;font-size:10px;">Ethereum · Etherscan</div>
+
+    <div class="tsep" style="border-top:1px solid #00BFFF44;"></div>
+
+    <!-- event hero -->
+    <div style="margin-top:6px;border:1px solid #00BFFF;padding:10px;font-size:11px;">
+      <div class="trow"><span class="neon-cyan">🔍</span> <span style="color:#888;">TOKEN TRANSFER DETECTED</span></div>
+      <div style="margin-top:4px;">
+        <div class="trow"><span class="dim">tx hash</span><span style="flex:1;text-align:right;color:#888;">0x8F2E....AB41</span></div>
+        <div class="trow"><span class="dim">method</span><span style="flex:1;text-align:right;color:#888;">transfer()</span></div>
+        <div class="trow"><span class="dim">from</span><span style="flex:1;text-align:right;color:#888;">0x9F3E....21A0</span></div>
+        <div class="trow"><span class="dim">to</span><span style="flex:1;text-align:right;color:#888;">0x1278....B4F2</span></div>
+        <div class="trow"><span class="dim">amount</span><span style="flex:1;text-align:right;color:#FFB02D;">$12,400</span></div>
+      </div>
+    </div>
+
+    <!-- analysis -->
+    <div style="margin-top:8px;border:1px solid #3A3A44;padding:4px 8px;font-size:10px;">
+      <div class="neon-blue">$ JARVIS ANALYSIS</div>
+      <div style="color:#888;margin-top:2px;">destination wallet is new (1 day old). likely exchange deposit or fresh accumulation wallet.</div>
+    </div>
+
+    <div style="display:flex;gap:4px;margin-top:8px;">
+      <span class="tag tag-yellow" style="padding:4px 10px;">:trace wallet</span>
+      <span class="tag tag-cyan" style="padding:4px 10px;">:show tx</span>
+    </div>
+
+    <div style="font-size:8px;color:#555;position:absolute;bottom:8px;left:10px;right:10px;">
+      <span>⏺ 1h ago · ETH</span>
+      <span style="float:right;">sc: Etherscan</span>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="border:1px solid #FFB02D;">
+  <div style="padding:10px;font-size:11px;line-height:1.6;">
+    <div class="trow">
+      <span style="font-size:12px;">📊 MOVERS</span>
+      <span class="tag tag-yellow">○ LEADER</span>
+      <span class="dim" style="flex:1;text-align:right;">24h</span>
+    </div>
+    <div style="color:#555;font-size:10px;">top movers · all chains</div>
+
+    <div class="tsep" style="border-top:1px solid #FFB02D44;"></div>
+
+    <!-- leaderboard -->
+    <div style="margin-top:6px;font-size:10px;">
+      <div class="trow" style="font-weight:600;">
+        <span class="dim">R</span>
+        <span class="dim" style="width:80px;">TOKEN</span>
+        <span class="dim" style="flex:1;text-align:right;">CHANGE</span>
+        <span class="dim" style="text-align:right;">VOLUME</span>
+      </div>
+      <div style="color:#555;border-top:1px solid #2A2A34;"></div>
+      <div class="trow">
+        <span class="neon-orange">▶ 1</span>
+        <span style="width:80px;">PEPE</span>
+        <span class="neon-green" style="flex:1;text-align:right;">+112.4%</span>
+        <span style="text-align:right;color:#888;">$12.4M</span>
+      </div>
+      <div class="trow">
+        <span class="neon-yellow">▶ 2</span>
+        <span style="width:80px;">BONK</span>
+        <span class="neon-yellow" style="flex:1;text-align:right;">+8.2%</span>
+        <span style="text-align:right;color:#888;">$2.1M</span>
+      </div>
+      <div class="trow">
+        <span>▶ 3</span>
+        <span style="width:80px;">SHIB</span>
+        <span style="flex:1;text-align:right;color:#888;">+0.4%</span>
+        <span style="text-align:right;color:#888;">$4.2M</span>
+      </div>
+      <div class="trow">
+        <span>▶ 4</span>
+        <span style="width:80px;">FLOKI</span>
+        <span style="flex:1;text-align:right;color:#FF4444;">-2.1%</span>
+        <span style="text-align:right;color:#888;">$1.8M</span>
+      </div>
+      <div class="trow">
+        <span>▶ 5</span>
+        <span style="width:80px;">DOGE</span>
+        <span style="flex:1;text-align:right;color:#888;">0.0%</span>
+        <span style="text-align:right;color:#888;">$8.9M</span>
+      </div>
+    </div>
+
+    <!-- mini chart -->
+    <div style="margin-top:8px;border:1px solid #3A3A44;padding:4px;font-size:8px;">
+      <div class="dim">relative volume</div>
+      <div style="display:flex;height:16px;border:1px solid #3A3A44;margin-top:2px;">
+        <span style="width:38%;background:#FF3B1D22;color:#888;font-size:7px;">PEPE 38%</span>
+        <span style="width:18%;background:#FFB02D22;color:#888;font-size:7px;">BONK 18%</span>
+        <span style="width:24%;background:#3A3A44;color:#888;font-size:7px;">rest 44%</span>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:4px;margin-top:6px;">
+      <span class="tag tag-cyan" style="padding:4px 10px;">:view all</span>
+      <span class="tag tag-blue" style="padding:4px 10px;">:filter chain</span>
+    </div>
+
+    <div style="font-size:8px;color:#555;position:absolute;bottom:8px;left:10px;right:10px;">
+      <span>_ 50 of 50 tokens _</span>
+      <span style="float:right;">UPD: 2m ago</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     FOOTER
+     ␐══════════════════════════════════════════════════════════ -->
+<div style="margin:32px 0;border:1px solid #6C3BFF;padding:12px;font-size:12px;line-height:1.5;">
+  <div class="neon-blue">🪣 FEED CARD TYPES — 10 VARIETIES</div>
+  <div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap;font-size:10px;">
+    <span class="tag tag-red">01 price spike alert</span>
+    <span class="tag tag-orange">02 whale movement</span>
+    <span class="tag tag-cyan">03 new pair discovered</span>
+    <span class="tag tag-yellow">04 social sentiment surge</span>
+    <span class="tag tag-green">05 portfolio P&L</span>
+    <span class="tag tag-red">06 risk / rug warning</span>
+    <span class="tag tag-pink">07 AI suggestion card</span>
+    <span class="tag tag-blue">08 market digest</span>
+    <span class="tag tag-cyan">09 on-chain event</span>
+    <span class="tag tag-yellow">10 top movers leaderboard</span>
+  </div>
+  <div style="color:#555;margin-top:6px;">all 420x420 · 1:1 square · terminal cyberpunk · neon borders · monospace · black bg</div>
+</div>
+
+</div>
+</body>
+</html>
