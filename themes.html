@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=900, initial-scale=1">
+<title>Theme Options - Crypto Portfolio</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0D0D12; color: #E8E8F0; font-family: system-ui, sans-serif; padding: 20px; }
+  .page { max-width: 1000px; margin: 0 auto; }
+  h1 { font-size: 24px; margin-bottom: 4px; color: #6C3BFF; }
+  .subtitle { color: #888; font-size: 13px; margin-bottom: 24px; }
+
+  .theme-section { margin: 48px 0; }
+  .theme-section h2 { font-size: 22px; margin-bottom: 12px; border-bottom: 1px solid #2A2A34; padding-bottom: 8px; }
+
+  .phone { width: 360px; height: 620px; background: var(--bg); border: var(--border-width) solid var(--border-color); border-radius: var(--phone-radius); padding: var(--pad); display: inline-block; margin: 10px; position: relative; overflow: hidden; vertical-align: top; }
+  .phone-label { text-align: center; color: #888; font-size: 11px; margin-top: 6px; }
+  .phone-desc { text-align: center; color: #AAA; font-size: 12px; margin-top: 2px; max-width: 360px; }
+
+  .pros-cons { display: flex; gap: 16px; margin: 8px auto 0; max-width: 760px; }
+  .pros { background: #1A1A24; padding: 10px 14px; border-radius: 10px; flex: 1; }
+  .cons { background: #1A1A24; padding: 10px 14px; border-radius: 10px; flex: 1; }
+  .pros h4, .cons h4 { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+  .pros li, .cons li { font-size: 11px; color: #CCC; margin: 2px 0; }
+
+  /* ─ Common card components ─ */
+  .card-el { background: var(--card-bg); border-radius: var(--card-radius); padding: var(--card-pad); margin: 6px 0; border: var(--card-border-width) solid var(--card-border-color); box-shadow: var(--card-shadow); }
+  .card-header { display: flex; align-items: center; gap: 8px; }
+  .avatar { width: 30px; height: 30px; border-radius: var(--avatar-radius); background: var(--avatar-bg); font-size: 14px; text-align: center; line-height: 30px; color: #fff; }
+  .token-name { font-size: 13px; font-weight: 600; }
+  .token-chain { font-size: 10px; color: #888; }
+  .badge { font-size: 9px; padding: 2px 7px; border-radius: var(--badge-radius); font-weight: 600; }
+  .badge-urgent { background: #FF6B2D; color: #fff; }
+  .badge-normal { background: #2A2A34; color: #aaa; }
+  .price { font-size: var(--price-size); font-weight: 700; }
+  .price-up { color: #00C96C; }
+  .price-down { color: #FF4444; }
+  .desc-text { font-size: 12px; color: #BBB; margin-top: 6px; line-height: 1.3; }
+  .stats { display: flex; gap: 12px; font-size: 10px; color: #888; margin-top: 6px; }
+
+  /* Tab bar */
+  .tbar { display: flex; justify-content: space-around; padding: 6px 0; border-top: var(--tab-border) solid #2A2A34; background: var(--bg); font-size: 10px; text-align: center; }
+  .tbar .tab { flex: 1; padding: 4px; color: #888; }
+  .tbar .tab.act { color: var(--accent); }
+
+  /* ═ Font styles */
+  .font-preview { display: flex; gap: 24px; align-items: center; padding: 12px; background: #1A1A24; border-radius: 12px; margin: 8px 0; }
+  .font-sample { font-size: 32px; font-weight: 700; }
+  .font-details { font-size: 14px; color: #CCC; }
+  .font-details .label { font-size: 12px; color: #888; }
+
+  .card-grid { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+  /* Theme specific overrides */
+  .theme-t1 { --bg: #0D0D12; --border-color: #2A2A34; --border-width: 1px; --phone-radius: 20px; --pad: 12px;
+    --card-bg: #1A1A24; --card-radius: 8px; --card-pad: 12px; --card-border-width: 1px; --card-border-color: #2A2A34; --card-shadow: none;
+    --avatar-radius: 50%; --avatar-bg: linear-gradient(135deg, #FF6B2D, #FFB02D); --badge-radius: 4px; --price-size: 16px;
+    --tab-border: 1px; --accent: #6C3BFF; }
+  .theme-t2 { --bg: #0F0F14; --border-color: #3A3A44; --border-width: 2px; --phone-radius: 24px; --pad: 14px;
+    --card-bg: rgba(26, 26, 36, 0.85); --card-radius: 16px; --card-pad: 14px; --card-border-width: 0; --card-border-color: none; --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --avatar-radius: 40%; --avatar-bg: linear-gradient(135deg, #00BFFF, #6C3BFF); --badge-radius: 10px; --price-size: 18px;
+    --tab-border: 1px; --accent: #00BFFF; }
+  .theme-t3 { --bg: #08080D; --border-color: #4A4A54; --border-width: 0; --phone-radius: 0px; --pad: 16px;
+    --card-bg: #0D0D12; --card-radius: 0px; --card-pad: 10px; --card-border-width: 1px; --card-border-color: #6C3BFF; --card-shadow: none;
+    --avatar-radius: 0px; --avatar-bg: #6C3BFF; --badge-radius: 2px; --price-size: 13px;
+    --tab-border: 2px; --accent: #6C3BFF; }
+  .theme-t4 { --bg: #14141E; --border-color: #2A2A34; --border-width: 1px; --phone-radius: 28px; --pad: 14px;
+    --card-bg: rgba(26, 26, 36, 0.6); --card-radius: 20px; --card-pad: 16px; --card-border-width: 1px; --card-border-color: rgba(255,255,255,0.06); --card-shadow: none;
+    --avatar-radius: 50%; --avatar-bg: radial-gradient(circle at 30% 30%, #00BFFF, #6C3BFF); --badge-radius: 8px; --price-size: 17px;
+    --tab-border: 1px; --accent: #E8E8F0; }
+</style>
+</head>
+<body>
+
+<div class="page">
+<h1>🪣 Theme Options</h1>
+<div class="subtitle">Four distinct visual styles for the Crypto Portfolio app. Each changes borders, corners, cards, glow — the full look.</div>
+
+<!-- ═════ THEME 1: SHARP ␝ MINIMAL ␐═════════════════════════════════════════════ -->
+<div class="theme-section">
+<h2>📢 Theme A: "Sharp" — Minimal & Clean</h2>
+<p style="color: #AAA; font-size: 13px;">Slight corners, thin borders, flat cards. Think Linear.app or Vercel. Functional, fast, professional.</p>
+
+<div class="card-grid">
+<div class="phone theme-t1">
+  <div style="display: flex; justify-content: space-between; font-size: 11px;"><span style="color: #888;">Feed</span><span style="color: #6C3BFF; font-size: 10px;">🤖 Meme</span></div>
+  <div style="display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px;">
+    <span style="font-size: 9px; padding: 2px 8px; background: #2A2A34; border-radius: 4px; color: #FF6B2D;">🚨 Critical</span>
+    <span style="font-size: 9px; padding: 2px 8px; background: #2A2A34; border-radius: 4px; color: #888;">🟡 Normal</span>
+  </div>
+
+  <div class="card-el">
+    <div class="card-header">
+      <div class="avatar">🤖</div>
+      <div><div class="token-name">PEPE <span class="token-chain">ETH</span></div></div>
+      <span class="badge badge-urgent" style="margin-left: auto;">🚨</span>
+    </div>
+    <div class="price price-up">$0.000524 <span style="font-size: 12px;">+112%</span></div>
+    <div class="desc-text">PEPE surged 112% in 1h with $12.4M volume. Whale accumulation detected.</div>
+    <div class="stats"><span>📊 $12.4M</span><span>👛 $14.2K</span><span>💬 0.84</span></div>
+  </div>
+
+  <div class="card-el">
+    <div class="card-header">
+      <div class="avatar" style="background: #00BFFF;">✦</div>
+      <div><div class="token-name">BONK <span class="token-chain">SOL</span></div></div>
+      <span class="badge badge-normal">🟡</span>
+    </div>
+    <div class="price">$0.000003 <span style="font-size: 12px; color: #888;">→ 0%</span></div>
+    <div class="desc-text">Steady. Social activity stable. No significant changes.</div>
+    <div class="stats"><span>📊 $2.1M</span><span>💬 0.32</span></div>
+  </div>
+
+  <div class="tbar"><div class="tab act">🏠 Feed</div><div class="tab">👛 Portfolio</div><div class="tab">🔍 Search</div><div class="tab">⚙️ Settings</div></div>
+</div>
+
+<div class="pros-cons" style="max-width: 360px;">
+  <div class="pros"><h4>🟢 Pros</h4><li>Clean & spacious — easy to scan</li><li>Thin borders feel modern + refined</li><li>8px corners = soft but not cuddly</li><li>Flat = fast renders, no GPU stress</li><li>Familiar layout = low learning curve</li></div>
+  <div class="cons"><h4>🔴 Cons</h4><li>Can feel "basic" or generic</li><li>Not visually exciting at first glance</li><li>High space usage = fewer items/scroll</li><li>Less distinct from other crypto apps</li></div>
+</div>
+</div>
+</div>
+
+<!-- ═════ THEME 2: GLA LASS ␝ MODERN ␐═════════════════════════════════════ -->
+<div class="theme-section">
+<h2>🟢 Theme B: "Glass" — Modern Frosted</h2>
+<p style="color: #AAA; font-size: 13px;">Glassmorphism — semi-transparent cards with blur, bold 2px borders, large rounded corners, elevated shadows. Think Vision Pro or Arc browser. Polished, premium, high-end.</p>
+
+<div class="card-grid">
+<div class="phone theme-t2">
+  <div style="display: flex; justify-content: space-between; font-size: 11px;"><span style="color: #888; font-weight: 600;">For You</span><span style="color: #00BFFF; font-size: 10px;">12 new</span></div>
+
+  <div style="display: flex; gap: 6px; margin-top: 8px;">
+    <span class="badge badge-urgent" style="border-radius: 12px; padding: 4px 12px;">🚨 CRITICAL</span>
+  </div>
+
+  <div class="card-el" style="backdrop-filter: blur(12px);">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div class="avatar" style="width: 38px; height: 38px; border-radius: 40%;">🤖</div>
+      <div style="flex: 1;">
+        <div style="font-size: 16px; font-weight: 700;">PEPE</div>
+        <div style="font-size: 10px; color: #888;">ETH • DexScreener</div>
+      </div>
+      <div style="text-align: right;">
+        <div style="font-size: 18px; font-weight: 700; color: #00C96C;">$0.000524</div>
+        <div style="font-size: 12px; color: #00C96C;">🚀 +112%</div>
+      </div>
+    </div>
+    <div style="height: 1px; background: linear-gradient(90deg, transparent, #3A3A44, transparent); margin: 8px 0;"></div>
+    <div class="desc-text">Whales accumulating. Volume spiked 12x across 3 DEX pairs in the last hour. Social sentiment strongly bullish.</div>
+    <div class="stats" style="margin-top: 8px;">
+      <span>📊 $12.4M vol</span>
+      <span>👛 42.9K holders</span>
+      <span>💬 0.84 confidence</span>
+    </div>
+  </div>
+
+  <div class="card-el" style="backdrop-filter: blur(8px);">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div class="avatar" style="width: 30px; height: 30px; background: #00BFFF;">✦</div>
+      <div style="flex: 1;">
+        <div style="font-size: 14px; font-weight: 600;">BONK</div>
+        <div style="font-size: 10px; color: #888;">SOL</div>
+      </div>
+      <div style="text-align: right;">
+        <div style="font-size: 15px; font-weight: 600;">$0.000003</div>
+        <div style="font-size: 11px; color: #888;">→ 0%</div>
+      </div>
+    </div>
+    <div class="desc-text">Stading steady. No significant changes detected.</div>
+  </div>
+
+  <div class="tbar"><div class="tab act">🏠 Feed</div><div class="tab">👛 Portfolio</div><div class="tab">🔍 Search</div><div class="tab">⚙️ Settings</div></div>
+</div>
+
+<div class="pros-cons" style="max-width: 360px;">
+  <div class="pros"><h4>🟢 Pros</h4><li>Feels premium + polished — wow factor</li><li>Glass depth = visual hierarchy</li><li>Large cards = great touch targets</li><li>Backdrop blur = content pops forward</li><li>Stands out from other crypto apps</li></div>
+  <div class="cons"><h4>🔴 Cons</h4><li>GPU-intensive (blur = expensive on mobile)</li><li>Can feel sluggish on older phones</li><li>Higher information density per scroll</li><li>"Frosted glass" trend is everywhere (2020-2023)</li><li>Harder to implement responsive design</li></div>
+</div>
+</div>
+</div>
+
+<!-- ═════ THEME 3: TERM ␝ DATA DENSE ␐══════════════════════════════════════════ -->
+<div class="theme-section">
+<h2>🔴 Theme C: "Term" — Cyberpunk Data-Dense</h2>
+<p style="color: #AAA; font-size: 13px;">Sharp 90° corners, no borders no radius — just clean data rows with bold colored accents. Think Bloomberg terminal meets cyberpunk aesthetic. For power users who want maximum signal.</p>
+
+<div class="card-grid">
+<div class="phone theme-t3">
+  <div style="font-family: monospace; font-size: 11px; display: flex; justify-content: space-between;">
+    <span style="color: #6C3BFF;">crypto-terminal</span>
+    <span style="color: #888;">07/27 20:25</span>
+  </div>
+  <div style="font-family: monospace; font-size: 10px; color: #888; margin: 4px 0;">
+    filter: --urgency=urgent+ --chain=all --min-liq=1K
+  </div>
+  <div style="display: flex; gap: 3px; flex-wrap: wrap; margin-top: 4px;">
+    <span style="font-size: 9px; padding: 1px 6px; background: #0D0D12; color: #FF6B2D; border: 1px solid #FF6B2D;">CRITICAL</span>
+    <span style="font-size: 9px; padding: 1px 6px; background: #0D0D12; color: #FFB02D; border: 1px solid #FFB02D;">ALERT</span>
+    <span style="font-size: 9px; padding: 1px 6px; background: #0D0D12; color: #888; border: 1px solid #2A2A34;">NORMAL</span>
+  </div>
+
+  <div style="font-family: monospace; font-size: 12px; line-height: 1.8; margin-top: 8px;">
+    <div style="color: #FF6B2D;">┌──────────────────────────────────┐</div>
+    <div style="color: #FF6B2D;">│ 🚡 PEPE    CRITICAL    🛡 +112.4%│</div>
+    <div style="color: #888;">│ $0.000524  Vol:12.4M  MC:245M   │</div>
+    <div style="color: #888;">│ Whales accumulating. Social surge.│</div>
+    <div style="color: #FF6B2D;">├──────────────────────────────────┤</div>
+    <div style="color: #FFB02D;">│ 🟡 BONK    ALERT       🛡 +8.2% │</div>
+    <div style="color: #888;">│ $0.000003  Vol:2.1M   Liq:800K  │</div>
+    <div style="color: #888;">│ Volume spiked 3x in 15 minutes.  │</div>
+    <div style="color: #FFB02D;">├──────────────────────────────────┤</div>
+    <div style="color: #00BFFF;">│ 🟢 SHIB    NORMAL      → 0.0%   │</div>
+    <div style="color: #888;">│ $0.000018  Vol:4.2M   Stading.   │</div>
+    <div style="color: #00BFFF;">└──────────────────────────────────┘</div>
+  </div>
+
+  <div style="font-family: monospace; font-size: 10px; color: #6C3BFF; margin-top: 8px;">
+    _ ~ 3 results | 50 tracked | 12 new since last scan _
+  </div>
+
+  <div class="tbar" style="border-top: 2px solid #2A2A34;">
+    <div class="tab act" style="font-size: 11px;">⌘ Feed</div>
+    <div class="tab" style="font-size: 11px;">≡ Grid</div>
+    <div class="tab" style="font-size: 11px;">⚙️ Config</div>
+  </div>
+</div>
+
+<div class="pros-cons" style="max-width: 360px;">
+  <div class="pros"><h4>🟢 Pros</h4><li>Maximum data density per screen</li><li>Low cognitive overhead — patterns are clear</li><li>Very fast to render (simple styling)</li><li>Unique — no other crypto app looks like this</li><li>Power users love the terminal aesthetic</li></div>
+  <div class="cons"><h4>🔴 Cons</h4><li>Intimidating to new users / normies</li><li>No imagery or visual hierarchy</li><li>Hard to convey severity subtly</li><li>Accessibility concerns (font size, contrast)</li><li>Not friendly for touch targets</li></div>
+</div>
+</div>
+</div>
+
+<!-- ═════ THEME 4: ␝ BLEM ␐ FUTURISTIC/NEON ␐═══════════════════════════════════════════ -->
+<div class="theme-section">
+<h2>🦢 Theme D: "Blem" — Future Neon Edge</h2>
+<p style="color: #AAA; font-size: 13px;">Dark background with vibrant neon borders, large rounded cards, subtle glow effects on urgency elements. Think cyberpunk meets luxury (like a high-end car dashboard). Bold, energetic, attention-grabbing.</p>
+
+<div class="card-grid">
+<div class="phone theme-t4">
+  <div style="display: flex; justify-content: space-between; font-size: 11px;">
+    <span style="color: #888; font-weight: 600;">🦢 LIVE FEED</span>
+    <span style="color: #FF6B2D; font-size: 10px;">● 2 critical</span>
+  </div>
+
+  <div style="display: flex; gap: 6px; margin-top: 6px;">
+    <span style="font-size: 10px; padding: 3px 10px; background: rgba(255,107,45,0.15); color: #FF6B2D; border: 1px solid #FF6B2D; border-radius: 8px;">● CRITICAL</span>
+    <span style="font-size: 10px; padding: 3px 10px; background: rgba(255,176,45,0.1); color: #FFB02D; border: 1px solid #FFB02D44; border-radius: 8px;">○ ALERT</span>
+  </div>
+
+  <!-- Card with neon border glow -->
+  <div class="card-el" style="border: 1.5px solid #FF6B2D; box-shadow: 0 0 12px rgba(255,107,45,0.2), inset 0 0 4px rgba(255,107,45,0.1);">
+    <div class="card-header">
+      <div class="avatar" style="border: 2px solid #FF6B2D;">🤖</div>
+      <div style="flex: 1;">
+        <div class="token-name">PEPE <span class="token-chain">ETH</span></div>
+        <div style="font-size: 10px; color: #FF6B2D;">● 2 min ago</div>
+      </div>
+      <div style="text-align: right;">
+        <div style="font-size: 20px; font-weight: 700; color: #00C96C;">$0.000524</div>
+      </div>
+    </div>
+    <div style="display: flex; gap: 6px; margin: 6px 0;">
+      <div style="flex: 1; height: 2px; background: linear-gradient(90deg, #00C96C, transparent);"></div>
+    </div>
+    <div class="desc-text" style="color: #CCC; font-weight: 500;">112% surge detected in the last hour. Whales moving in. Social volume spiking across Telegram and X.</div>
+    <div class="stats" style="margin-top: 8px;">
+      <span style="color: #00BFFF;">📊 $12.4M vol</span>
+      <span style="color: #00BFFF;">👛 42.9K holders</span>
+      <span style="color: #FFB02D;">💬 HIGH confidence</span>
+    </div>
+  </div>
+
+  <!-- Normal card with subtle glow -->
+  <div class="card-el" style="border: 1px solid rgba(255,255,255,0.06);">
+    <div class="card-header">
+      <div class="avatar" style="background: #00BFFF; border: 1px solid #00BFFF44;">✦</div>
+      <div style="flex: 1;">
+        <div class="token-name">BONK <span class="token-chain">SOL</span></div>
+      </div>
+      <div style="font-size: 15px; font-weight: 600; color: #888;">$0.000003</div>
+    </div>
+    <div class="desc-text" style="color: #999;">Stading steady — no action needed.</div>
+  </div>
+
+  <div class="tbar"><div class="tab act" style="color: #B8B8C0;">🏠 Feed</div><div class="tab">👛 Portfolio</div><div class="tab">🔍 Search</div><div class="tab">⚙️ Settings</div></div>
+</div>
+
+<div class="pros-cons" style="max-width: 360px;">
+  <div class="pros"><h4>🟢 Pros</h4><li>High visual impact — grabs attention</li><li>Neon borders = urgency is *felt*</li><li>Feels futuristic and premium</li><li>Glow effects = natural hierarchy</li><li>Memorable — people will talk about it</li></div>
+  <div class="cons"><h4>🔴 Cons</h4><li>Can be visually exhausting over time</li><li>Neon effect benefits = hard on battery</li><li>Not suitable for conservative users</li><li>Heavy styling = more code to maintain</li><li>Style may age quickly</li></div>
+</div>
+</div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════════════ -->
+<!-- SUMMARY TABLE -->
+<!-- ␐══════════════════════════════════════════════════════════════════ -->
+<div class="theme-section">
+<h2>🪣 Quick Reference</h2>
+
+<div style="display: grid; gap: 4px; background: #1A1A24; padding: 16px; border-radius: 14px;">
+  <table style="border-collapse: collapse; font-size: 13px; width: 100%;">
+    <tr style="color: #888; border-bottom: 1px solid #2A2A34;">
+      <th style="text-align: left; padding: 8px;">Theme</th>
+      <th style="text-align: left; padding: 8px;">Corners</th>
+      <th style="text-align: left; padding: 8px;">Borders</th>
+      <th style="text-align: left; padding: 8px;">Cards</th>
+      <th style="text-align: left; padding: 8px;">Vibe</th>
+      <th style="text-align: left; padding: 8px;">Best For</th>
+    </tr>
+    <tr style="border-bottom: 1px solid #2A2A34;">
+      <td style="padding: 10px;"><strong>📢 Sharp</strong></td>
+      <td style="padding: 10px;">8px (slight)</td>
+      <td style="padding: 10px;">1px thin</td>
+      <td style="padding: 10px;">Flat, solid bg</td>
+      <td style="padding: 10px;">Clean, modern</td>
+      <td style="padding: 10px;">Daily drivers — Linear, Vercel</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #2A2A34;">
+      <td style="padding: 10px;"><strong>🟢 Glass</strong></td>
+      <td style="padding: 10px;">16px (large)</td>
+      <td style="padding: 10px;">2px bold</td>
+      <td style="padding: 10px;">Frosted glass + shadow</td>
+      <td style="padding: 10px;">Polished, premium</td>
+      <td style="padding: 10px;">Showcase — Vision Pro, Arc</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #2A2A34;">
+      <td style="padding: 10px;"><strong>🔴 Term</strong></td>
+      <td style="padding: 10px;">0° (sharp)</td>
+      <td style="padding: 10px;">1px colored</td>
+      <td style="padding: 10px;">Flat monospace rows</td>
+      <td style="padding: 10px;">Data-dense, power</td>
+      <td style="padding: 10px;">Terminals — Bloomberg, HackerNews</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px;"><strong>🦢 Blem</strong></td>
+      <td style="padding: 10px;">20px (pill-like)</td>
+      <td style="padding: 10px;">1.5px + glow</td>
+      <td style="padding: 10px;">Glass + neon borders</td>
+      <td style="padding: 10px;">Futuristic, loud</td>
+      <td style="padding: 10px;">Night trading — T-Bank, gaming</td>
+    </tr>
+  </table>
+</div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════════════ -->
+<!-- MY PICK -->
+<!-- ␐══════════════════════════════════════════════════════════════════ -->
+<div class="theme-section">
+<h2>🪣 My Verdict</h2>
+<div style="padding: 20px; background: linear-gradient(135deg, #1A1A24, #2A2A34); border-radius: 16px;">
+  <div style="display: flex; gap: 16px; align-items: center;">
+    <div style="width: 64px; height: 64px; border-radius: 16px; background: #6C3BFF; font-size: 32px; text-align: center; line-height: 64px;">🤖</div>
+    <div style="flex: 1;">
+      <div style="font-size: 18px; font-weight: 700;">For this app: a <strong style="color: #6C3BFF;">Sharp + Glass hybrid</strong></div>
+      <div style="font-size: 13px; color: #AAA; margin-top: 6px;">
+        Take the <strong>clean layout</strong> of Sharp (thin borders, flat cards, 8px corners) 
+        as your base, but borrow Glass's <strong>elevation & depth cues</strong> for urgency
+        and the <strong>neon urgency borders</strong> from Blem for critical alerts only.
+      </div>
+    </div>
+  </div>
+  <div style="margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap;">
+    <span style="font-size: 12px; padding: 6px 14px; background: #2A2A34; border-radius: 8px;">🟢 90% of cards = Sharp (thin, flat, 8px)</span>
+    <span style="font-size: 12px; padding: 6px 14px; background: #2A2A34; border-radius: 8px;">🟢 Critical/Urgent = Blem neon border + glow</span>
+    <span style="font-size: 12px; padding: 6px 14px; background: #2A2A34; border-radius: 8px;">🟢 Feed = 12px cards (room to breathe)</span>
+    <span style="font-size: 12px; padding: 6px 14px; background: #2A2A34; border-radius: 8px;">🟢 Token Detail = Sharp data rows</span>
+    <span style="font-size: 12px; padding: 6px 14px; background: #2A2A34; border-radius: 8px;">🟢 Settings = Glass cards (polished)</span>
+  </div>
+  <div style="font-size: 13px; color: #CCC; margin-top: 12px;">
+    <strong>Why:</strong> You get the <strong>usability and speed</strong> of Sharp for daily use, 
+    the <strong>wow factor</strong> of Glass for the feed experience, and the <strong>urgency signaling</strong> 
+    of Blem exactly where it matters — critical alerts. Best of all worlds.
+  </div>
+</div>
+</div>
+
+<div style="margin: 40px 0; padding: 20px; text-align: center; background: linear-gradient(135deg, #6C3BFF, #00BFFF); border-radius: 16px;">
+  <div style="font-size: 24px; font-weight: 700; color: #fff;">Which direction feels right?</div>
+  <div style="font-size: 14px; color: #fff; margin-top: 8px;">Or mix and match — every screen can have a different treatment</div>
+</div>
+
+</div>
+</body>
+</html>
