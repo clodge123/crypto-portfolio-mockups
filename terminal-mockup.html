@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1050, initial-scale=1">
+<title>Terminal Style Mockups — 1:1 Cards</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #08080D; color: #E0E0EC; font-family: 'Courier New', 'Consolas', monospace; padding: 24px; }
+  .page { max-width: 1000px; margin: 0 auto; }
+
+  .header { margin-bottom: 28px; }
+  .header h1 { font-size: 22px; color: #6C3BFF; margin-bottom: 4px; }
+  .header .sub { font-size: 12px; color: #888; }
+
+  .section { margin: 48px 0; }
+  .section-title { font-size: 14px; color: #00BFFF; border-bottom: 1px solid #2A2A34; padding-bottom: 6px; margin-bottom: 20px; }
+  .section-title span { color: #666; }
+
+  /* ═══ 1:1 Square Card ␝ Terminal Neon ␐══ */
+  .card { width: 420px; height: 420px; background: #08080D; border: 1px solid #3A3A44; display: inline-block; margin: 12px; position: relative; vertical-align: top; }
+  .card-label { text-align: center; color: #888; font-size: 10px; margin-top: 4px; max-width: 420px; }
+  .card-desc { text-align: center; color: #AAA; font-size: 11px; margin-top: 2px; max-width: 420px; }
+
+  /* �── Shared terminal palette ── */
+  .neon-red { color: #FF3B1D; }
+  .neon-orange { color: #FF7B2D; }
+  .neon-yellow { color: #FFB02D; }
+  .neon-cyan { color: #00BFFF; }
+  .neon-blue { color: #6C3BFF; }
+  .neon-green { color: #00C96C; }
+  .neon-pink { color: #FF44AA; }
+
+  .dim { color: #666; }
+  .muted { color: #888; }
+
+  .border-red { border-color: #FF3B1D; }
+  .border-orange { border-color: #FF7B2D; }
+  .border-cyan { border-color: #00BFFF; }
+  .border-blue { border-color: #6C3BFF; }
+
+  .term-box { background: #08080D; border: 1px solid #3A3A44; padding: 10px; font-size: 11px; line-height: 1.5; }
+
+  .tag { font-size: 9px; padding: 1px 7px; background: #08080D; border: 1px solid #3A3A44; display: inline-block; }
+  .tag-red { border-color: #FF3B1D; color: #FF3B1D; }
+  .tag-orange { border-color: #FF7B2D; color: #FF7B2D; }
+  .tag-yellow { border-color: #FFB02D; color: #FFB02D; }
+  .tag-cyan { border-color: #00BFFF; color: #00BFFF; }
+  .tag-green { border-color: #00C96C; color: #00C96C; }
+  .tag-blue { border-color: #6C3BFF; color: #6C3BFF; }
+  .tag-selected { background: #08080D; color: #fff; border: 1px solid; }
+
+  /* Terminal row */
+  .trow { display: flex; align-items: center; gap: 8px; }
+  .tsep { height: 1px; background: linear-gradient(90deg, transparent 10%, #3A3A44, transparent 90%); margin: 4px 0; }
+
+  /* Button */
+  .tbtn { font-size: 10px; padding: 4px 12px; background: #08080D; border: 1px solid #6C3BFF; color: #6C3BFF; display: inline-block; }
+  .tbtn-primary { background: #6C3BFF; color: #fff; border: 1px solid #6C3BFF; }
+  .tbtn-red { border-color: #FF3B1D; color: #FF3B1D; }
+  .tbtn-cyan { border-color: #00BFFF; color: #00BFFF; }
+
+  .grid-2 { display: flex; gap: 8px; }
+  .grid-2 > * { flex: 1; }
+
+  .pill { font-size: 9px; padding: 2px 8px; border: 1px solid #3A3A44; border-radius: 10px; background: #08080D; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<div class="header">
+  <h1>🪣 TERMINAL MOCKUPS  —  1:1 CYBERPUNK</h1>
+  <div class="sub">monospace · neon thin lines · black bg · data-dense · full card for social</div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     CARD 1 : ONBOARDING — CHATBOT SETUP
+     ␐══════════════════════════════════════════════════════════ -->
+<div class="section">
+<div class="section-title"><span>01</span> ONBOARDING — Chatbot-First</div>
+
+<div class="card" style="border: 1px solid #6C3BFF;">
+  <div style="padding: 12px;">
+    <!-- terminal header -->
+    <div class="trow">
+      <span class="neon-blue">🪣 crypto-onboard@jarvis</span>
+      <span class="dim" style="flex:1;text-align:right;">~</span>
+      <span class="dim">$</span>
+    </div>
+    <div style="font-size:10px;color:#666;margin:2px 0;">─── setup wizard v1.0 ───</div>
+    <div class="tsep"></div>
+
+    <!-- chat sequence -->
+    <div style="margin-top:8px;font-size:11px;line-height:1.6;">
+      <div><span class="neon-cyan">🤖 jarvis</span><span class="dim"> — hey! let's get you set up. quick tour or skip to settings?</span></div>
+      <div style="margin-top:4px;text-align:right;"><span class="dim">you > </span><span class="neon-green">quick tour please</span></div>
+      <div style="margin-top:4px;"><span class="neon-cyan">🤖 jarvis</span><span class="dim"> — great! what kind of crypto user are you?</span></div>
+    </div>
+
+    <!-- persona chips (terminal style) -->
+    <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:12px;">
+      <span class="tag tag-red" style="border-color:#FF3B1D;background:#FF3B1D11;color:#FF3B1D;">◆ MEME TRADER</span>
+      <span class="tag tag-yellow">◇ SWING TRADER</span>
+      <span class="tag tag-cyan">◇ HOLDER</span>
+      <span class="tag tag-blue">◇ VALIDATOR</span>
+    </div>
+
+    <div class="tsep" style="margin-top:14px;"></div>
+
+    <!-- bottom input -->
+    <div style="margin-top:10px;">
+      <div style="display:flex;align-items:center;gap:6px;background:#08080D;border:1px solid #3A3A44;padding:6px 10px;">
+        <span class="neon-blue">$</span>
+        <span style="flex:1;color:#666;">ask me anything or type a persona number...</span>
+        <span class="neon-cyan">▊</span>
+      </div>
+    </div>
+
+    <!-- action row -->
+    <div style="display:flex;gap:6px;margin-top:10px;">
+      <span class="tbtn-primary" style="flex:1;text-align:center;">✨ chatbot setup</span>
+      <span class="tbtn" style="flex:1;text-align:center;">⚙️ manual</span>
+    </div>
+
+    <!-- status line -->
+    <div style="font-size:9px;color:#555;margin-top:8px;position:absolute;bottom:10px;left:12px;right:12px;">
+      <span>STATUS: awaiting persona selection</span>
+      <span style="float:right;">PID: 2841 | MEM: 32MB</span>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="border:1px solid #00BFFF;">
+  <div style="padding:12px;">
+    <div class="trow">
+      <span class="neon-cyan">🪣 manual-setup@jarvis</span>
+      <span class="dim" style="flex:1;text-align:right;">step 2/4</span>
+    </div>
+    <div style="font-size:10px;color:#666;margin:2px 0;">─── persona selection ───</div>
+    <div class="tsep"></div>
+
+    <div style="margin-top:8px;font-size:11px;">
+      <div class="neon-yellow">SELECT YOUR PERSONA:</div>
+      <div style="margin-top:6px;">[1] <span class="neon-red">◆ MEME TRADER</span>  — micro-caps + rug detection</div>
+      <div style="margin-top:2px;">[2] <span class="neon-yellow">◇ SWING TRADER</span> — alpha + signals</div>
+      <div style="margin-top:2px;">[3] <span class="neon-cyan">◇ HOLDER</span>       — portfolio + P&amp;L</div>
+      <div style="margin-top:2px;">[4] <span class="neon-blue">◇ VALIDATOR</span>    — staking + uptime</div>
+    </div>
+
+    <!-- selected card highlight -->
+    <div style="margin-top:10px;border:1px solid #FF3B1D;padding:8px;background:#08080D;">
+      <div class="trow"><span class="neon-red">▌ SELECTED: MEME TRADER</span></div>
+      <div style="font-size:10px;color:#888;margin-top:2px;">
+        tuned for micro-cap new pairs · min liq &gt; $1K · rug detection ON
+      </div>
+    </div>
+
+    <div style="display:flex;gap:6px;margin-top:12px;">
+      <span class="tbtn" style="flex:1;text-align:center;">← back</span>
+      <span class="tbtn-primary" style="flex:1;text-align:center;">next →</span>
+    </div>
+
+    <!-- pips -->
+    <div style="display:flex;gap:4px;justify-content:center;margin-top:10px;">
+      <span style="width:6px;height:6px;border:1px solid #3A3A44;background:#08080D;"></span>
+      <span style="width:18px;height:6px;background:#6C3BFF;border-radius:2px;"></span>
+      <span style="width:6px;height:6px;border:1px solid #3A3A44;background:#08080D;"></span>
+      <span style="width:6px;height:6px;border:1px solid #3A3A44;background:#08080D;"></span>
+    </div>
+
+    <div style="font-size:9px;color:#555;position:absolute;bottom:10px;left:12px;right:12px;">
+      <span>STATUS: persona selected</span>
+      <span style="float:right;">PID: 2842 | MEM: 28MB</span>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<!-- ␐══════════════════════════════════════════════════════════
+     CARD 3 + 4 : FEED — Token Alerts
+     ␐══════════════════════════════════════════════════════════ -->
+<div class="section">
+<div class="section-title"><span>02</span> FEED — Token Alert Terminal</div>
+
+<div class="card" style="border:1px solid #FF3B1D;">
+  <div style="padding:12px;">
+    <div class="trow">
+      <span class="neon-red">🪣 crypto-feed@jarvis</span>
+      <span class="dim" style="flex:1;text-align:right;">filter: urgent+</span>
+    </div>
+    <div style="font-size:10px;color:#666;margin:2px 0;">─── live · 3 alerts · 12 tracked ───</div>
+    <div class="tsep"></div>
+
+    <!-- filter row -->
+    <div style="display:flex;gap:4px;margin-top:6px;">
+      <span class="tag tag-red" style="background:#FF3B1D22;">● CRITICAL</span>
+      <span class="tag tag-yellow">○ ALERT</span>
+      <span class="tag tag-cyan">○ NORMAL</span>
+      <span class="tag" style="flex:1;text-align:right;color:#555">^C to clear</span>
+    </div>
+
+    <!-- PEPE critical alert -->
+    <div style="margin-top:8px;border:1px solid #FF3B1D;padding:8px;font-size:11px;background:#08080D;line-height:1.5;">
+      <div class="neon-red">┌───────────────────────────────────────────────────┐</div>
+      <div class="neon-red">│ 🤖 PEPE         🚡 CRITICAL          🛡 +112.4% │</div>
+      <div style="color:#888;">│ $0.000524       Vol:12.4M          Liq:14.2K    │</div>
+      <div style="color:#888;">│ whales accumulating · social surge · 3 DEX pairs  │</div>
+      <div style="color:#FF3B1D;">│ �F_7d ago        📊 DexScreener     💬 0.84 conf  │</div>
+      <div class="neon-red">├───────────────────────────────────────────────────┤</div>
+    </div>
+
+    <!-- BONK alert -->
+    <div style="margin-top:4px;border:1px solid #FFB02D;padding:8px;font-size:11px;line-height:1.5;">
+      <div class="neon-yellow">│ ✦ BONK          🟡 ALERT           🛡 +8.2%    │</div>
+      <div style="color:#888;">│ $0.000003       Vol:2.1M           Liq:800K     │</div>
+      <div style="color:#888;">│ volume spiked 3x in 15min                    │</div>
+      <div class="neon-yellow">├───────────────────────────────────────────────────┤</div>
+    </div>
+
+    <!-- SHIB normal -->
+    <div style="margin-top:4px;border:1px solid #00BFFF;padding:8px;font-size:11px;line-height:1.5;">
+      <div class="neon-cyan">│ 📊 SHIB          🟢 NORMAL          → 0.0%     │</div>
+      <div style="color:#888;">│ $0.000018       Vol:4.2M           stading.     │</div>
+      <div class="neon-cyan">└───────────────────────────────────────────────────┘</div>
+    </div>
+
+    <!-- footer -->
+    <div style="font-size:9px;color:#555;position:absolute;bottom:10px;left:12px;right:12px;">
+      <span>_ 3 results · 50 tracked · 12 new since scan_</span>
+      <span style="float:right;">[ctrl+R] refresh</span>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="border:1px solid #00BFFF;">
+  <div style="padding:12px;">
+    <div class="trow">
+      <span class="neon-cyan">🪣 feed-grid@jarvis</span>
+      <span class="dim" style="flex:1;text-align:right;">by urgency</span>
+    </div>
+    <div style="font-size:10px;color:#666;margin:2px 0;">─── compact view ───</div>
+    <div class="tsep"></div>
+
+    <div style="display:flex;gap:6px;margin-top:6px;">
+      <span class="tag tag-red" style="border-color:#FF3B1D;">● URGENT</span>
+      <span class="tag tag-yellow" style="border-color:#FFB02D;">○ ALERT</span>
+      <span class="tag tag-cyan" style="border-color:#00BFFF;">○ ALL</span>
+    </div>
+
+    <!-- compact rows -->
+    <div style="margin-top:8px;font-size:11px;line-height:1.7;">
+      <div class="neon-red">PID  TOKEN          PRICE         CHANGE     URG</div>
+      <div style="color:#555;">─────────────────────────────────────────</div>
+      <div><span class="neon-red">▶ 1</span>  PEPE       <span class="neon-green">$0.000524</span>   <span class="neon-green">+112.4%</span>    <span class="neon-red">CRITICAL</span></div>
+      <div><span class="neon-yellow">▶ 2</span>  BONK       <span class="neon-green">$0.000003</span>   <span class="neon-yellow">+8.2%</span>     ALERT</div>
+      <div><span class="neon-cyan">▶ 3</span>  SHIB       <span class="dim">$0.000018</span>   <span class="dim">0.0%</span>      NORMAL</div>
+      <div><span class="dim">▶ 4</span>  ETH        <span class="dim">$2,847</span>      <span class="dim">0.0%</span>      NORMAL</div>
+      <div><span class="dim">▶ 5</span>  USDC       <span class="dim">$1.00</span>       <span class="dim">0.0%</span>      NORMAL</div>
+      <div style="color:#555;">─────────────────────────────────────────</div>
+      <div><span class="neon-cyan">▶ 12 more</span> (type <span class="neon-blue">:page 2</span> or <span class="neon-blue">:filter urgent</span>)</div>
+    </div>
+
+    <div style="margin-top:10px;display:flex;gap:4px;flex-wrap:wrap;">
+      <span class="tbtn-red" style="font-size:9px;">:filter urgent</span>
+      <span class="tbtn-cyan" style="font-size:9px;">:sort vol</span>
+      <span class="tbtn" style="font-size:9px;">:export csv</span>
+    </div>
+
+    <div style="font-size:9px;color:#555;position:absolute;bottom:10px;left:12px;right:12px;">
+      <span>_ type :help for commands_</span>
+      <span style="float:right;">MEM: 44MB</span>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<!-- ␐══════════════════════════════════════════════════════════
+     CARD 5 + 6 : TOKEN DETAIL + MARKET
+     ␐══════════════════════════════════════════════════════════ -->
+<div class="section">
+<div class="section-title"><span>03</span> TOKEN DETAIL — PEPE Deep Dive</div>
+
+<div class="card" style="border:1px solid #FF3B1D;">
+  <div style="padding:12px;">
+    <div class="trow">
+      <span class="neon-orange">🪣 pepe-detail@jarvis</span>
+      <span class="dim" style="flex:1;text-align:right;">market tab</span>
+    </div>
+    <div style="font-size:10px;color:#666;margin:2px 0;">─── 🤖 PEPE / ETH · DexScreener + CoinGecko ───</div>
+    <div class="tsep"></div>
+
+    <!-- tabs -->
+    <div style="display:flex;gap:2px;margin-top:6px;font-size:10px;">
+      <span class="tag tag-red" style="background:#FF3B1D22;">📊 market</span>
+      <span class="tag tag-cyan">📄 news</span>
+      <span class="tag tag-cyan">🔍 on-chain</span>
+    </div>
+
+    <!-- price hero -->
+    <div style="margin-top:8px;">
+      <div style="font-size:28px;font-weight:700;" class="neon-green">$0.000524</div>
+      <div style="font-size:12px;color:#00C96C;">🛡 +112.4% (24h)  ·  updated 7m ago</div>
+    </div>
+
+    <!-- stats grid -->
+    <div style="margin-top:10px;display:grid;gap:4px;font-size:11px;">
+      <div class="trow"><span class="dim">market cap</span><span class="neon-green" style="flex:1;text-align:right;">$245.6M</span></div>
+      <div class="trow"><span class="dim">volume (24h)</span><span style="flex:1;text-align:right;color:#888;">$12.4M</span></div>
+      <div class="trow"><span class="dim">liquidity</span><span style="flex:1;text-align:right;color:#888;">$14.2K</span></div>
+      <div class="trow"><span class="dim">holders</span><span style="flex:1;text-align:right;color:#888;">42,891</span></div>
+      <div class="trow"><span class="dim">top holder</span><span class="neon-yellow" style="flex:1;text-align:right;">12.4%</span></div>
+    </div>
+
+    <!-- sparkline -->
+    <div style="margin-top:10px;border:1px solid #3A3A44;padding:6px;font-size:9px;">
+      <div class="dim">24h price history</div>
+      <div style="height:24px;display:flex;align-items:center;padding:2px;">
+        <span style="font-size:8px;word-spacing:-3px;letter-spacing:-1px;color:#888;width:100%;white-space:nowrap;overflow:hidden;">
+          ▂▁▁▂▂▂▃▃▄▄▄▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▃▃▄▄▄▄�4�5�6�7�8�9█
+        </span>
+      </div>
+    </div>
+
+    <!-- quick actions -->
+    <div style="display:flex;gap:4px;margin-top:8px;">
+      <span class="tbtn-primary" style="font-size:9px;">:add watch</span>
+      <span class="tbtn-red" style="font-size:9px;">:alert -20%</span>
+      <span class="tbtn-cyan" style="font-size:9px;">:chain eth</span>
+    </div>
+
+    <div style="font-size:9px;color:#555;position:absolute;bottom:10px;left:12px;right:12px;">
+      <span>_ data from DexScreener API _</span>
+      <span style="float:right;">UPD: 7m ago</span>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="border:1px solid #00BFFF;">
+  <div style="padding:12px;">
+    <div class="trow">
+      <span class="neon-cyan">🪣 pepe-news@jarvis</span>
+      <span class="dim" style="flex:1;text-align:right;">news tab</span>
+    </div>
+    <div style="font-size:10px;color:#666;margin:2px 0;">─── recent activity · 3 items ───</div>
+    <div class="tsep"></div>
+
+    <!-- news items as terminal log -->
+    <div style="margin-top:8px;font-size:11px;line-height:1.7;">
+      <div style="color:#555;">TIMESTAMP  SOURCE        TYPE        SIGNAL</div>
+      <div style="color:#555;">───────────────────────────────────────────</div>
+      <div><span class="neon-green">[07-27]</span> CoinDesk     <span class="neon-red">🧲 BREAKOUT</span>  "breaks $0.0005 first time"</div>
+      <div class="tsep" style="margin:1px 0;"></div>
+      <div><span class="neon-yellow">[07-26]</span> X.com        <span class="neon-orange">⚡ WHALE</span>     "accumulation detected"</div>
+      <div class="tsep" style="margin:1px 0;"></div>
+      <div><span class="dim">[07-26]</span> DexScreener  <span class="neon-cyan">✦ LIQ</span>       "new liquidity pool added"</div>
+      <div class="tsep" style="margin:1px 0;"></div>
+      <div><span class="dim">[07-25]</span> Etherscan    <span class="dim">⏹ HOLD</span>      "top wallet increased position"</div>
+    </div>
+
+    <!-- on-chain snippet -->
+    <div style="margin-top:8px;border:1px solid #3A3A44;padding:6px;font-size:10px;">
+      <div class="neon-blue">🔍 ON-CHAIN [Etherscan]</div>
+      <div style="color:#888;">holders: 42,891 · top 10: 24.7% · supply: 420.69T</div>
+      <div style="color:#555;">┄ tx count: 1,284 (24h) · active wallets: 892</div>
+    </div>
+
+    <div style="display:flex;gap:4px;margin-top:8px;">
+      <span class="tbtn" style="font-size:9px;">← back to feed</span>
+      <span class="tbtn-cyan" style="font-size:9px;">:refresh</span>
+    </div>
+
+    <div style="font-size:9px;color:#555;position:absolute;bottom:10px;left:12px;right:12px;">
+      <span>_ news from CoinGecko + X.com _</span>
+      <span style="float:right;">PID: 2901</span>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<!-- ␐══════════════════════════════════════════════════════════
+     CARD 7 + 8 : SETTINGS + WALLETS
+     ␐══════════════════════════════════════════════════════════ -->
+<div class="section">
+<div class="section-title"><span>04</span> SETTINGS &amp; WALLET MANAGEMENT</div>
+
+<div class="card" style="border:1px solid #6C3BFF;">
+  <div style="padding:12px;">
+    <div class="trow">
+      <span class="neon-blue">🪣 settings@jarvis</span>
+      <span class="dim" style="flex:1;text-align:right;">~/.config</span>
+    </div>
+    <div style="font-size:10px;color:#666;margin:2px 0;">─── persona · thresholds · signals ───</div>
+    <div class="tsep"></div>
+
+    <!-- persona -->
+    <div style="margin-top:6px;font-size:11px;">
+      <div class="neon-blue">$ PERSONA</div>
+      <div style="display:flex;gap:4px;margin-top:4px;flex-wrap:wrap;">
+        <span class="tag tag-red" style="border-color:#FF3B1D;background:#FF3B1D22;">◆ MEME TRADER</span>
+        <span class="tag tag-yellow">◇ SWING TRADER</span>
+        <span class="tag tag-cyan">◇ HOLDER</span>
+        <span class="tag tag-blue">◇ VALIDATOR</span>
+      </div>
+      <div style="color:#555;font-size:9px;margin-top:2px;">active: Meme Trader — micro-cap new pairs, rug detection, liq > $1K</div>
+    </div>
+
+    <div class="tsep" style="margin-top:8px;"></div>
+
+    <!-- thresholds -->
+    <div style="margin-top:6px;font-size:11px;">
+      <div class="neon-yellow">$ THRESHOLDS</div>
+      <div class="trow" style="margin-top:4px;"><span class="dim">min liquidity</span><span class="neon-green" style="flex:1;text-align:right;">$1,000</span></div>
+      <div class="trow"><span class="dim">min confidence</span><span style="flex:1;text-align:right;color:#888;">0.3</span></div>
+      <div class="trow"><span class="dim">max urgency</span><span class="neon-yellow" style="flex:1;text-align:right;">ALERT</span></div>
+    </div>
+
+    <div class="tsep" style="margin-top:8px;"></div>
+
+    <!-- signal toggles -->
+    <div style="margin-top:6px;font-size:11px;">
+      <div class="neon-green">$ SIGNALS (ON/OFF)</div>
+      <div class="trow" style="margin-top:4px;"><span class="dim">�  price changes</span><span class="neon-green" style="flex:1;text-align:right;">[ON]</span></div>
+      <div class="trow"><span class="dim">�  whale moves</span><span class="dim" style="flex:1;text-align:right;">[OFF]</span></div>
+      <div class="trow"><span class="dim">�  new pairs</span><span class="neon-green" style="flex:1;text-align:right;">[ON]</span></div>
+      <div class="trow"><span class="dim">�  validator/staking</span><span class="dim" style="flex:1;text-align:right;">[OFF]</span></div>
+      <div class="trow"><span class="dim">�  governance</span><span class="dim" style="flex:1;text-align:right;">[OFF]</span></div>
+    </div>
+
+    <div style="font-size:9px;color:#555;position:absolute;bottom:10px;left:12px;right:12px;">
+      <span>_ :save or :discard_</span>
+      <span style="float:right;">CFG: ~/.jarvisrc</span>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="border:1px solid #00C96C;">
+  <div style="padding:12px;">
+    <div class="trow">
+      <span class="neon-green">🪣 wallets@jarvis</span>
+      <span class="dim" style="flex:1;text-align:right;">2 connected</span>
+    </div>
+    <div style="font-size:10px;color:#666;margin:2px 0;">─── wallet manager ───</div>
+    <div class="tsep"></div>
+
+    <!-- wallet 1 -->
+    <div style="margin-top:6px;border:1px solid #6C3BFF;padding:8px;font-size:11px;">
+      <div class="trow">
+        <span class="neon-blue">◆ wallet-01</span>
+        <span class="neon-green" style="flex:1;text-align:right;">$12,450</span>
+      </div>
+      <div style="color:#888;">0x983e....59b0 · ETH</div>
+      <div style="color:#555;font-size:10px;">12 tokens tracked · last scan: 14m ago</div>
+      <div style="display:flex;gap:3px;margin-top:4px;">
+        <span class="tag tag-red" style="font-size:8px;">PEPE</span>
+        <span class="tag" style="font-size:8px;">ETH</span>
+        <span class="tag" style="font-size:8px;">USDC</span>
+        <span style="color:#555;font-size:8px;">+9 more</span>
+      </div>
+    </div>
+
+    <!-- wallet 2 -->
+    <div style="margin-top:6px;border:1px solid #00BFFF;padding:8px;font-size:11px;">
+      <div class="trow">
+        <span class="neon-cyan">✦ wallet-02</span>
+        <span class="neon-pink" style="flex:1;text-align:right;">$892</span>
+      </div>
+      <div style="color:#888;">DezXA....B263 · SOL</div>
+      <div style="color:#555;font-size:10px;">8 tokens tracked · last scan: 2h ago</div>
+    </div>
+
+    <!-- add wallet -->
+    <div style="margin-top:6px;border:1px dashed #3A3A44;padding:8px;font-size:11px;">
+      <div class="trow">
+        <span class="neon-cyan">+ add wallet</span>
+      </div>
+      <div style="color:#555;font-size:10px;">paste any ETH or SOL address to auto-discover tokens</div>
+      <div style="margin-top:4px;border:1px solid #3A3A44;padding:4px 6px;font-size:10px;background:#08080D;">
+        <span class="neon-blue">$</span> <span style="color:#555;">wallet add 0x...</span><span class="neon-cyan">▊</span>
+      </div>
+    </div>
+
+    <div style="font-size:9px;color:#555;position:absolute;bottom:10px;left:12px;right:12px;">
+      <span>_ :scan all to refresh_</span>
+      <span style="float:right;">TOT: $13,342</span>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<!-- ␐══════════════════════════════════════════════════════════
+     CARD 9 + 10 : AI CHAT + COMMANDS
+     ␐══════════════════════════════════════════════════════════ -->
+<div class="section">
+<div class="section-title"><span>05</span> AI ASSISTANT — Jarvis Terminal</div>
+
+<div class="card" style="border:1px solid #FF44AA;">
+  <div style="padding:12px;">
+    <div class="trow">
+      <span class="neon-pink">🪣 jarvis@daemon</span>
+      <span class="dim" style="flex:1;text-align:right;">SESSION: 0x4F2A</span>
+    </div>
+    <div style="font-size:10px;color:#666;margin:2px 0;">─── crypto co-pilot · 3 messages ───</div>
+    <div class="tsep"></div>
+
+    <!-- chat transcript -->
+    <div style="margin-top:6px;font-size:11px;line-height:1.6;">
+      <div><span class="neon-pink">🤖 jarvis</span> <span class="dim">— i see PEPE is up 112%. want me to add it to your watchlist?</span></div>
+      <div style="margin-top:4px;text-align:right;">
+        <span class="dim">you > </span><span class="neon-green">yes, and alert me if it drops 20%</span>
+      </div>
+      <div style="margin-top:4px;">
+        <span class="neon-pink">🤖 jarvis</span> <span class="dim">— done! PEPE added with 20% drop alert. you'll get a push notification.</span>
+      </div>
+    </div>
+
+    <!-- quick actions -->
+    <div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;">
+      <span class="pill" style="border-color:#FF3B1D;color:#FF3B1D;">➕ add token</span>
+      <span class="pill" style="border-color:#00BFFF;color:#00BFFF;">🔍 show PEPE</span>
+      <span class="pill" style="border-color:#6C3BFF;color:#6C3BFF;">⚙️ settings</span>
+      <span class="pill" style="border-color:#FFB02D;color:#FFB02D;">:help</span>
+    </div>
+
+    <!-- input line -->
+    <div style="margin-top:10px;border:1px solid #3A3A44;padding:6px 10px;font-size:11px;">
+      <span class="neon-pink">$</span> <span style="color:#555;">ask jarvis anything...</span><span class="neon-cyan" style="margin-left:4px;">▊</span>
+    </div>
+
+    <div style="font-size:9px;color:#555;position:absolute;bottom:10px;left:12px;right:12px;">
+      <span>_ type :help for commands_</span>
+      <span style="float:right;">AVAC: 16MB</span>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="border:1px solid #00BFFF;">
+  <div style="padding:12px;">
+    <div class="trow">
+      <span class="neon-cyan">🪣 commands@jarvis</span>
+      <span class="dim" style="flex:1;text-align:right;">~/.commands</span>
+    </div>
+    <div style="font-size:10px;color:#666;margin:2px 0;">─── command palette ───</div>
+    <div class="tsep"></div>
+
+    <div style="margin-top:6px;font-size:11px;">
+      <div class="neon-blue">$ AVAILABLE COMMANDS</div>
+      <div style="margin-top:4px;line-height:1.6;">
+        <div><span class="neon-green">add token</span>     <span class="dim">0x... — scan & track new token</span></div>
+        <div><span class="neon-green">show portfolio</span> <span class="dim">— display all tracked tokens</span></div>
+        <div><span class="neon-green">alert when</span>     <span class="dim">[token] [condition] — set alert</span></div>
+        <div><span class="neon-green">switch to</span>      <span class="dim">[persona] — change persona mode</span></div>
+        <div><span class="neon-green">whale moves</span>    <span class="dim">[$min] — track whale transactions</span></div>
+        <div><span class="neon-green">show wallets</span>   <span class="dim">— list connected wallets</span></div>
+        <div><span class="neon-green">:help</span>          <span class="dim">— show this menu</span></div>
+      </div>
+    </div>
+
+    <!-- recent command -->
+    <div style="margin-top:8px;border:1px solid #3A3A44;padding:6px;font-size:10px;">
+      <div class="dim">last command:</div>
+      <div><span class="neon-cyan">$ scan 0x983e....59b0</span></div>
+      <div style="color:#888;">→ found 12 tokens. track all? [Y/n]</div>
+    </div>
+
+    <div style="display:flex;gap:6px;margin-top:8px;">
+      <span class="tbtn-primary" style="font-size:9px;">Y  yes, track all</span>
+      <span class="tbtn" style="font-size:9px;">n  let me choose</span>
+    </div>
+
+    <div style="font-size:9px;color:#555;position:absolute;bottom:10px;left:12px;right:12px;">
+      <span>_ natural language or commands_</span>
+      <span style="float:right;">PID: 3102</span>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<!-- ␐══════════════════════════════════════════════════════════
+     FOOTER
+     ␐══════════════════════════════════════════════════════════ -->
+<div style="margin:32px 0;border:1px solid #6C3BFF;padding:12px;font-size:12px;line-height:1.5;">
+  <div class="neon-blue">🪣 DESIGN SYSTEM — TERMINAL MOCKUPS</div>
+  <div style="color:#888;margin-top:4px;">10 screens · 1:1 square cards · monospace · neon thin lines · black background · data-dense</div>
+  <div style="display:flex;gap:4px;margin-top:6px;">
+    <span class="tag tag-red">● CRITICAL = #FF3B1D</span>
+    <span class="tag tag-orange">○ ALERT = #FF7B2D</span>
+    <span class="tag tag-yellow">○ WARNING = #FFB02D</span>
+    <span class="tag tag-cyan">○ INFO = #00BFFF</span>
+    <span class="tag tag-green">○ POSITIVE = #00C96C</span>
+    <span class="tag tag-blue">○ ACCENT = #6C3BFF</span>
+    <span class="tag" style="border-color:#FF44AA;color:#FF44AA;">○ AI = #FF44AA</span>
+  </div>
+  <div style="color:#555;margin-top:4px;">bg: #08080D · border: 1px solid · font: monospace · no radius · no glow — pure terminal cyberpunk</div>
+</div>
+
+</div>
+</body>
+</html>
