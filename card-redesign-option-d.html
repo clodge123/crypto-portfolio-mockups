@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200, initial-scale=1">
+<title>Card Redesign — Option D: Flex Waterfall</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #08080D; color: #E0E0EC; font-family: 'Courier New', 'Consolas', monospace; padding: 32px; }
+  .page { max-width: 1150px; margin: 0 auto; }
+
+  h1 { font-size: 26px; color: #FF3B1D; margin-bottom: 4px; }
+  .subtitle { color: #888; font-size: 12px; margin-bottom: 8px; }
+  .prompt { font-size: 11px; color: #6C3BFF; margin-bottom: 32px; }
+
+  .dim { color: #666; }
+  .neon-red { color: #FF3B1D; }
+  .neon-orange { color: #FF7B2D; }
+  .neon-yellow { color: #FFB02D; }
+  .neon-cyan { color: #00BFFF; }
+  .neon-green { color: #00C96C; }
+  .neon-blue { color: #6C3BFF; }
+  .neon-pink { color: #FF44AA; }
+
+  .tag { font-size: 9px; padding: 2px 7px; display: inline-block; background: #08080D; border: 1px solid #3A3A44; }
+  .tag-red { border-color: #FF3B1D; color: #FF3B1D; }
+  .tag-orange { border-color: #FF7B2D; color: #FF7B2D; }
+  .tag-yellow { border-color: #FFB02D; color: #FFB02D; }
+  .tag-cyan { border-color: #00BFFF; color: #00BFFF; }
+  .tag-green { border-color: #00C96C; color: #00C96C; }
+  .tag-pink { border-color: #FF44AA; color: #FF44AA; }
+  .tag-blue { border-color: #6C3BFF; color: #6C3BFF; }
+
+  .trow { display: flex; align-items: center; gap: 6px; }
+  .tsep { height: 1px; margin: 4px 0; border-top: 1px solid #2A2A34; }
+
+  /* ␐ Card is fixed: 430w × 580h */
+  .card { width: 430px; height: 580px; display: inline-block; margin: 12px; position: relative; vertical-align: top; background: #08080D; border: 1px solid #3A3A44; }
+  .card-inner { padding: 10px; font-size: 10px; line-height: 1.4; display: flex; flex-direction: column; height: 100%; }
+
+  .card-header { margin-bottom: 2px; }
+  .card-header .top { display: flex; align-items: center; gap: 6px; }
+  .card-header .sub { color: #555; font-size: 9px; margin-top: 1px; }
+
+  /* section title helper */
+  .section-title { font-size: 11px; color: #888; border-bottom: 1px solid #2A2A34; padding-bottom: 4px; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<h1>🪣 OPTION D: FLEX WATERFALL</h1>
+<div class="subtitle">Blocks have natural width preferences (full, half, third). They flow like a waterfall — next line when full. Heights adapt to content within their allocated cell.</div>
+<div class="prompt">_ <span class="dim">crypto-feed@jarvis · card=580h fixed · blocks flow by width class · aug 2026_</span></div>
+
+<!-- ␐══════════════
+     SYSTEM OVERVIEW
+     ␐══════════════ -->
+<div style="border:1px solid #3A3A44; padding:14px; margin-bottom:40px; background:#0D0D14;">
+  <div class="neon-cyan" style="font-size:13px; margin-bottom:8px;">🆡 HOW FLEX WATERFALL WORKS</div>
+  <div style="font-size:11px; color:#AAA; line-height:1.6;">
+    <div>• Every block type has a <span class="neon-green">width class</span>: <strong>full</strong> (100%), <strong>half</strong> (50%), or <strong>third</strong> (33%)</div>
+    <div>• Blocks flow left-to-right, wrapping to next row when width runs out</div>
+    <div>• Row height is determined by the <span class="neon-yellow">tallest block</span> in that row</div>
+    <div>• Card height is fixed (580px). If blocks exceed it — <span class="neon-pink">scale down proportionally</span> or <span class="neon-orange">overflow to detail</span></div>
+    <div>• If blocks under-fill — <span class="neon-green">scale up proportionally</span> to fill the card</div>
+    <div style="margin-top:6px;">
+      <span class="neon-blue">Width Classes:</span>
+      <span class="tag tag-blue" style="font-size:8px;">full (100%)</span>
+      <span class="tag tag-cyan" style="font-size:8px;">half (50%)</span>
+      <span class="tag tag-pink" style="font-size:8px;">third (33%)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     EXAMPLE 1: 4 blocks (full + half×2 + full)
+     ␐══════════════════════════════════════════════════════════ -->
+<div style="margin-bottom:8px;">
+  <span class="tag tag-green">4 BLOCKS — Full + Half×2 + Full</span>
+  <span class="dim" style="margin-left:8px;">2 rows: [header-metric][metric][text] + [list]</span>
+</div>
+
+<div class="card" style="border:1px solid #00C96C;">
+<div class="card-inner">
+  <!-- Header -->
+  <div class="card-header">
+    <div class="top">
+      <span style="font-size:12px;">🤖 PEPE</span>
+      <span class="tag tag-red" style="font-size:8px; padding:1px 6px;">● CRITICAL</span>
+      <span class="dim" style="flex:1; text-align:right; font-size:9px;">2m ago</span>
+    </div>
+    <div class="sub">ETH · DexScreener</div>
+  </div>
+  <div class="tsep" style="border-top:1px solid #FF3B1D44;"></div>
+
+  <!-- Remaining space allocated to blocks -->
+  <!-- Row 1: Full-width metric (header/market snapshot) -->
+  <div style="flex:1; display:flex; flex-direction:column; gap:4px;">
+    <!-- FULL-WIDTH: Price hero -->
+    <div style="width:100%; border:1px solid #00C96C; padding:8px; align-items:center; justify-content:center;">
+      <div style="text-align:center;">
+        <span style="font-size:26px; color:#00C96C; font-weight:bold;">$0.000524</span>
+        <span style="font-size:14px; color:#00C96C; margin-left:8px;">🛡 +112%</span>
+        <div class="dim" style="font-size:9px; margin-top:2px;">24h change · updated 2m ago</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2: Two half-width blocks side by side -->
+  <div style="flex:0.8; display:flex; gap:4px;">
+    <div style="flex:1; border:1px solid #3A3A44; padding:6px;">
+      <div class="dim" style="font-size:8px;">volume (24h)</div>
+      <div style="font-size:16px; color:#888; font-weight:bold;">$12.4M</div>
+      <div class="dim" style="font-size:8px;">+8.2% vs yesterday</div>
+    </div>
+    <div style="flex:1; border:1px solid #3A3A44; padding:6px;">
+      <div class="dim" style="font-size:8px;">liquidity</div>
+      <div style="font-size:16px; color:#FFB02D; font-weight:bold;">$14.2K</div>
+      <div class="dim" style="font-size:8px;">low · caution</div>
+    </div>
+  </div>
+
+  <!-- Row 3: Full-width insight -->
+  <div style="flex:0.8; border:1px solid #FF3B1D; padding:6px; background:#FF3B1D11;">
+    <div style="font-size:11px; color:#AAA; line-height:1.3;">
+      <span class="neon-red">◆</span> Whales accumulating across 3 DEX pairs. Social volume surging on X and Telegram. Multiple signals aligning for potential breakout.
+    </div>
+    <div style="display:flex; gap:4px; margin-top:4px;">
+      <span class="tag tag-green" style="font-size:8px;">:watch</span>
+      <span class="tag tag-yellow" style="font-size:8px;">:alert -20%</span>
+      <span class="tag tag-cyan" style="font-size:8px;">:detail</span>
+    </div>
+  </div>
+
+  <!-- Detail overflow indicator -->
+  <div style="flex:0.2; border:1px solid #2A2A34; padding:2px; text-align:center;">
+    <span class="dim" style="font-size:8px;">+2 blocks on detail (chart, donut)</span>
+  </div>
+</div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     EXAMPLE 2: 6 blocks (mixed widths)
+     ␐══════════════════════════════════════════════════════════ -->
+<div style="margin-bottom:8px; margin-top:20px;">
+  <span class="tag tag-yellow">6 BLOCKS — Mixed Widths</span>
+  <span class="dim" style="margin-left:8px;">3 rows: [half+half] [third+third+third] [full]</span>
+</div>
+
+<div class="card" style="border:1px solid #FFB02D;">
+<div class="card-inner">
+  <div class="card-header">
+    <div class="top">
+      <span style="font-size:12px;">■ SOCIAL SURGE</span>
+      <span class="tag tag-yellow" style="font-size:8px;">○ ALERT</span>
+      <span class="dim" style="flex:1; text-align:right; font-size:9px;">8m ago</span>
+    </div>
+    <div class="sub">GAL · Twitter · Reddit</div>
+  </div>
+  <div class="tsep" style="border-top:1px solid #FFB02D44;"></div>
+
+  <!-- Row 1: Two half-width -->
+  <div style="flex:1; display:flex; gap:4px;">
+    <div style="flex:1; border:1px solid #3A3A44; padding:6px;">
+      <div class="dim" style="font-size:8px;">social volume</div>
+      <div style="display:flex; align-items:center; gap:4px;">
+        <span style="font-size:22px; color:#FF44AA; font-weight:bold;">+340%</span>
+        <span class="dim" style="font-size:9px;">24h spike</span>
+      </div>
+    </div>
+    <div style="flex:1; border:1px solid #3A3A44; padding:6px;">
+      <div class="dim" style="font-size:8px;">unique mentions</div>
+      <div style="font-size:22px; color:#888; font-weight:bold;">847</div>
+      <div class="dim" style="font-size:8px;">across 4 platforms</div>
+    </div>
+  </div>
+
+  <!-- Row 2: Three third-width -->
+  <div style="flex:0.7; display:flex; gap:4px;">
+    <div style="flex:1; border:1px solid #FF44AA; padding:4px;">
+      <div class="dim" style="font-size:7px;">twitter</div>
+      <div style="font-size:14px; color:#FF44AA;">88%</div>
+      <div class="dim" style="font-size:7px;">12 sources</div>
+    </div>
+    <div style="flex:1; border:1px solid #00BFFF; padding:4px;">
+      <div class="dim" style="font-size:7px;">reddit</div>
+      <div style="font-size:14px; color:#00BFFF;">72%</div>
+      <div class="dim" style="font-size:7px;">8 sources</div>
+    </div>
+    <div style="flex:1; border:1px solid #00C96C; padding:4px;">
+      <div class="dim" style="font-size:7px;">news</div>
+      <div style="font-size:14px; color:#00C96C;">95%</div>
+      <div class="dim" style="font-size:7px;">4 sources</div>
+    </div>
+  </div>
+
+  <!-- Row 3: Full-width insight -->
+  <div style="flex:0.8; border:1px solid #FFB02D; padding:6px;">
+    <div style="font-size:10px; color:#AAA; line-height:1.3;">
+      Community overwhelmingly positive ahead of v2.0 launch. Most discussion centers around the new treasury rebalance proposal.
+    </div>
+  </div>
+
+  <!-- Row 4: Full-width action tags -->
+  <div style="flex:0.3; display:flex; gap:4px; align-items:center;">
+    <span class="tag tag-green" style="font-size:8px;">:track</span>
+    <span class="tag tag-cyan" style="font-size:8px;">:sentiment</span>
+    <span class="tag tag-pink" style="font-size:8px;">:detail</span>
+  </div>
+</div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     EXAMPLE 3: 2 blocks (generous mode)
+     ␐══════════════════════════════════════════════════════════ -->
+<div style="margin-bottom:8px; margin-top:20px;">
+  <span class="tag tag-green">2 BLOCKS — Generous (1:2 split)</span>
+  <span class="dim" style="margin-left:8px;">With only 2 blocks, each gets ~40% of card height</span>
+</div>
+
+<div class="card" style="border:1px solid #6C3BFF;">
+<div class="card-inner">
+  <div class="card-header">
+    <div class="top">
+      <span style="font-size:12px;">🆡 NEW PAIR</span>
+      <span class="tag tag-cyan" style="font-size:8px;">✦ INFO</span>
+      <span class="dim" style="flex:1; text-align:right; font-size:9px;">12m ago</span>
+    </div>
+    <div class="sub">PEPE/ETH · Uniswap V3 · DexScreener</div>
+  </div>
+  <div class="tsep" style="border-top:1px solid #00BFFF44;"></div>
+
+  <!-- Block 1: Large hero (takes ~55% of remaining) -->
+  <div style="flex:2.5; border:1px solid #00BFFF; padding:12px; margin-bottom:4px;">
+    <div class="trow" style="margin-bottom:6px;">
+      <span class="neon-cyan" style="font-size:12px;">🆡</span>
+      <span style="color:#888; font-size:11px;">NEW LIQUIDITY POOL</span>
+    </div>
+    <div style="font-size:28px; font-weight:bold; color:#E0E0EC; margin-top:4px;">PEPE / ETH</div>
+    <div style="color:#888; font-size:10px;">Uniswap V3 · 0.3% fee tier</div>
+    <div class="tsep" style="margin:6px 0;"></div>
+    <div style="display:flex; gap:10px;">
+      <div style="flex:1;">
+        <div class="dim" style="font-size:9px;">initial liq</div>
+        <div style="font-size:18px; color:#00C96C; font-weight:bold;">$50.2K</div>
+      </div>
+      <div style="flex:1;">
+        <div class="dim" style="font-size:9px;">age</div>
+        <div style="font-size:18px; color:#888;">14 min</div>
+      </div>
+      <div style="flex:1;">
+        <div class="dim" style="font-size:9px;">TX count</div>
+        <div style="font-size:18px; color:#888;">47</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Block 2: DEX links & tags (takes ~45%) -->
+  <div style="flex:1.5; border:1px solid #3A3A44; padding:10px;">
+    <div class="neon-blue" style="font-size:11px; margin-bottom:6px;">$ DEX LINKS</div>
+    <div style="font-size:12px; color:#00BFFF;">
+      <div><a style="color:#00BFFF; text-decoration:none;">dex.screener ↗</a></div>
+      <div><a style="color:#00BFFF; text-decoration:none;">dexs.tools ↗</a></div>
+      <div><a style="color:#00BFFF; text-decoration:none;">birk.chart ↗</a></div>
+    </div>
+    <div style="display:flex; gap:4px; margin-top:8px;">
+      <span class="tag tag-green" style="font-size:8px;">:track pair</span>
+      <span class="tag tag-cyan" style="font-size:8px;">:set alert</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     WIDTH CLASS REFERENCE
+     ␐══════════════════════════════════════════════════════════ -->
+<div style="margin-top:60px;">
+<h2 style="font-size:20px; color:#00BFFF; margin-bottom:16px;">◊ BLOCK WIDTH CLASSES — Natural Sizes</h2>
+
+<div style="border:1px solid #3A3A44; padding:16px; background:#0D0D14;">
+  <div style="font-size:12px; color:#AAA; line-height:1.6;">
+
+    <div style="margin-bottom:12px;">
+      <span class="neon-green" style="font-size:13px;">✦ FULL WIDTH (100%)</span>
+      <div style="font-size:11px; color:#888; margin-top:2px;">Always takes the whole row. Best for data that needs horizontal space.</div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <span class="tag tag-green">text (title)</span>
+      <span class="tag tag-green">text (body)</span>
+      <span class="tag tag-green">metrics_row</span>
+      <span class="tag tag-green">chart</span>
+      <span class="tag tag-green">risk_meter</span>
+      <span class="tag tag-green">sentiment</span>
+      <span class="tag tag-green">whale_card</span>
+      <span class="tag tag-green">progress</span>
+      <span class="tag tag-green">image</span>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <span class="neon-cyan" style="font-size:13px;">✦ HALF WIDTH (50%)</span>
+      <div style="font-size:11px; color:#888; margin-top:2px;">Pairs well. Two of these fit side by side. Good for metrics, compact data.</div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <span class="tag tag-cyan">metric</span>
+      <span class="tag tag-cyan">donut (small)</span>
+      <span class="tag tag-cyan">tags</span>
+      <span class="tag tag-cyan">divider (label)</span>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <span class="neon-pink" style="font-size:13px;">✦ THIRD WIDTH (33%)</span>
+      <div style="font-size:11px; color:#888; margin-top:2px;">Three to a row. Only when compact mode is needed (7+ blocks).</div>
+    </div>
+    <div>
+      <span class="tag tag-pink">metric (mini)</span>
+      <span class="tag tag-pink">divider (subtle)</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     SCALING REFERENCE
+     ␐══════════════════════════════════════════════════════════ -->
+<div style="margin-top:40px;">
+<h2 style="font-size:20px; color:#FF44AA; margin-bottom:16px;">◊ SCALING: How Blocks Fit the Fixed Card</h2>
+
+<div style="border:1px solid #3A3A44; padding:16px; background:#0D0D14;">
+  <div style="font-size:11px; color:#AAA; line-height:1.7;">
+    <div><strong>Card available height:</strong> ~520px (580 - 60 for header)</div>
+    <div><strong>Block natural total:</strong> Sum of all block heights at their "ideal" size</div>
+    <div style="margin-top:8px;">
+      <table style="width:100%; border-collapse:collapse; font-size:11px;">
+        <tr style="border-bottom:1px solid #3A3A44;">
+          <th style="text-align:left; padding:6px; color:#888;">Scenario</th>
+          <th style="text-align:left; padding:6px; color:#888;">Scale Factor</th>
+          <th style="text-align:left; padding:6px; color:#888;">Result</th>
+        </tr>
+        <tr style="border-bottom:1px solid #2A2A34;">
+          <td style="padding:6px;">natural total &lt; 520px</td>
+          <td style="padding:6px;"><span class="neon-green">×1.0 to ×1.5</span></td>
+          <td style="padding:6px; color:#888;">Blocks scale UP to fill card. Generous spacing.</td>
+        </tr>
+        <tr style="border-bottom:1px solid #2A2A34;">
+          <td style="padding:6px;">natural total ≈ 520px</td>
+          <td style="padding:6px;"><span class="neon-cyan">×1.0</span></td>
+          <td style="padding:6px; color:#888;">Perfect fit. Blocks render at natural size.</td>
+        </tr>
+        <tr style="border-bottom:1px solid #2A2A34;">
+          <td style="padding:6px;">natural total 520-780px</td>
+          <td style="padding:6px;"><span class="neon-yellow">×0.66 to ×1.0</span></td>
+          <td style="padding:6px; color:#888;">Blocks scale DOWN. Still readable, compact but comfortable.</td>
+        </tr>
+        <tr style="border-bottom:1px solid #2A2A34;">
+          <td style="padding:6px;">natural total 780-1040px</td>
+          <td style="padding:6px;"><span class="neon-orange">×0.5 to ×0.66</span></td>
+          <td style="padding:6px; color:#888;">Dense mode. Mini blocks, 3-col splits. Some T2 blocks → detail.</td>
+        </tr>
+        <tr>
+          <td style="padding:6px;">natural total &gt; 1040px</td>
+          <td style="padding:6px;"><span class="neon-red">×0.5 min</span></td>
+          <td style="padding:6px; color:#888;">Overflow mode. All T2+T3 → detail. Card shows headlines only.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     COMPARISON OF ALL OPTIONS
+     ␐══════════════════════════════════════════════════════════ -->
+<div style="margin-top:60px;">
+<h2 style="font-size:20px; color:#FF3B1D; margin-bottom:16px;">◊ OPTION COMPARISON MATRIX</h2>
+
+<div style="border:1px solid #3A3A44; padding:16px; background:#0D0D14;">
+  <table style="width:100%; border-collapse:collapse; font-size:11px;">
+    <tr style="border-bottom:1px solid #3A3A44;">
+      <th style="text-align:left; padding:8px; color:#888;">Option</th>
+      <th style="text-align:left; padding:8px; color:#888;">How Blocks Fit</th>
+      <th style="text-align:left; padding:8px; color:#888;">Pros</th>
+      <th style="text-align:left; padding:8px; color:#888;">Cons</th>
+    </tr>
+    <tr style="border-bottom:1px solid #2A2A34;">
+      <td style="padding:8px; color:#00BFFF;">A: 2-Col Grid</td>
+      <td style="padding:8px; color:#888;">All blocks same height, 1-col or 2-col width</td>
+      <td style="padding:8px; color:#00C96C;">Most predictable. Dead simple math.</td>
+      <td style="padding:8px; color:#FF7B2D;">Forces some blocks into half-width awkwardly.</td>
+    </tr>
+    <tr style="border-bottom:1px solid #2A2A34;">
+      <td style="padding:8px; color:#FF44AA;">B: Priority Tier</td>
+      <td style="padding:8px; color:#888;">T1 blocks big, T2+ shrink/overflow</td>
+      <td style="padding:8px; color:#00C96C;">Best data prioritization. Detail page is natural.</td>
+      <td style="padding:8px; color:#FF7B2D;">Need LLM to tag priorities. Less predictable layout.</td>
+    </tr>
+    <tr style="border-bottom:1px solid #2A2A34;">
+      <td style="padding:8px; color:#6C3BFF;">C: Equal Units</td>
+      <td style="padding:8px; color:#888;">Card ÷ N = equal rows for all</td>
+      <td style="padding:8px; color:#00C96C;">Perfect consistency. Cleanest code.</td>
+      <td style="padding:8px; color:#FF7B2D;">One-size-fits-all. Charts cramped with many blocks.</td>
+    </tr>
+    <tr>
+      <td style="padding:8px; color:#00C96C;">D: Flex Waterfall</td>
+      <td style="padding:8px; color:#888;">Width-class based. Blocks flow &amp; wrap naturally.</td>
+      <td style="padding:8px; color:#00C96C;">Most natural. Blocks sizes match their content. No forced sizing.</td>
+      <td style="padding:8px; color:#FF7B2D;">Most complex layout engine. Row heights can vary.</td>
+    </tr>
+  </table>
+</div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     RECOMMENDATION
+     ␐══════════════════════════════════════════════════════════ -->
+<div style="margin-top:60px;">
+<h2 style="font-size:20px; color:#00C96C; margin-bottom:16px;">◊ MY TAKE: HYBRID RECOMMENDATION</h2>
+
+<div style="border:1px solid #00C96C; padding:16px; background:#0D0D14;">
+  <div style="font-size:12px; color:#AAA; line-height:1.6;">
+    <div style="margin-bottom:12px;">I think the best approach combines elements from multiple options:</div>
+    <div><span class="neon-green">✦</span> <strong>Use Option D (Flex Waterfall)</strong> as the base rendering engine — blocks have natural width classes and flow naturally</div>
+    <div><span class="neon-green">✦</span> <strong>Borrow Option B's priority tiers</strong> for the card vs detail split (T1 always on card, T2 flexible, T3 detail)</div>
+    <div><span class="neon-green">✦</span> <strong>Scale proportionally</strong> like Option A — total block height vs card height = scale factor</div>
+    <div style="margin-top:8px; color:#888;">
+      This gives us: Natural block sizes + Intelligent overflow + Always-filled card + No awkward forced sizes
+    </div>
+  </div>
+</div>
+</div>
+
+<div style="margin-top:60px; border-top:1px solid #2A2A34; padding-top:16px; font-size:10px; color:#555; text-align:center;">
+  Crypto AI Portfolio · Flex Waterfall Option · Aug 2026<br>
+  Cards: 430w × 580h fixed · Flex Waterfall layout · Scale + overflow system
+</div>
+
+</div><!-- end page -->
+</body>
+</html>

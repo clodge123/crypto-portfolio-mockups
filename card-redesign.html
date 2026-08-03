@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200, initial-scale=1">
+<title>Card Redesign — Design Options</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #08080D; color: #E0E0EC; font-family: 'Courier New', 'Consolas', monospace; padding: 32px; }
+  .page { max-width: 1150px; margin: 0 auto; }
+
+  h1 { font-size: 26px; color: #FF3B1D; margin-bottom: 4px; }
+  .subtitle { color: #888; font-size: 12px; margin-bottom: 8px; }
+  .prompt { font-size: 11px; color: #6C3BFF; margin-bottom: 32px; }
+
+  /* ═ Navigation */
+  .nav { display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap; }
+  .nav a { font-size: 12px; padding: 6px 14px; border: 1px solid #3A3A44; background: #08080D; color: #AAA; text-decoration: none; }
+  .nav a:hover { color: #00BFFF; border-color: #00BFFF; }
+
+  /* ═ Option Section */
+  .option { margin: 48px 0; }
+  .option-header { margin-bottom: 20px; }
+  .option-header h2 { font-size: 20px; color: #00BFFF; }
+  .option-header .desc { font-size: 12px; color: #888; line-height: 1.5; margin-top: 6px; }
+  .option-header .pros { color: #00C96C; font-size: 11px; }
+  .option-header .cons { color: #FF7B2D; font-size: 11px; }
+
+  /* ═ Shared helpers */
+  .dim { color: #666; }
+  .muted { color: #888; }
+
+  .tag { font-size: 9px; padding: 2px 7px; display: inline-block; background: #08080D; border: 1px solid #3A3A44; }
+  .tag-red { border-color: #FF3B1D; color: #FF3B1D; }
+  .tag-orange { border-color: #FF7B2D; color: #FF7B2D; }
+  .tag-yellow { border-color: #FFB02D; color: #FFB02D; }
+  .tag-cyan { border-color: #00BFFF; color: #00BFFF; }
+  .tag-green { border-color: #00C96C; color: #00C96C; }
+  .tag-pink { border-color: #FF44AA; color: #FF44AA; }
+  .tag-blue { border-color: #6C3BFF; color: #6C3BFF; }
+
+  .trow { display: flex; align-items: center; gap: 6px; }
+  .tsep { height: 1px; margin: 4px 0; border-top: 1px solid #2A2A34; }
+  .tsep-red { height: 1px; margin: 4px 0; border-top: 1px solid #FF3B1D44; }
+  .tsep-orange { height: 1px; margin: 4px 0; border-top: 1px solid #FF7B2D44; }
+  .tsep-cyan { height: 1px; margin: 4px 0; border-top: 1px solid #00BFFF44; }
+  .tsep-yellow { height: 1px; margin: 4px 0; border-top: 1px solid #FFB02D44; }
+
+  .neon-red { color: #FF3B1D; }
+  .neon-orange { color: #FF7B2D; }
+  .neon-yellow { color: #FFB02D; }
+  .neon-cyan { color: #00BFFF; }
+  .neon-green { color: #00C96C; }
+  .neon-blue { color: #6C3BFF; }
+  .neon-pink { color: #FF44AA; }
+
+  /* ═ CARD sizes */
+  /* Card W = 420 (same as before, slight stretch to ~430) */
+  .card-430 { width: 430px; }
+
+  /* ═===═===═===═===═===═===═===═===═===═===═===═===═===═===
+     OPTION A : 2-Column Grid — Blocks Snap to Grid Cells
+     ═===═===═===═===═===═===═===═===═===═===═===═===═===═=== */
+  .card-a { width: 430px; height: 580px; display: inline-block; margin: 12px; position: relative; vertical-align: top; background: #08080D; border: 1px solid #3A3A44; }
+  .card-a-inner { padding: 10px; font-size: 10px; line-height: 1.4; display: flex; flex-direction: column; height: 100%; }
+
+  /* ═ Block variants for Option A */
+  .a-header { padding: 0; margin-bottom: 4px; }
+  .a-block { margin: 2px 0; }
+  .a-grid { display: flex; flex-wrap: wrap; gap: 3px; }
+  .a-cell-w1 { width: 100%; }
+  .a-cell-w2 { width: calc(50% - 1.5px); }
+  .a-cell-h1 { }
+  .a-cell-h2 { }
+  .a-cell-h3 { }
+
+  /* ═===═===═===═===═===═===═===═===═===═===═===═===═===═===
+     OPTION B : Single-Column Stack — Cards Are Tall, Full Width
+     ═===═===═===═===═===═===═===═===═===═===═===═===═===═=== */
+  .card-b { width: 430px; height: 580px; display: inline-block; margin: 12px; position: relative; vertical-align: top; background: #08080D; border: 1px solid #3A3A44; }
+
+  /* ═===═===═===═===═===═===═===═===═===═===═===═===═===═===
+     OPTION C : Tiered Priority — Blocks Have Priority Tanks
+     ═===═===═===═===═===═===═===═===═===═===═===═===═===═=== */
+  .card-c { width: 430px; height: 580px; display: inline-block; margin: 12px; position: relative; vertical-align: top; background: #08080D; border: 1px solid #3A3A44; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<h1>🪣 CARD REDESIGN  —  FIXED CARD, ADAPTIVE BLOCKS</h1>
+<div class="subtitle">Cards stay same size (430w × 580h). Blocks dynamically resize based on count. 3 design options.</div>
+<div class="prompt">_ <span class="dim">crypto-feed@jarvis · card=580h fixed · blocks adapt · aug 2026_</span></div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     SECTION: DESIGN PHILOSOPHY
+     ␐══════════════════════════════════════════════════════════ -->
+<div style="border:1px solid #3A3A44; padding:14px; margin-bottom:40px; background:#0D0D14;">
+  <div class="neon-cyan" style="font-size:13px; margin-bottom:8px;">🆡 DESIGN PRINCIPLES</div>
+  <div style="font-size:11px; color:#AAA; line-height:1.6;">
+    <div>• Card = fixed 430w × 580h (taller Instagram-style rectangle)</div>
+    <div>• Blocks dynamically allocate card real estate based on <span class="neon-green">count</span></div>
+    <div>• <span class="neon-yellow">2-3 blocks</span> → each gets generous space (1/2 or 1/3 of card each)</div>
+    <div>• <span class="neon-yellow">4-7 blocks</span> → medium sizing, compact layout with grid</div>
+    <div>• <span class="neon-yellow">8+ blocks</span> → tight grid, mini-block mode, swipe/scroll inside</div>
+    <div>• Block types have <span class="neon-blue">minimum heights</span> — some always get more room</div>
+    <div>• Content overflow → slides to <span class="neon-pink">detail page</span> (not cut off)</div>
+  </div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     OPTION A: ADAPTIVE 2-Column Grid
+     ␐══════════════════════════════════════════════════════════ -->
+<div class="option">
+<div class="option-header">
+  <h2>◊ OPTION A: ADAPTIVE 2-COLUMN GRID</h2>
+  <div class="desc">Blocks snap to a 2-column grid within the fixed card. Block sizes adjust based on how many blocks exist.</div>
+  <div class="pros" style="margin-top:4px;">✓ Predictable layout · Always fills card evenly · No dead space</div>
+  <div class="cons">✗ Some blocks forced into half-width when they'd look better full · Grid math gets weird with odd counts</div>
+</div>
+
+<!-- ── Example 1: 3 blocks (generous sizing) ── -->
+<div style="margin-bottom:8px;">
+  <span class="tag tag-green">3 BLOCKS</span>
+  <span class="dim" style="margin-left:8px;">Each block gets ~1/3 of card height</span>
+</div>
+
+<div class="card-a" style="border:1px solid #00C96C;">
+  <div class="card-a-inner">
+    <!-- ── Header ── -->
+    <div class="a-header">
+      <div class="trow">
+        <span style="font-size:12px;">🤖 PEPE</span>
+        <span class="tag tag-red" style="font-size:8px;padding:1px 6px;">● CRITICAL</span>
+        <span class="dim" style="flex:1;text-align:right;font-size:9px;">2m ago</span>
+      </div>
+      <div style="color:#555; font-size:9px; margin-top:1px;">ETH · DexScreener</div>
+    </div>
+
+    <div class="tsep-red"></div>
+
+    <!-- ── 3 BLOCKS, each gets 1/3 of remaining space ── -->
+    <!-- Block 1: Title text (1/3 height ≈ big text) -->
+    <div style="flex:1; display:flex; align-items:center; justify-content:center; border:1px dashed #2A2A34; padding:10px;">
+      <div style="text-align:center;">
+        <div style="font-size:28px; font-weight:bold; color:#E0E0EC; text-align:center;">$0.000524</div>
+        <div style="font-size:16px; color:#00C96C; margin-top:2px;">🛡 +112%</div>
+        <div class="dim" style="font-size:9px; margin-top:4px;">24h change · updated 2m ago</div>
+      </div>
+    </div>
+
+    <!-- Block 2: metrics row (1/3 height) -->
+    <div style="flex:1; border:1px dashed #2A2A34; padding:8px;">
+      <div class="dim" style="font-size:9px; margin-bottom:4px;">-- Market Snapshot --</div>
+      <div style="display:flex; flex-wrap:wrap; gap:4px;">
+        <div style="flex:1; min-width:90px;"><span class="dim" style="font-size:9px;">volume</span><br><span style="font-size:13px; color:#888;">$12.4M</span></div>
+        <div style="flex:1; min-width:90px;"><span class="dim" style="font-size:9px;">liquidity</span><br><span style="font-size:13px; color:#888;">$14.2K</span></div>
+        <div style="flex:1; min-width:90px;"><span class="dim" style="font-size:9px;">m.cap</span><br><span style="font-size:13px; color:#888;">$245.6M</span></div>
+        <div style="flex:1; min-width:90px;"><span class="dim" style="font-size:9px;">holders</span><br><span style="font-size:13px; color:#888;">42.8K</span></div>
+      </div>
+    </div>
+
+    <!-- Block 3: insight text (1/3 height) -->
+    <div style="flex:1; border:1px dashed #2A2A34; padding:6px;">
+      <div style="font-size:11px; color:#AAA; line-height:1.4;">
+        <span class="neon-red">◆</span> Whales accumulating across 3 DEX pairs. Social volume surging on X and Telegram.
+      </div>
+      <div style="display:flex; gap:4px; margin-top:6px;">
+        <span class="tag tag-green" style="font-size:8px; padding:2px 8px;">:watch</span>
+        <span class="tag tag-yellow" style="font-size:8px; padding:2px 8px;">:alert -20%</span>
+        <span class="tag tag-cyan" style="font-size:8px; padding:2px 8px;">:detail</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Example 2: 5 blocks (medium sizing) ── -->
+<div style="margin-bottom:8px; margin-top:16px;">
+  <span class="tag tag-yellow">5 BLOCKS</span>
+  <span class="dim" style="margin-left:8px;">Each block gets ~1/5 of card height · 2-col grid for small blocks</span>
+</div>
+
+<div class="card-a" style="border:1px solid #FFB02D;">
+  <div class="card-a-inner">
+    <div class="a-header">
+      <div class="trow">
+        <span style="font-size:12px;">✦ WHALE</span>
+        <span class="tag tag-orange" style="font-size:8px;">○ ALERT</span>
+        <span class="dim" style="flex:1;text-align:right;font-size:9px;">4m ago</span>
+      </div>
+      <div style="color:#555; font-size:9px;">BONK · SOL</div>
+    </div>
+    <div class="tsep-orange"></div>
+
+    <!-- Block 1: whale hero (2 cols × 2 units) -->
+    <div style="flex:2; border:1px dashed #2A2A34; padding:8px;">
+      <div class="trow">
+        <span style="font-size:24px; color:#FF7B2D;">🐋 $248K</span>
+        <span class="dim" style="font-size:10px;">whale moved BONK</span>
+      </div>
+      <div style="display:flex; gap:3px; margin-top:4px;">
+        <div style="flex:1; font-size:9px;"><span class="dim">from:</span><br>DezXA....B263</div>
+        <div style="flex:1; font-size:9px;"><span class="dim">amount:</span><br>248M BONK</div>
+        <div style="flex:1; font-size:9px;"><span class="dim">value:</span><br>$744</div>
+      </div>
+    </div>
+
+    <!-- Block 2: impact warning (2 cols × 1 unit) -->
+    <div style="flex:1; border:1px solid #FFB02D; padding:5px; background:#FFB02D11;">
+      <div style="font-size:9px;">
+        <span class="neon-yellow">⚠</span> this wallet holds 2.4% of supply. previous move 3mo ago.
+      </div>
+    </div>
+
+    <!-- Block 3-4: two metrics side-by-side (1 col × 1 unit each) -->
+    <div style="flex:1; display:flex; gap:3px;">
+      <div style="flex:1; border:1px dashed #2A2A34; padding:5px;">
+        <div class="dim" style="font-size:8px;">holdings</div>
+        <div style="font-size:14px; color:#FF7B2D;">2.4%</div>
+        <div class="dim" style="font-size:8px;">of total supply</div>
+      </div>
+      <div style="flex:1; border:1px dashed #2A2A34; padding:5px;">
+        <div class="dim" style="font-size:8px;">last move</div>
+        <div style="font-size:14px; color:#888;">3 mo</div>
+        <div class="dim" style="font-size:8px;">inactivity</div>
+      </div>
+    </div>
+
+    <!-- Block 5: tags (1 unit) -->
+    <div style="flex:0.5; display:flex; gap:4px; align-items:center;">
+      <span class="tag tag-yellow" style="font-size:8px; padding:2px 8px;">:track whale</span>
+      <span class="tag tag-cyan" style="font-size:8px; padding:2px 8px;">:source</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Example 3: 7+ blocks (compact grid mode) ── -->
+<div style="margin-bottom:8px; margin-top:16px;">
+  <span class="tag tag-red">7+ BLOCKS</span>
+  <span class="dim" style="margin-left:8px;">Compact grid — blocks get tight, scrollable area inside card</span>
+</div>
+
+<div class="card-a" style="border:1px solid #FF3B1D;">
+  <div class="card-a-inner">
+    <div class="a-header">
+      <div class="trow">
+        <span style="font-size:11px;">🆡 PEPE ANALYSIS</span>
+        <span class="tag tag-red" style="font-size:7px;">● CRITICAL</span>
+        <span class="dim" style="flex:1;text-align:right;font-size:8px;">10m ago</span>
+      </div>
+    </div>
+    <div class="tsep-red"></div>
+
+    <!-- 7+ blocks → everything is miniaturized, 2-col grid with small cells -->
+    <div style="flex:1; display:flex; flex-direction:column; gap:2px;">
+
+      <!-- Row 1: 2 mini metrics side by side -->
+      <div style="display:flex; gap:2px;">
+        <div style="flex:1; border:1px solid #3A3A44; padding:4px;">
+          <div class="dim" style="font-size:7px;">price</div>
+          <div style="font-size:11px; color:#00C96C;">$0.0005</div>
+        </div>
+        <div style="flex:1; border:1px solid #3A3A44; padding:4px;">
+          <div class="dim" style="font-size:7px;">24h</div>
+          <div style="font-size:11px; color:#00C96C;">+112%</div>
+        </div>
+      </div>
+
+      <!-- Row 2: 3 mini metrics -->
+      <div style="display:flex; gap:2px;">
+        <div style="flex:1; border:1px solid #3A3A44; padding:3px;">
+          <div class="dim" style="font-size:7px;">vol</div>
+          <div style="font-size:10px; color:#888;">$12.4M</div>
+        </div>
+        <div style="flex:1; border:1px solid #3A3A44; padding:3px;">
+          <div class="dim" style="font-size:7px;">liq</div>
+          <div style="font-size:10px; color:#888;">$14.2K</div>
+        </div>
+        <div style="flex:1; border:1px solid #3A3A44; padding:3px;">
+          <div class="dim" style="font-size:7px;">mcap</div>
+          <div style="font-size:10px; color:#888;">$245M</div>
+        </div>
+      </div>
+
+      <!-- Row 3: Text block -->
+      <div style="border:1px solid #3A3A44; padding:4px;">
+        <div style="font-size:9px; color:#AAA; line-height:1.3;">
+          <span class="neon-red">◆</span> 3 DEX pairs accumulating. Social volume surging on X.
+        </div>
+      </div>
+
+      <!-- Row 4: Mini list -->
+      <div style="border:1px solid #3A3A44; padding:4px;">
+        <div style="font-size:8px; color:#888;">
+          <div><span class="neon-red">!</span> TVL dropped 40%</div>
+          <div><span class="neon-yellow">!</span> Liquidity down 65%</div>
+          <div><span class="neon-green">✓</span> Team is doxxed</div>
+        </div>
+      </div>
+
+      <!-- Row 5: Tags row -->
+      <div style="display:flex; gap:3px; padding:3px;">
+        <span class="tag tag-green" style="font-size:7px;">:watch</span>
+        <span class="tag tag-yellow" style="font-size:7px;">:alert</span>
+        <span class="tag tag-cyan" style="font-size:7px;">:detail</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end option A -->
+
+<!-- ␐══════════════════════════════════════════════════════════
+     OPTION B: PRIORITY-TIERED STaCK
+     ␐══════════════════════════════════════════════════════════ -->
+<div class="option">
+<div class="option-header">
+  <h2>◊ OPTION B: PRIORITY-TIERED STaCK</h2>
+  <div class="desc">Every block has a priority tier (P1/P2/P3). P1 blocks always render at full size. P2/P3 shrink proportionally. Overflow blocks → detail page.</div>
+  <div class="pros" style="margin-top:4px;">✓ Most important data always readable · No awkward half-widths · Detail page is natural overflow</div>
+  <div class="cons">✗ Less predictable layout · Card may look empty with few blocks · Priority system needs LLM cooperation</div>
+</div>
+
+<!-- ── Example 1: 4 blocks — clean spread ── -->
+<div style="margin-bottom:8px;">
+  <span class="tag tag-green">4 BLOCKS (2P1 + 2P2)</span>
+</div>
+
+<div class="card-b" style="border:1px solid #00BFFF;">
+  <div style="padding:10px; font-size:10px; line-height:1.4; display:flex; flex-direction:column; height:100%;">
+    <!-- Header (not a block, always present) -->
+    <div>
+      <div class="trow">
+        <span style="font-size:12px;">🆡 NEW PAIR</span>
+        <span class="tag tag-cyan" style="font-size:8px;">✦ INFO</span>
+        <span class="dim" style="flex:1;text-align:right;font-size:9px;">12m ago</span>
+      </div>
+      <div style="color:#555; font-size:9px;">PEPE/ETH · Uniswap V3</div>
+    </div>
+    <div class="tsep-cyan"></div>
+
+    <!-- P1 Block: Price hero — BIG -->
+    <div style="flex:2; border:1px solid #00BFFF; padding:10px; margin-bottom:4px;">
+      <div class="trow"><span class="neon-cyan" style="font-size:11px;">🆡</span> <span style="color:#888; font-size:10px;">NEW LIQUIDITY POOL</span></div>
+      <div style="font-size:22px; margin-top:4px;">PEPE / ETH</div>
+      <div style="color:#888; font-size:9px;">Uniswap V3 · 0.3% fee tier</div>
+      <div class="tsep" style="margin:4px 0;"></div>
+      <div class="trow"><span class="dim" style="font-size:9px;">initial liq</span><span style="flex:1;text-align:right; color:#00C96C; font-size:13px; font-weight:bold;">$50.2K</span></div>
+      <div class="trow"><span class="dim" style="font-size:9px;">age</span><span style="flex:1;text-align:right; color:#888; font-size:11px;">14 minutes</span></div>
+      <div class="trow"><span class="dim" style="font-size:9px;">TX count</span><span style="flex:1;text-align:right; color:#888; font-size:11px;">47</span></div>
+    </div>
+
+    <!-- P2 Blocks: 2 metrics side by side -->
+    <div style="flex:1; display:flex; gap:4px;">
+      <div style="flex:1; border:1px solid #3A3A44; padding:6px;">
+        <div class="dim" style="font-size:8px;">liquidity trend</div>
+        <div style="font-size:16px; color:#00C96C;">🛡 UP</div>
+      </div>
+      <div style="flex:1; border:1px solid #3A3A44; padding:6px;">
+        <div class="dim" style="font-size:8px;">TX activity</div>
+        <div style="font-size:16px; color:#888;">47 TX</div>
+      </div>
+    </div>
+
+    <!-- P2: Tags -->
+    <div style="flex:0.5; display:flex; gap:4px; align-items:center;">
+      <span class="tag tag-green" style="font-size:8px;">:track</span>
+      <span class="tag tag-cyan" style="font-size:8px;">:dex links</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Example 2: 2 blocks (generous, detail page gets rest) ── -->
+<div style="margin-bottom:8px; margin-top:16px;">
+  <span class="tag tag-green">2 BLOCKS + 3 OVERFLOW → DETAIL</span>
+  <span class="dim" style="margin-left:8px;">Card only shows P1 blocks, rest moves to detail page</span>
+</div>
+
+<div class="card-b" style="border:1px solid #FF44AA;">
+  <div style="padding:10px; font-size:10px; line-height:1.4; display:flex; flex-direction:column; height:100%;">
+    <div>
+      <div class="trow">
+        <span style="font-size:12px;">■ SENTIMENT</span>
+        <span class="tag tag-pink" style="font-size:8px;">✦ WATCH</span>
+        <span class="dim" style="flex:1;text-align:right;font-size:9px;">30m ago</span>
+      </div>
+      <div style="color:#555; font-size:9px;">GAL · Social</div>
+    </div>
+    <div class="tsep" style="border-top:1px solid #FF44AA44;"></div>
+
+    <!-- P1: Sentiment gauge — takes 2/3 of card -->
+    <div style="flex:3; border:1px solid #FF44AA; padding:12px; margin-bottom:4px;">
+      <div class="dim" style="font-size:9px; margin-bottom:6px;">-- Social Sentiment --</div>
+      <div style="height:12px; display:flex; gap:0; margin-bottom:6px;">
+        <div style="flex:5.5; background:#00C96C; border:1px solid #00C96C; height:12px;"></div>
+        <div style="flex:0.5; background:#888; border:1px solid #888; height:12px;"></div>
+        <div style="flex:1; background:#FF3B1D; border:1px solid #FF3B1D; height:12px;"></div>
+      </div>
+      <div class="trow" style="font-size:11px;">
+        <span class="neon-green">+92%</span>
+        <span class="dim">positive</span>
+        <span style="flex:1;"></span>
+        <span class="neon-red">-5%</span>
+        <span class="dim">negative</span>
+      </div>
+      <div style="margin-top:8px; font-size:10px; color:#AAA;">
+        <div><span class="neon-green">+</span> Twitter: 88% positive (12 sources)</div>
+        <div><span class="neon-green">+</span> Reddit: 72% positive (8 sources)</div>
+        <div><span class="neon-green">+</span> News: 95% positive (4 sources)</div>
+      </div>
+    </div>
+
+    <!-- P2: Key insight mini block -->
+    <div style="flex:1; border:1px solid #3A3A44; padding:6px;">
+      <div class="dim" style="font-size:8px;">key insight</div>
+      <div style="font-size:10px; color:#AAA;">Community overwhelmingly positive ahead of v2.0 launch.</div>
+    </div>
+
+    <!-- Overflow indicator -->
+    <div style="flex:0.4; border:1px solid #FF44AA; background:#FF44AA11; padding:3px;">
+      <div style="font-size:8px; color:#FF44AA; text-align:center;">
+        +3 more blocks on detail page (chart, whale, proposals)
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end option B -->
+
+<!-- ␐══════════════════════════════════════════════════════════
+     OPTION C: DYNAMIC EQUAL-SIZE BLOCKS
+     ␐══════════════════════════════════════════════════════════ -->
+<div class="option">
+<div class="option-header">
+  <h2>◊ OPTION C: EQUAL-SIZE BLOCK UNITS</h2>
+  <div class="desc">Card is divided into N equal vertical units (determined by block count). Every block gets the same height. Block width is either 1-column (full) or 2-column (half) based on type.</div>
+  <div class="pros" style="margin-top:4px;">✓ Perfectly consistent · Clean math · No priority disputes · Most predictable render</div>
+  <div class="cons">✗ Some blocks may feel cramped or over-spaced · One-size-fits-all loses nuance</div>
+</div>
+
+<!-- ── Example 1: 3 blocks → 3 equal units ── -->
+<div style="margin-bottom:8px;">
+  <span class="tag tag-green">3 BLOCKS</span>
+  <span class="dim" style="margin-left:8px;">Card ÷ 3 = 3 equal rows, ~155px each</span>
+</div>
+
+<div class="card-c" style="border:1px solid #6C3BFF;">
+  <div style="padding:10px; font-size:10px; line-height:1.4; display:flex; flex-direction:column; height:100%;">
+    <div>
+      <div class="trow">
+        <span style="font-size:12px;">■ PEPE</span>
+        <span class="tag tag-red">● CRITICAL</span>
+        <span class="dim" style="flex:1;text-align:right;font-size:9px;">2m ago</span>
+      </div>
+    </div>
+    <div class="tsep-red"></div>
+
+    <!-- 3 equal rows -->
+    <div style="flex:1; border:1px dashed #2A2A34; padding:6px; align-items:center; justify-content:center;">
+      <div style="text-align:center;">
+        <span style="font-size:24px; color:#00C96C;">$0.000524</span>
+        <span style="font-size:14px; color:#00C96C; margin-left:6px;">+112%</span>
+      </div>
+    </div>
+
+    <div style="flex:1; border:1px dashed #2A2A34; padding:6px;">
+      <div style="display:flex; gap:6px;">
+        <div style="flex:1; text-align:center;">
+          <div class="dim" style="font-size:8px;">volume</div>
+          <div style="font-size:14px; font-weight:bold; color:#888;">$12.4M</div>
+        </div>
+        <div style="flex:1; text-align:center;">
+          <div class="dim" style="font-size:8px;">liquidity</div>
+          <div style="font-size:14px; font-weight:bold; color:#888;">$14.2K</div>
+        </div>
+        <div style="flex:1; text-align:center;">
+          <div class="dim" style="font-size:8px;">MCap</div>
+          <div style="font-size:14px; font-weight:bold; color:#888;">$245M</div>
+        </div>
+        <div style="flex:1; text-align:center;">
+          <div class="dim" style="font-size:8px;">holders</div>
+          <div style="font-size:14px; font-weight:bold; color:#888;">42.8K</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="flex:1; border:1px dashed #2A2A34; padding:6px;">
+      <div style="font-size:10px; color:#AAA; line-height:1.4;">
+        <span class="neon-red">◆</span> Whales accumulating across 3 DEX pairs. Social volume surging.
+      </div>
+      <div style="display:flex; gap:4px; margin-top:4px;">
+        <span class="tag tag-green" style="font-size:7px;">:watch</span>
+        <span class="tag tag-yellow" style="font-size:7px;">:alert -20%</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Example 2: 5 blocks → 5 equal units ── -->
+<div style="margin-bottom:8px; margin-top:16px;">
+  <span class="tag tag-yellow">5 BLOCKS</span>
+  <span class="dim" style="margin-left:8px;">Card ÷ 5 = 5 rows, ~95px each, blocks use 1-col or 2-col splits</span>
+</div>
+
+<div class="card-c" style="border:1px solid #FFB02D;">
+  <div style="padding:10px; font-size:10px; line-height:1.4; display:flex; flex-direction:column; height:100%;">
+    <div>
+      <div class="trow">
+        <span style="font-size:11px;">✦ WHALE ALERT</span>
+        <span class="tag tag-orange" style="font-size:7px;">○ ALERT</span>
+        <span class="dim" style="flex:1;text-align:right;font-size:8px;">4m ago</span>
+      </div>
+    </div>
+    <div class="tsep-orange"></div>
+
+    <!-- 5 equal rows -->
+    <div style="flex:1; border:1px dashed #2A2A34; padding:4px;">
+      <div class="trow"><span style="font-size:16px; color:#FF7B2D;">🐋 $248K</span><span class="dim" style="font-size:8px;">BONK moved</span></div>
+      <div style="font-size:9px; color:#888;">DezXA....B263 → 0x9F3E....21A0</div>
+    </div>
+
+    <div style="flex:1; border:1px dashed #2A2A34; padding:4px;">
+      <div class="trow"><span class="dim" style="font-size:8px;">amount</span><span style="flex:1;text-align:right; font-size:11px;">248M BONK</span></div>
+      <div class="trow"><span class="dim" style="font-size:8px;">value</span><span style="flex:1;text-align:right; font-size:11px;">$744</span></div>
+    </div>
+
+    <div style="flex:1; border:1px dashed #2A2A34; padding:4px;">
+      <div style="font-size:9px; color:#AAA;">
+        <span class="neon-yellow">⚠</span> wallet holds 2.4% of total supply. Previous move 3mo ago.
+      </div>
+    </div>
+
+    <div style="flex:1; border:1px dashed #2A2A34; padding:4px;">
+      <div style="display:flex; gap:3px;">
+        <div style="flex:1; text-align:center;">
+          <div class="dim" style="font-size:7px;">size</div>
+          <div style="font-size:12px; font-weight:bold; color:#FF7B2D;">2.4%</div>
+        </div>
+        <div style="flex:1; text-align:center;">
+          <div class="dim" style="font-size:7px;">inactive</div>
+          <div style="font-size:12px; font-weight:bold; color:#888;">3 mo</div>
+        </div>
+        <div style="flex:1; text-align:center;">
+          <div class="dim" style="font-size:7px;">TX type</div>
+          <div style="font-size:12px; font-weight:bold; color:#888;">sell</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="flex:1; display:flex; gap:4px; align-items:center; border:1px dashed #2A2A34; padding:3px;">
+      <span class="tag tag-yellow" style="font-size:7px;">:track whale</span>
+      <span class="tag tag-cyan" style="font-size:7px;">:source</span>
+      <span class="tag tag-green" style="font-size:7px;">:alert</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- end option C -->
+
+<!-- ␐══════════════════════════════════════════════════════════
+     SECTION: BLOCK TYPE REFERENCE CARDS
+     ␐══════════════════════════════════════════════════════════ -->
+<div style="margin-top:60px;">
+<h2 style="font-size:20px; color:#FF44AA; margin-bottom:20px;">◊ BLOCK TYPE SHOWCASE — Each Block at Its Ideal Aspect Ratio</h2>
+<div class="subtitle">These show each block type at its natural size. The layout system would scale them up/down to fit the card.</div>
+
+<div style="display:flex; flex-wrap:wrap; gap:12px;">
+
+  <!-- text (title) block -->
+  <div style="width:280px; height:160px; background:#08080D; border:1px solid #3A3A44; padding:10px;">
+    <div class="dim" style="font-size:8px; margin-bottom:4px;">text (title)</div>
+    <div style="font-size:20px; font-weight:bold; color:#E0E0EC;">Proposal #42: Treasury Rebalance</div>
+  </div>
+
+  <!-- text (body) block -->
+  <div style="width:280px; height:120px; background:#08080D; border:1px solid #3A3A44; padding:10px;">
+    <div class="dim" style="font-size:8px; margin-bottom:4px;">text (body)</div>
+    <div style="font-size:12px; color:#AAA; line-height:1.4;">
+      Major tokenomics overhaul incoming: staking rewards increased 3x, new 3% buy/sell tax starting next week.
+    </div>
+  </div>
+
+  <!-- metric block -->
+  <div style="width:130px; height:120px; background:#08080D; border:1px solid #3A3A44; padding:8px;">
+    <div class="dim" style="font-size:8px; margin-bottom:4px;">metric</div>
+    <div class="dim" style="font-size:9px;">24h Change</div>
+    <div style="font-size:22px; color:#00C96C; font-weight:bold;">+12.3%</div>
+    <div class="dim" style="font-size:8px; margin-top:2px;">vs +3.1% avg</div>
+  </div>
+
+  <!-- metrics_row block -->
+  <div style="width:280px; height:100px; background:#08080D; border:1px solid #3A3A44; padding:8px;">
+    <div class="dim" style="font-size:8px; margin-bottom:4px;">metrics_row</div>
+    <div style="display:flex; gap:6px;">
+      <div style="flex:1; font-size:11px;"><span class="dim" style="font-size:8px;">price</span><br><span style="color:#00C96C;">$0.04</span></div>
+      <div style="flex:1; font-size:11px;"><span class="dim" style="font-size:8px;">vol</span><br><span style="color:#888;">$1.2M</span></div>
+      <div style="flex:1; font-size:11px;"><span class="dim" style="font-size:8px;">liq</span><br><span style="color:#FFB02D;">$340K</span></div>
+      <div style="flex:1; font-size:11px;"><span class="dim" style="font-size:8px;">holders</span><br><span style="color:#888;">12.4K</span></div>
+    </div>
+  </div>
+
+  <!-- list block -->
+  <div style="width:280px; height:140px; background:#08080D; border:1px solid #3A3A44; padding:8px;">
+    <div class="dim" style="font-size:8px; margin-bottom:4px;">list</div>
+    <div style="font-size:10px;">
+      <div><span class="neon-red">!</span> TVL dropped 40% overnight</div>
+      <div><span class="neon-yellow">!</span> Liquidity down 65% on main pool</div>
+      <div><span class="neon-yellow">!</span> 3 Reddit posts reporting possible rug</div>
+      <div><span class="neon-green">✓</span> Team is doxxed and KYC verified</div>
+    </div>
+  </div>
+
+  <!-- chart block -->
+  <div style="width:280px; height:180px; background:#08080D; border:1px solid #3A3A44; padding:8px;">
+    <div class="dim" style="font-size:8px; margin-bottom:4px;">chart (line)</div>
+    <div class="dim" style="font-size:9px;">7-Day Price Trend</div>
+    <div style="height:100px; padding:4px; margin-top:4px; border:1px solid #3A3A44;">
+      <div style="height:100%; background: linear-gradient(90deg, #0D0D14, #0D0D14);">
+        <!-- chart SVG placeholder -->
+        <svg width="100%" height="100%" viewBox="0 0 240 80">
+          <polyline points="0,60 30,55 60,50 90,45 120,35 150,40 180,30 210,25 240,20" fill="none" stroke="#00C96C" stroke-width="2"/>
+          <polyline points="0,65 30,60 60,58 90,55 120,50 150,52 180,48 210,45 240,42" fill="none" stroke="#6277C4" stroke-width="1.5"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- donut block -->
+  <div style="width:200px; height:200px; background:#08080D; border:1px solid #3A3A44; padding:8px;">
+    <div class="dim" style="font-size:8px; margin-bottom:4px;">donut</div>
+    <div style="text-align:center;">
+      <svg width="160" height="140" viewBox="0 0 160 140">
+        <circle cx="80" cy="70" r="50" fill="none" stroke="#2A2A34" stroke-width="20"/>
+        <circle cx="80" cy="70" r="50" fill="none" stroke="#F7931A" stroke-width="20" stroke-dasharray="70.68 157.08" stroke-dashoffset="0" transform="rotate(-90 80 70)"/>
+        <circle cx="80" cy="70" r="50" fill="none" stroke="#6277C4" stroke-width="20" stroke-dasharray="39.27 188.49" stroke-dashoffset="-70.68" transform="rotate(-90 80 70)"/>
+        <circle cx="80" cy="70" r="50" fill="none" stroke="#9946DD" stroke-width="20" stroke-dasharray="23.56 204.2" stroke-dashoffset="-109.95" transform="rotate(-90 80 70)"/>
+        <text x="80" y="74" text-anchor="middle" font-size="14" fill="#E0E0EC" font-family="Courier New">$124K</text>
+      </svg>
+      <div class="dim" style="font-size:8px;">total value</div>
+    </div>
+  </div>
+
+  <!-- risk_meter block -->
+  <div style="width:280px; height:130px; background:#08080D; border:1px solid #3A3A44; padding:8px;">
+    <div class="dim" style="font-size:8px; margin-bottom:4px;">risk_meter</div>
+    <div class="dim" style="font-size:9px;">Risk Score</div>
+    <div style="height:14px; margin-top:4px; display:flex; gap:0;">
+      <div style="flex:3; background:#00C96C; height:14px; border:1px solid #00C96C;"></div>
+      <div style="flex:2; background:#FFB02D; height:14px; border:1px solid #FFB02D;"></div>
+      <div style="flex:2; background:#FF7B2D; height:14px; border:1px solid #FF7B2D;"></div>
+      <div style="flex:1.5; background:#FF3B1D; height:14px; border:1px solid #FF3B1D;"></div>
+      <div style="flex:1.5; background:#CC1111; height:14px; border:1px solid #CC1111;"></div>
+    </div>
+    <div class="trow" style="margin-top:4px;">
+      <span class="neon-green" style="font-size:10px;">safe</span>
+      <span style="flex:1;"></span>
+      <span class="neon-red" style="font-size:10px; font-weight:bold;">92 CRITICAL</span>
+    </div>
+  </div>
+
+  <!-- sentiment block -->
+  <div style="width:280px; height:130px; background:#08080D; border:1px solid #3A3A44; padding:8px;">
+    <div class="dim" style="font-size:8px; margin-bottom:4px;">sentiment</div>
+    <div style="height:10px; display:flex; gap:0; margin-bottom:4px;">
+      <div style="flex:5.5; background:#00C96C; height:10px;"></div>
+      <div style="flex:0.3; background:#888; height:10px;"></div>
+      <div style="flex:0.7; background:#FF3B1D; height:10px;"></div>
+    </div>
+    <div class="trow">
+      <span class="neon-green">92%</span>
+      <span class="dim" style="font-size:8px;">positive</span>
+      <span style="flex:1;"></span>
+      <span class="neon-red">5%</span>
+      <span class="dim" style="font-size:8px;">neg · 24 sources</span>
+    </div>
+  </div>
+
+  <!-- whale_card block -->
+  <div style="width:280px; height:140px; background:#08080D; border:1px solid #3A3A44; padding:8px;">
+    <div class="dim" style="font-size:8px; margin-bottom:4px;">whale_card</div>
+    <div style="font-size:18px; color:#FF7B2D;">🐋 $168M BTC</div>
+    <div style="font-size:10px; color:#888; margin-top:4px;">
+      <div><span class="dim">from</span> Binance Cold Wallet <span class="dim">→</span> <span class="neon-red">Unknown</span></div>
+      <div><span class="dim">2,500 BTC</span> · tx: 0x4f2a...b3a</div>
+    </div>
+  </div>
+
+  <!-- progress block -->
+  <div style="width:280px; height:100px; background:#08080D; border:1px solid #3A3A44; padding:8px;">
+    <div class="dim" style="font-size:8px; margin-bottom:4px;">progress</div>
+    <div class="dim" style="font-size:9px;">Voting Progress</div>
+    <div style="height:8px; margin-top:4px; display:flex; gap:0;">
+      <div style="flex:8; background:#00C96C; height:8px;"></div>
+      <div style="flex:2; background:#FF3B1D; height:8px;"></div>
+    </div>
+    <div style="font-size:9px; color:#888; margin-top:2px;">For: 79.5% · Against: 20.5%</div>
+  </div>
+
+  <!-- tags block -->
+  <div style="width:280px; height:60px; background:#08080D; border:1px solid #3A3A44; padding:8px;">
+    <div class="dim" style="font-size:8px; margin-bottom:2px;">tags</div>
+    <span class="tag tag-pink" style="font-size:8px;">governance</span>
+    <span class="tag tag-green" style="font-size:8px;">voting active</span>
+    <span class="tag tag-yellow" style="font-size:8px;">3 days left</span>
+  </div>
+
+</div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     SECTION: CARD VS DETAIL SPLIT SYSTEM
+     ␐══════════════════════════════════════════════════════════ -->
+<div style="margin-top:60px;">
+<h2 style="font-size:20px; color:#00C96C; margin-bottom:16px;">◊ CARD vs DETAIL: BLOCK ALLOCATION SYSTEM</h2>
+
+<div style="border:1px solid #3A3A44; padding:16px; background:#0D0D14;">
+  <div style="font-size:12px; color:#AAA; line-height:1.6;">
+
+    <div style="margin-bottom:12px;">
+      <span class="neon-green" style="font-size:13px;">✦ ALWAYS ON CARD (TIER 1)</span>
+    </div>
+    <div style="font-size:11px; color:#888; margin-bottom:12px;">
+      These always render on the feed card. They're the core signal.
+    </div>
+    <div style="margin-bottom:16px;">
+      <span class="tag tag-green">text (title)</span>
+      <span class="tag tag-green">metric</span>
+      <span class="tag tag-green">metrics_row</span>
+      <span class="tag tag-green">tags</span>
+      <span class="tag tag-green">text (subtitle)</span>
+      <span class="tag tag-green">risk_meter</span>
+      <span class="tag tag-green">sentiment</span>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <span class="neon-yellow" style="font-size:13px;">✦ FLEXIBLE (TIER 2)</span>
+    </div>
+    <div style="font-size:11px; color:#888; margin-bottom:12px;">
+      Rendered on card if space allows. Moved to detail if too many blocks.
+    </div>
+    <div style="margin-bottom:16px;">
+      <span class="tag tag-yellow">text (body/long)</span>
+      <span class="tag tag-yellow">list</span>
+      <span class="tag tag-yellow">progress</span>
+      <span class="tag tag-yellow">divider</span>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <span class="neon-orange" style="font-size:13px;">✦ DETAIL-ONLY (TIER 3)</span>
+    </div>
+    <div style="font-size:11px; color:#888; margin-bottom:12px;">
+      Too large for the card. Always go to detail page where there's full vertical space.
+    </div>
+    <div>
+      <span class="tag tag-orange">chart</span>
+      <span class="tag tag-orange">donut</span>
+      <span class="tag tag-orange">whale_card</span>
+      <span class="tag tag-orange">image</span>
+    </div>
+
+    <div style="margin-top:20px;">
+      <div class="neon-cyan" style="font-size:13px;">🆡 ALLOCATION ALGORITHM</div>
+      <div style="font-size:11px; color:#AAA; margin-top:4px;">
+        <div>1. Start with card height = 580px (fixed)</div>
+        <div>2. Subtract header (token + urgency + timestamp) → ~60px</div>
+        <div>3. Available = 520px for blocks</div>
+        <div>4. Sort blocks by tier: T1 → T2 → T3 (T3 → detail immediately)</div>
+        <div>5. Calculate each block's natural height (based on content &amp; type)</div>
+        <div>6. Sum T1 heights + T2 heights. If total ≤ 520px → all fit, scale evenly</div>
+        <div>7. If total > 520px → drop T2 blocks to detail, recalculate</div>
+        <div>8. If still > 520px → scale down proportionally with minimum sizes</div>
+        <div>9. If still > 520px after min sizes → card gets internal scroll, rest on detail</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     SECTION: LAYOUT MODE COMPARISON
+     ␐══════════════════════════════════════════════════════════ -->
+<div style="margin-top:60px;">
+<h2 style="font-size:20px; color:#FF3B1D; margin-bottom:16px;">◊ LAYOUT MODES: How Block Count Shapes the Grid</h2>
+
+<div style="border:1px solid #3A3A44; padding:16px; background:#0D0D14;">
+  <table style="width:100%; border-collapse:collapse;">
+    <tr style="border-bottom:1px solid #3A3A44;">
+      <th style="text-align:left; padding:8px; font-size:11px; color:#888;"># Blocks</th>
+      <th style="text-align:left; padding:8px; font-size:11px; color:#888;">Mode</th>
+      <th style="text-align:left; padding:8px; font-size:11px; color:#888;">Grid</th>
+      <th style="text-align:left; padding:8px; font-size:11px; color:#888;">Block Height</th>
+      <th style="text-align:left; padding:8px; font-size:11px; color:#888;">Notes</th>
+    </tr>
+    <tr style="border-bottom:1px solid #2A2A34;">
+      <td style="padding:6px; font-size:11px;">1-2</td>
+      <td style="padding:6px; font-size:11px;"><span class="neon-green">GENEROUS</span></td>
+      <td style="padding:6px; font-size:11px;">1-col, full width</td>
+      <td style="padding:6px; font-size:11px;">~175-260px each</td>
+      <td style="padding:6px; font-size:11px; color:#888;">Each block gets tons of room. Charts/images look great here.</td>
+    </tr>
+    <tr style="border-bottom:1px solid #2A2A34;">
+      <td style="padding:6px; font-size:11px;">3-4</td>
+      <td style="padding:6px; font-size:11px;"><span class="neon-cyan">COMFORTABLE</span></td>
+      <td style="padding:6px; font-size:11px;">1-col + 2-col splits</td>
+      <td style="padding:6px; font-size:11px;">~130-170px each</td>
+      <td style="padding:6px; font-size:11px; color:#888;">Sweet spot. Most cards will fall here. Metrics go 2-col, text goes 1-col.</td>
+    </tr>
+    <tr style="border-bottom:1px solid #2A2A34;">
+      <td style="padding:6px; font-size:11px;">5-6</td>
+      <td style="padding:6px; font-size:11px;"><span class="neon-yellow">COMPACT</span></td>
+      <td style="padding:6px; font-size:11px;">Mixed grid (1-col + 2-col)</td>
+      <td style="padding:6px; font-size:11px;">~85-105px each</td>
+      <td style="padding:6px; font-size:11px; color:#888;">Good density. Mini-metrics, short text, compact lists.</td>
+    </tr>
+    <tr style="border-bottom:1px solid #2A2A34;">
+      <td style="padding:6px; font-size:11px;">7-9</td>
+      <td style="padding:6px; font-size:11px;"><span class="neon-orange">DENSE</span></td>
+      <td style="padding:6px; font-size:11px;">2-col + 3-col splits</td>
+      <td style="padding:6px; font-size:11px;">~55-75px each</td>
+      <td style="padding:6px; font-size:11px; color:#888;">Data-dense mode. Mini everything. Some blocks overflow to detail.</td>
+    </tr>
+    <tr>
+      <td style="padding:6px; font-size:11px;">10+</td>
+      <td style="padding:6px; font-size:11px;"><span class="neon-red">OVERFLOW</span></td>
+      <td style="padding:6px; font-size:11px;">T3 blocks → detail</td>
+      <td style="padding:6px; font-size:11px;">~45-55px min</td>
+      <td style="padding:6px; font-size:11px; color:#888;">LLM output too dense. Push non-critical blocks to detail, card shows headlines only.</td>
+    </tr>
+  </table>
+</div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     FOOTER
+     ␐══════════════════════════════════════════════════════════ -->
+<div style="margin-top:60px; border-top:1px solid #2A2A34; padding-top:16px; font-size:10px; color:#555; text-align:center;">
+  Crypto AI Portfolio · Card Redesign Mockv · Aug 2026<br>
+  Cards: 430w × 580h fixed · Blocks adapt to count · 3 layout options
+</div>
+
+</div><!-- end page -->
+</body>
+</html>
