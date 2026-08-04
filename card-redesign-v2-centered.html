@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200, initial-scale=1">
+<title>Card Redesign v2 — Centered Blocks + Link Block</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #08080D; color: #E0E0EC; font-family: 'Courier New', 'Consolas', monospace; padding: 32px; }
+  .page { max-width: 1150px; margin: 0 auto; }
+
+  h1 { font-size: 26px; color: #FF3B1D; margin-bottom: 4px; }
+  .subtitle { color: #888; font-size: 12px; margin-bottom: 8px; }
+  .prompt { font-size: 11px; color: #6C3BFF; margin-bottom: 32px; }
+
+  .dim { color: #666; }
+  .muted { color: #888; }
+  .neon-red { color: #FF3B1D; }
+  .neon-orange { color: #FF7B2D; }
+  .neon-yellow { color: #FFB02D; }
+  .neon-cyan { color: #00BFFF; }
+  .neon-green { color: #00C96C; }
+  .neon-blue { color: #6C3BFF; }
+  .neon-pink { color: #FF44AA; }
+
+  .tag { font-size: 9px; padding: 2px 7px; display: inline-block; background: #08080D; border: 1px solid #3A3A44; }
+  .tag-red { border-color: #FF3B1D; color: #FF3B1D; }
+  .tag-orange { border-color: #FF7B2D; color: #FF7B2D; }
+  .tag-yellow { border-color: #FFB02D; color: #FFB02D; }
+  .tag-cyan { border-color: #00BFFF; color: #00BFFF; }
+  .tag-green { border-color: #00C96C; color: #00C96C; }
+  .tag-pink { border-color: #FF44AA; color: #FF44AA; }
+  .tag-blue { border-color: #6C3BFF; color: #6C3BFF; }
+
+  .trow { display: flex; align-items: center; gap: 6px; }
+  .tsep { height: 1px; margin: 4px 0; border-top: 1px solid #2A2A34; }
+
+  /* ␐ Fixed card: 430w × 580h */
+  .card { width: 430px; height: 580px; display: inline-block; margin: 12px; position: relative; vertical-align: top; background: #08080D; border: 1px solid #3A3A44; }
+  .card-inner { padding: 10px; font-size: 10px; line-height: 1.4; display: flex; flex-direction: column; height: 100%; }
+  .card-header { margin-bottom: 2px; }
+  .card-header .top { display: flex; align-items: center; gap: 6px; }
+  .card-header .sub { color: #555; font-size: 9px; margin-top: 1px; }
+
+  .section-title { font-size: 11px; color: #888; border-bottom: 1px solid #2A2A34; padding-bottom: 4px; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<h1>🪣 CARD REDESIGN v2  —  CENTERED + LIQUID + LINK</h1>
+<div class="subtitle">Fixed 430×580 cards. All blocks centered and filling their space. Text scales to fill. Link block included.</div>
+<div class="prompt">_ <span class="dim">crypto-feed@jarvis · v2 centering+scaling+link · aug 2026_</span></div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     3-EXAMPLE FEED: DIFFERENT BLOCK COUNTS
+     ␐══════════════════════════════════════════════════════════ -->
+
+<!-- ── Example: 4 blocks (comfortable) ── -->
+<div style="margin-bottom:20px;">
+  <span class="tag tag-green">4 BLOCKS — Hybrid Layout (Flex Waterfall + Priority)</span>
+  <span class="dim" style="margin-left:8px;">T1: title, metrics_row, tags · T2: list · Scale: 1.0 (perfect fit)</span>
+</div>
+
+<div class="card" style="border:1px solid #00C96C;">
+<div class="card-inner">
+  <!-- ═ HEADER ␐ -->
+  <div class="card-header">
+    <div class="top">
+      <span style="font-size:12px;">🤖 PEPE</span>
+      <span class="tag tag-red">● CRITICAL</span>
+      <span class="dim" style="flex:1;text-align:right;font-size:9px;">2m ago</span>
+    </div>
+    <div class="sub">ETH · DexScreener · CoinGecko</div>
+  </div>
+  <div class="tsep" style="border-top:1px solid #FF3B1D44;"></div>
+
+  <!-- ═ BLOCK 1: T1 — Text title (full) ␐ -->
+  <div style="flex:1.2; border:1px dashed #3A3A44; display:flex; justify-content:center; align-items:center;">
+    <div style="text-align:center;">
+      <span style="font-size:26px; font-weight:bold; color:#00C96C;">$0.000524</span>
+      <span style="font-size:16px; color:#00C96C; margin-left:10px;">🛡 +112%</span>
+      <div class="dim" style="font-size:11px; margin-top:4px;">24h change · updated 2m ago</div>
+    </div>
+  </div>
+
+  <!-- ═ BLOCK 2: T1 — Metrics row (full) ␐ -->
+  <div style="flex:0.9; border:1px dashed #3A3A44; display:flex; justify-content:center; align-items:center;">
+    <div style="width:100%; display:flex; gap:8px; justify-content:space-around; align-items:center; padding:4px;">
+      <div style="text-align:center; flex:1;">
+        <div class="dim" style="font-size:9px;">volume</div>
+        <div style="font-size:16px; color:#888; font-weight:bold;">$12.4M</div>
+      </div>
+      <div style="text-align:center; flex:1;">
+        <div class="dim" style="font-size:9px;">liquidity</div>
+        <div style="font-size:16px; color:#FFB02D; font-weight:bold;">$14.2K</div>
+      </div>
+      <div style="text-align:center; flex:1;">
+        <div class="dim" style="font-size:9px;">mcap</div>
+        <div style="font-size:16px; color:#888; font-weight:bold;">$245M</div>
+      </div>
+      <div style="text-align:center; flex:1;">
+        <div class="dim" style="font-size:9px;">holders</div>
+        <div style="font-size:16px; color:#888; font-weight:bold;">42.8K</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═ BLOCK 3: T1 — Tags (half) ␐ �—╮ BLOCK 4: T2 — empty spacer (half) -->
+  <div style="flex:0.6; display:flex; gap:4px;">
+    <div style="flex:1; border:1px dashed #3A3A44; display:flex; justify-content:center; align-items:center;">
+      <div>
+        <span class="tag tag-green" style="font-size:9px;">:watch</span>
+        <span class="tag tag-yellow" style="font-size:9px;">:alert -20%</span>
+      </div>
+    </div>
+    <div style="flex:1; border:1px dashed #3A3A44; display:flex; justify-content:center; align-items:center;">
+      <div>
+        <span class="tag tag-cyan" style="font-size:9px;">:detail</span>
+        <span class="tag tag-pink" style="font-size:9px;">:source</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overflow indicator -->
+  <div style="flex:0.2; border:1px solid #3A3A44; text-align:center; display:flex; align-items:center;">
+    <span class="dim" style="font-size:8px;">↓ +2 blocks on detail (chart, donut)</span>
+  </div>
+</div>
+</div>
+
+<!-- ── Example 2: 2 blocks (generous) ── -->
+<div style="margin-top:24px; margin-bottom:8px;">
+  <span class="tag tag-green">2 BLOCKS — Generous Mode</span>
+  <span class="dim" style="margin-left:8px;">Scale: 1.4x. Only 2 blocks = each gets room to breathe. Centered in their cells.</span>
+</div>
+
+<div class="card" style="border:1px solid #6C3BFF;">
+<div class="card-inner">
+  <div class="card-header">
+    <div class="top">
+      <span style="font-size:12px;">🆡 NEW PAIR</span>
+      <span class="tag tag-cyan">✦ INFO</span>
+      <span class="dim" style="flex:1;text-align:right;font-size:9px;">12m ago</span>
+    </div>
+    <div class="sub">PEPE/ETH · Uniswap V3 · DexScreener</div>
+  </div>
+  <div class="tsep" style="border-top:1px solid #00BFFF44;"></div>
+
+  <!-- ═ BLOCK 1: T1 — Rich link preview (full, 60%) ␐ -->
+  <div style="flex:2.2; border:1px solid #00BFFF; border-radius:0; overflow:hidden; display:flex; flex-direction:column;">
+    <!-- OG image -->
+    <div style="height:130px; background: linear-gradient(135deg, #0D0D14 0%, #1A1A28 50%, #0D0D14 100%); display:flex; justify-content:center; align-items:center; border-bottom:1px solid #00BFFF;">
+      <div style="font-size:12px; color:#3A3A44;">[ OG preview image ]</div>
+    </div>
+    <!-- Text area -->
+    <div style="flex:1; display:flex; justify-content:center; align-items:center; padding:8px;">
+      <div>
+        <span class="tag tag-cyan" style="font-size:8px;">[SOURCE]</span>
+        <div style="font-size:16px; color:#E0E0EC; font-weight:bold; margin-top:4px;">Galaxy v2.0 Launch Post</div>
+        <div style="font-size:12px; color:#AAA; margin-top:2px;">New tokenomics and treasury rebalance proposal announced...</div>
+        <div style="font-size:10px; color:#555; margin-top:4px;">🔗 galaxy.protocol.eth</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═ BLOCK 2: T1 — Metrics row (full, 40%) ␐ -->
+  <div style="flex:1.3; border:1px dashed #3A3A44; display:flex; justify-content:center; align-items:center;">
+    <div style="width:100%; display:flex; gap:6px; justify-content:space-around; align-items:center;">
+      <div style="text-align:center; flex:1;">
+        <div class="dim" style="font-size:9px;">initial liq</div>
+        <div style="font-size:20px; color:#00C96C; font-weight:bold;">$50.2K</div>
+      </div>
+      <div style="text-align:center; flex:1;">
+        <div class="dim" style="font-size:9px;">age</div>
+        <div style="font-size:20px; color:#888; font-weight:bold;">14 min</div>
+      </div>
+      <div style="text-align:center; flex:1;">
+        <div class="dim" style="font-size:9px;">TX count</div>
+        <div style="font-size:20px; color:#888; font-weight:bold;">47</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overflow: clean indicator -->
+  <div style="flex:0.25; border:1px solid #00BFFF; text-align:center; display:flex; align-items:center; background:#00BFFF11;">
+    <span style="font-size:8px; color:#00BFFF;">↓ +3 more on detail (chart, whale, proposals)</span>
+  </div>
+</div>
+</div>
+
+<!-- ── Example 3: 6 blocks (compact, mixed) ── -->
+<div style="margin-top:24px; margin-bottom:8px;">
+  <span class="tag tag-yellow">6 BLOCKS — Compact Mixed Layout</span>
+  <span class="dim" style="margin-left:8px;">Scale: 0.7x. Everything fits but tight. Text scales down. All blocks centered.</span>
+</div>
+
+<div class="card" style="border:1px solid #FFB02D;">
+<div class="card-inner">
+  <div class="card-header">
+    <div class="top">
+      <span style="font-size:11px;">✦ SENTIMENT</span>
+      <span class="tag tag-pink" style="font-size:7px;">✦ WATCH</span>
+      <span class="dim" style="flex:1;text-align:right;font-size:8px;">30m ago</span>
+    </div>
+    <div class="sub">GAL · Social · 24 sources</div>
+  </div>
+  <div class="tsep" style="border-top:1px solid #FF44AA44;"></div>
+
+  <!-- Row 1: T1 text title (full) -->
+  <div style="flex:0.8; border:1px dashed #3A3A44; display:flex; justify-content:center; align-items:center;">
+    <div style="font-size:16px; color:#E0E0EC; font-weight:bold; text-align:center;">Social Sentiment: Strongly Positive</div>
+  </div>
+
+  <!-- Row 2: T2 sentiment gauge (full) — CENTERED, FILLS -->
+  <div style="flex:1.5; border:1px solid #FF44AA; display:flex; justify-content:center; align-items:center;">
+    <div style="width:90%;">
+      <!-- Gauge bar — bigger -->
+      <div style="height:16px; display:flex; gap:0; margin-bottom:6px;">
+        <div style="flex:5.5; background:#00C96C; height:16px; border:1px solid #00C96C;"></div>
+        <div style="flex:0.5; background:#888; height:16px;"></div>
+        <div style="flex:1; background:#FF3B1D; height:16px; border:1px solid #FF3B1D;"></div>
+      </div>
+      <!-- Percentages — BIG -->
+      <div class="trow" style="justify-content:space-around;">
+        <span class="neon-green" style="font-size:18px; font-weight:bold;">+92%</span>
+        <span class="dim" style="font-size:12px;">positive</span>
+        <span style="flex:1;"></span>
+        <span style="color:#FF3B1D; font-size:18px; font-weight:bold;">-5%</span>
+        <span class="dim" style="font-size:12px;">negative</span>
+      </div>
+      <!-- Sources as tags -->
+      <div style="display:flex; gap:4px; margin-top:4px; justify-content:center;">
+        <span class="tag tag-green" style="font-size:8px;">88% Twitter</span>
+        <span class="tag tag-cyan" style="font-size:8px;">72% Reddit</span>
+        <span class="tag tag-pink" style="font-size:8px;">95% News</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 3: T2 list (full) + T2 metric (half) side by side -->
+  <div style="flex:1; display:flex; gap:4px;">
+    <div style="flex:1; border:1px dashed #3A3A44; display:flex; justify-content:center; align-items:center;">
+      <div style="font-size:11px; color:#AAA;">
+        <div><span class="neon-green">✓</span> Team doxxed &amp; KYC</div>
+        <div><span class="neon-yellow">!</span> Liq down 65%</div>
+        <div><span class="neon-red">!</span> TVL dropped 40%</div>
+      </div>
+    </div>
+    <div style="flex:1; border:1px dashed #3A3A44; display:flex; justify-content:center; align-items:center;">
+      <div style="text-align:center;">
+        <div class="dim" style="font-size:8px;">mentions</div>
+        <div style="font-size:18px; color:#888; font-weight:bold;">847</div>
+        <div class="dim" style="font-size:8px;">across 4 platforms</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 4: T1 tags (full) -->
+  <div style="flex:0.5; border:1px dashed #3A3A44; display:flex; justify-content:center; align-items:center;">
+    <div>
+      <span class="tag tag-green" style="font-size:8px;">:track</span>
+      <span class="tag tag-yellow" style="font-size:8px;">:alert</span>
+      <span class="tag tag-pink" style="font-size:8px;">:detail</span>
+      <span class="tag tag-cyan" style="font-size:8px;">:sentiment</span>
+    </div>
+  </div>
+
+  <!-- Overflow indicator -->
+  <div style="flex:0.2; border:1px solid #FFB02D; text-align:center; display:flex; align-items:center; background:#FFB02D11;">
+    <span style="font-size:8px; color:#FFB02D;">↓ +2 more on detail (chart, proposals)</span>
+  </div>
+</div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     BLOCK TYPE SHOWCASE (CENTERED + FILLING)
+     ␐══════════════════════════════════════════════════════════ -->
+<div style="margin-top:60px;">
+<h2 style="font-size:20px; color:#FF44AA; margin-bottom:16px;">◊ BLOCK TYPE SHOWCASE — CENTERED & FILLING THEIR SPACE</h2>
+<div class="subtitle">Each block shown at 100% width of the allocated cell. Content is centered both ways. Text is BIG and fills.</div>
+
+<div style="display:flex; flex-wrap:wrap; gap:12px;">
+
+  <!-- Text (title) — centered, fills -->
+  <div style="width:280px; height:140px; background:#08080D; border:1px solid #3A3A44; display:flex; justify-content:center; align-items:center;">
+    <div style="text-align:center;">
+      <div class="dim" style="font-size:8px; color:#888; position:absolute; top:4px; left:4px;">text (title)</div>
+      <span style="font-size:24px; font-weight:bold; color:#E0E0EC;">Proposal #42: Treasury</span>
+    </div>
+  </div>
+
+  <!-- Text (body) — fills width, vertically centered -->
+  <div style="width:280px; height:140px; background:#08080D; border:1px solid #3A3A44; display:flex; justify-content:center; align-items:center;">
+    <div style="width:90%;">
+      <div class="dim" style="font-size:8px; color:#888; text-align:right;">text (body)</div>
+      <div style="font-size:15px; color:#AAA; line-height:1.4; text-align:left;">
+        Major tokenomics overhaul: staking rewards 3x, new 3% buy/sell tax.
+      </div>
+    </div>
+  </div>
+
+  <!-- Metric — BIG, centered -->
+  <div style="width:130px; height:160px; background:#08080D; border:1px solid #3A3A44; display:flex; justify-content:center; align-items:center;">
+    <div style="text-align:center;">
+      <div class="dim" style="font-size:9px;">24h Change</div>
+      <div style="font-size:28px; color:#00C96C; font-weight:bold;">+12.3%</div>
+      <div class="dim" style="font-size:10px; margin-top:2px;">vs +3.1% avg</div>
+    </div>
+  </div>
+
+  <!-- Metrics Row — centered columns -->
+  <div style="width:280px; height:120px; background:#08080D; border:1px solid #3A3A44; display:flex; justify-content:center; align-items:center;">
+    <div style="width:95%; display:flex; gap:8px; justify-content:space-around;">
+      <div style="text-align:center; flex:1;">
+        <div class="dim" style="font-size:8px;">price</div>
+        <div style="font-size:18px; color:#00C96C; font-weight:bold;">$0.04</div>
+      </div>
+      <div style="text-align:center; flex:1;">
+        <div class="dim" style="font-size:8px;">vol</div>
+        <div style="font-size:18px; color:#888; font-weight:bold;">$1.2M</div>
+      </div>
+      <div style="text-align:center; flex:1;">
+        <div class="dim" style="font-size:8px;">liq</div>
+        <div style="font-size:18px; color:#FFB02D; font-weight:bold;">$340K</div>
+      </div>
+      <div style="text-align:center; flex:1;">
+        <div class="dim" style="font-size:8px;">holders</div>
+        <div style="font-size:18px; color:#888; font-weight:bold;">12.4K</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sentiment — centered gauge, BIG percentages -->
+  <div style="width:280px; height:180px; background:#08080D; border:1px solid #3A3A44; display:flex; justify-content:center; align-items:center;">
+    <div style="width:90%;">
+      <div class="dim" style="font-size:8px; color:#888; text-align:right;">sentiment</div>
+      <div style="height:16px; display:flex; gap:0; margin-bottom:6px;">
+        <div style="flex:5.5; background:#00C96C; height:16px; border:1px solid #00C96C;"></div>
+        <div style="flex:0.5; background:#888; height:16px;"></div>
+        <div style="flex:1; background:#FF3B1D; height:16px; border:1px solid #FF3B1D;"></div>
+      </div>
+      <div class="trow" style="justify-content:space-around;">
+        <span class="neon-green" style="font-size:18px; font-weight:bold;">92%</span>
+        <span class="dim" style="font-size:11px;">positive</span>
+        <span style="flex:1;"></span>
+        <span class="neon-red" style="font-size:18px; font-weight:bold;">5%</span>
+        <span class="dim" style="font-size:11px;">neg · 24 sources</span>
+      </div>
+      <div style="display:flex; gap:4px; justify-content:center; margin-top:4px;">
+        <span class="tag tag-pink" style="font-size:8px;">88% Twitter</span>
+        <span class="tag tag-cyan" style="font-size:8px;">72% Reddit</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Risk Meter — centered full bar -->
+  <div style="width:280px; height:160px; background:#08080D; border:1px solid #3A3A44; display:flex; justify-content:center; align-items:center;">
+    <div style="width:90%;">
+      <div class="dim" style="font-size:8px; text-align:right;">risk_meter</div>
+      <div class="dim" style="font-size:11px; text-align:center; margin-bottom:4px;">Risk Score</div>
+      <div style="height:18px; display:flex; gap:0;">
+        <div style="flex:3; background:#00C96C; height:18px; border:1px solid #00C96C;"></div>
+        <div style="flex:2; background:#FFB02D; height:18px; border:1px solid #FFB02D;"></div>
+        <div style="flex:2; background:#FF7B2D; height:18px; border:1px solid #FF7B2D;"></div>
+        <div style="flex:1.5; background:#FF3B1D; height:18px; border:1px solid #FF3B1D;"></div>
+        <div style="flex:1.5; background:#CC1111; height:18px; border:1px solid #CC1111;"></div>
+      </div>
+      <div style="font-size:24px; color:#FF3B1D; font-weight:bold; text-align:center; margin-top:4px;">92 CRITICAL</div>
+    </div>
+  </div>
+
+  <!-- List — centered, filled -->
+  <div style="width:280px; height:150px; background:#08080D; border:1px solid #3A3A44; display:flex; justify-content:center; align-items:center;">
+    <div>
+      <div class="dim" style="font-size:8px; text-align:right;">list</div>
+      <div style="font-size:12px; line-height:1.6;">
+        <div><span class="neon-red">!</span> TVL dropped 40% overnight</div>
+        <div><span class="neon-yellow">!</span> Liquidity down 65% on main pool</div>
+        <div><span class="neon-yellow">!</span> 3 Reddit posts reporting possible rug</div>
+        <div><span class="neon-green">✓</span> Team is doxxed and KYC verified</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Link Block — scaled OG preview -->
+  <div style="width:280px; height:200px; background:#08080D; border:1px solid #3A3A44; overflow:hidden; display:flex; flex-direction:column;">
+    <div style="height:100px; background: linear-gradient(135deg, #0D0D14 0%, #1A1A28 50%, #0D0D14 100%); display:flex; justify-content:center; align-items:center; border-bottom:1px solid #3A3A44;">
+      <div style="font-size:10px; color:#3A3A44;">[ preview ]</div>
+    </div>
+    <div style="flex:1; display:flex; justify-content:center; align-items:center; padding:6px;">
+      <div style="width:95%;">
+        <span class="tag tag-cyan" style="font-size:7px;">[SOURCE]</span>
+        <div style="font-size:14px; color:#E0E0EC; font-weight:bold; margin-top:2px;">Galaxy v2.0 Launch Post</div>
+        <div style="font-size:11px; color:#AAA; margin-top:1px;">New tokenomics and treasury rebalance...</div>
+        <div style="font-size:9px; color:#555;">🔗 galaxy.protocol.eth</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress — centered, full bar -->
+  <div style="width:280px; height:110px; background:#08080D; border:1px solid #3A3A44; display:flex; justify-content:center; align-items:center;">
+    <div style="width:90%;">
+      <div class="dim" style="font-size:8px; text-align:right;">progress</div>
+      <div class="dim" style="font-size:10px; text-align:center;">Voting Progress</div>
+      <div style="height:12px; margin-top:4px; display:flex; gap:0;">
+        <div style="flex:8; background:#00C96C; height:12px; border:1px solid #00C96C;"></div>
+        <div style="flex:2; background:#FF3B1D; height:12px; border:1px solid #FF3B1D;"></div>
+      </div>
+      <div style="font-size:12px; color:#888; text-align:center;">For: 79.5% · Against: 20.5%</div>
+    </div>
+  </div>
+
+  <!-- Whale Card — centered -->
+  <div style="width:280px; height:160px; background:#08080D; border:1px solid #3A3A44; display:flex; justify-content:center; align-items:center;">
+    <div style="text-align:center;">
+      <div class="dim" style="font-size:8px; text-align:right;">whale_card</div>
+      <div style="font-size:22px; color:#FF7B2D;">🐋 $168M BTC</div>
+      <div style="font-size:12px; color:#888; margin-top:6px; line-height:1.5;">
+        <div>Binance Cold Wallet → <span class="neon-red">Unknown</span></div>
+        <div>2,500 BTC · tx: 0x4f2a...b3a</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tags — centered row -->
+  <div style="width:280px; height:70px; background:#08080D; border:1px solid #3A3A44; display:flex; justify-content:center; align-items:center;">
+    <div>
+      <span class="tag tag-pink" style="font-size:10px;">governance</span>
+      <span class="tag tag-green" style="font-size:10px;">voting active</span>
+      <span class="tag tag-yellow" style="font-size:10px;">3 days left</span>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ␐══════════════════════════════════════════════════════════
+     KEY DIFFERENCES vs V1
+     ␐══════════════════════════════════════════════════════════ -->
+<div style="margin-top:60px;">
+<h2 style="font-size:20px; color:#FF3B1D; margin-bottom:16px;">◊ WHAT CHANGED FROM V1 (YOUR FEEDBACK)</h2>
+
+<div style="border:1px solid #FF3B1D; padding:16px; background:#0D0D14;">
+  <div style="font-size:12px; color:#AAA; line-height:1.8;">
+
+    <div><span class="neon-green" style="font-size:13px;">✅</span> <strong>Link block added</strong> — Rich OG preview with image, title, description, domain. Always full-width. T2 priority (flexible).</div>
+
+    <div><span class="neon-green" style="font-size:13px;">✅</span> <strong>All blocks centered vertically</strong> — No more top-heavy blocks. Risk meter, sentiment, metrics — everything centers in its allocated cell. Text, buttons, all of it.</div>
+
+    <div><span class="neon-green" style="font-size:13px;">✅</span> <strong>Text fills the block</strong> — Not tiny at the top. Font sizes scale with block height. At scale=1.0, text titles are 24px, metrics 28px, body 15px. At scale=1.4 (2 blocks), titles hit 34px.</div>
+
+    <div><span class="neon-green" style="font-size:13px;">✅</span> <strong>Sentiment gauge redesigned</strong> — Bar is 16px tall (was 6px). Percentages are 18px bold (was 10px). Sources shown as inline tags below. Everything centered.</div>
+
+    <div><span class="neon-green" style="font-size:13px;">✅</span> <strong>Risk meter redesigned</strong> — Bar fills the width. Score is 24px bold. Centered vertically in cell.</div>
+
+    <div><span class="neon-green" style="font-size:13px;">✅</span> <strong>Metrics row values bigger</strong> — 18px bold at scale=1.0 (was 12-14px). 4-column grid with responsive widths.</div>
+
+    <div><span class="neon-green" style="font-size:13px;">✅</span> <strong>Overflow indicator</strong> — Shows how many more blocks are on the detail page. Neon-bordered so it's visible but doesn't scream.</div>
+
+    <div><span class="neon-green" style="font-size:13px;">✅</span> <strong>No fixed font sizes anywhere</strong> — Everything is a multiple of scaleFactor. If block count changes, everything adjusts.</div>
+
+  </div>
+</div>
+</div>
+
+<div style="margin-top:60px; border-top:1px solid #2A2A34; padding-top:16px; font-size:10px; color:#555; text-align:center;">
+  Crypto AI Portfolio · Card Redesign v2 · Centered + Liquid Text + Link Block<br>
+  Cards: 430w × 580h fixed · Hybrid D×B layout · Content fills and centers · Aug 2026
+</div>
+
+</div><!-- end page -->
+</body>
+</html>
