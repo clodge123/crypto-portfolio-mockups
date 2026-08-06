@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=900, initial-scale=1">
+<title>Dark Web — Detail Page Mockup</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0A0A10; color: #E8E8F0; font-family: system-ui, sans-serif; padding: 20px; }
+  .page { max-width: 800px; margin: 0 auto; }
+  h1 { font-size: 24px; margin-bottom: 4px; color: #6C3BFF; }
+  .subtitle { color: #888; font-size: 13px; margin-bottom: 6px; }
+  
+  /* ─── Phone frame ─── */
+  .phone {
+    width: 380px;
+    margin: 0 auto 40px;
+    background: #08080C;
+    border: 2px solid #2A2A34;
+    border-radius: 16px;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  /* ─── Tab bar ─── */
+  .tab-bar {
+    display: flex;
+    align-items: center;
+    background: #0A0A12;
+    border-bottom: 1px solid #1A1A24;
+    padding: 0 4px;
+    height: 40px;
+  }
+  .tab-item {
+    flex: 1;
+    text-align: center;
+    font-family: monospace;
+    font-size: 15px;
+    color: #1A1A28;
+  }
+  .tab-item.active { color: #6C3BFF; }
+
+  /* ─── HUD bar ─── */
+  .hud-bar {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 10px;
+    background: #0D0D15;
+    border-radius: 4px;
+    margin: 4px 8px;
+  }
+
+  /* ─── Card styles ─── */
+  .dw-card {
+    background: #0E0E16;
+    border-radius: 8px;
+    border: 1px solid var(--card-border, #2A2A34);
+    padding: 10px 12px;
+    margin: 5px 8px;
+    position: relative;
+  }
+  .dw-card.info    { border-color: #3388CC; }
+  .dw-card.alert   { border-color: #E0A000; }
+  .dw-card.critical{ border-color: #FF0044; }
+  .dw-card.watch   { border-color: #44BBAA; }
+
+  .dw-phosphor {
+    font-family: monospace;
+    font-size: 14px;
+    font-weight: bold;
+    text-shadow: 0 0 3px currentColor, 0 0 1px currentColor;
+  }
+
+  /* ─── Section header ─── */
+  .section-hdr {
+    font-family: monospace;
+    font-size: 9px;
+    color: #777;
+    margin: 12px 8px 4px 8px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ─── Block styles ─── */
+  .block-metric {
+    display: inline-block;
+    width: 48%;
+    margin: 0 1%;
+    background: #0E0E16;
+    border-radius: 6px;
+    border: 1px solid #2A2A34;
+    padding: 8px 10px;
+    text-align: center;
+  }
+  .block-text {
+    background: #0E0E16;
+    border-radius: 6px;
+    border: 1px solid #2A2A34;
+    padding: 8px 10px;
+    margin: 4px 8px;
+  }
+  .block-chart {
+    background: #0E0E16;
+    border-radius: 6px;
+    border: 1px solid #2A2A34;
+    padding: 10px;
+    margin: 4px 8px;
+  }
+  .block-tags {
+    background: transparent;
+    margin: 2px 8px;
+  }
+  .tag-chip {
+    display: inline-block;
+    font-family: monospace;
+    font-size: 9px;
+    color: var(--tag-color, #888);
+    background: #141420;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin: 0 2px;
+  }
+  .tag-chip.info    { color: #3388CC; background: #16203A; }
+  .tag-chip.success { color: #00C96C; background: #0A2A1A; }
+  .tag-chip.warning { color: #E0A000; background: #2A1A00; }
+  .tag-chip.error   { color: #FF4444; background: #2A1020; }
+
+  /* ─── Source item ─── */
+  .source-item {
+    display: flex;
+    align-items: center;
+    padding: 6px 10px;
+    margin: 2px 8px;
+    border: 1px solid #2A2A34;
+    border-radius: 6px;
+    background: #0E0E16;
+  }
+  .source-item .icon { font-family: monospace; font-size: 10px; color: #3388CC; margin-right: 6px; width: 14px; }
+  .source-item .title { font-size: 12px; color: #BBB; flex: 1; line-height: 1.3; }
+  .source-item .sub { font-size: 9px; color: #777; }
+
+  /* ─── Market data table ─── */
+  .mkt-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+    border-bottom: 1px solid #1A1A24;
+    font-family: monospace;
+    font-size: 11px;
+  }
+  .mkt-row .label { color: #888; }
+  .mkt-row .value { font-weight: bold; color: #CCC; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>⡂ Dark Web — Detail Page</h1>
+<p class="subtitle">How a feed item looks when you tap into it. Same Dark Web design language: rounded cards, colored shadows, phosphor numbers, hybrid fonts.</p>
+
+<div class="phone">
+
+  <!-- ─── Tab Bar ─── -->
+  <div class="tab-bar">
+    <div class="tab-item">[P]</div>
+    <div class="tab-item active">[F]</div>
+    <div class="tab-item">[S]</div>
+    <div class="tab-item" style="color: #6C3BFF;">+</div>
+  </div>
+
+  <!-- ─── Back button bar ─── -->
+  <div style="display: flex; align-items: center; gap: 4px; padding: 10px 10px; border-bottom: 1px solid #1A1A24;">
+    <span style="font-family: monospace; font-size: 16px; color: #6C3BFF; font-weight: bold;">&lt;-</span>
+    <span style="font-family: sans-serif; font-size: 13px; color: #AAA;">Back to Feed</span>
+    <span style="flex: 1;"></span>
+    <div style="width: 5px; height: 5px; border-radius: 50%; background: #00FF88; box-shadow: 0 0 4px #00FF88;"></div>
+  </div>
+
+  <!-- ════ HEADER SECTION ════ -->
+  <div style="padding: 12px 10px;">
+
+    <!-- Token header -->
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <!-- Token avatar -->
+      <div style="width: 48px; height: 48px; border-radius: 8px; background: #0E0E16; border: 1px solid #E0A000; display: flex; align-items: center; justify-content: center;">
+        <span style="font-family: monospace; font-size: 24px; font-weight: bold; color: #E0A000;">$B</span>
+      </div>
+      <div style="flex: 1;">
+        <span style="font-family: sans-serif; font-size: 20px; font-weight: bold; color: #E8E8F0;">$BONGO</span>
+        <span style="font-family: sans-serif; font-size: 13px; color: #999; margin-left: 6px;">Bongo Token</span>
+        <div style="margin-top: 3px;">
+          <span style="font-family: monospace; font-size: 9px; color: #E0A000; background: #282000; padding: 1px 6px; border-radius: 4px;">ALERT</span>
+          <span style="font-family: monospace; font-size: 10px; color: #888; margin-left: 8px;">8m ago</span>
+          <span style="font-family: monospace; font-size: 9px; color: #6C3BFF; margin-left: 6px;">DEEP SCAN</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <div style="margin-top: 12px;">
+      <span style="font-family: sans-serif; font-size: 18px; font-weight: bold; color: #E0E4EE; line-height: 1.3;">
+        Volume Spike Detected — Social Activity Surge
+      </span>
+    </div>
+
+    <!-- Summary block (like a pull-quote) -->
+    <div style="margin-top: 10px; background: #0E0E16; border-radius: 8px; border: 1px solid #2A2A34; padding: 10px 12px;">
+      <span style="font-family: sans-serif; font-size: 14px; color: #BBB; line-height: 1.5;">
+        Bongo is experiencing a significant volume spike with <span class="dw-phosphor" style="color: #FFAA00; font-size: 14px;">312%</span> increase in 24h volume. Social activity is surging across Telegram and Discord, with multiple KOM communities picking up the signal.
+      </span>
+    </div>
+
+  </div>
+
+  <!-- ␂────── KEY OBSERVATIONS ────── -->
+  <div class="section-hdr">-- Key Observations --</div>
+  <div style="margin: 2px 8px;">
+    <div style="display: flex; gap: 6px; align-items: flex-start; margin: 3px 0;">
+      <span style="font-family: monospace; font-size: 11px; color: #E0A000;">-&gt;</span>
+      <span style="font-family: sans-serif; font-size: 13px; color: #BBB;">24h volume jumped from $2.1M to $8.7M in under 4 hours</span>
+    </div>
+    <div style="display: flex; gap: 6px; align-items: flex-start; margin: 3px 0;">
+      <span style="font-family: monospace; font-size: 11px; color: #E0A000;">-&gt;</span>
+      <span style="font-family: sans-serif; font-size: 13px; color: #BBB;">Social mentions up <span class="dw-phosphor" style="color: #FFAA00; font-size: 13px;">840%</span> across monitored channels</span>
+    </div>
+    <div style="display: flex; gap: 6px; align-items: flex-start; margin: 3px 0;">
+      <span style="font-family: monospace; font-size: 11px; color: #E0A000;">-&gt;</span>
+      <span style="font-family: sans-serif; font-size: 13px; color: #BBB;">Liquidity pool TVL showing early distribution pattern</span>
+    </div>
+  </div>
+
+  <!-- ␂────── METADATA BAR ────── -->
+  <div style="margin: 8px 8px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center;">
+    <div style="background: #0E0E16; border: 1px solid #00C96C; border-radius: 4px; padding: 2px 8px;">
+      <span style="font-family: monospace; font-size: 10px; color: #00C96C; font-weight: bold;">BULLISH</span>
+    </div>
+    <div style="font-family: monospace; font-size: 10px; color: #888; background: #0E0E16; border-radius: 4px; padding: 2px 8px; border: 1px solid #2A2A34;">
+      CONFIDENCE: 76%
+    </div>
+    <div style="font-family: monospace; font-size: 10px; color: #888; background: #0E0E16; border-radius: 4px; padding: 2px 8px; border: 1px solid #2A2A34;">
+      SOCIAL
+    </div>
+    <div style="font-family: monospace; font-size: 10px; color: #888; background: #0E0E16; border-radius: 4px; padding: 2px 8px; border: 1px solid #2A2A34;">
+      scan #281
+    </div>
+  </div>
+
+  <!-- ␂────── 24H PRICE CHANGE ────── -->
+  <div style="margin: 4px 8px;">
+    <div style="background: #0E0E16; border-radius: 8px; border: 1px solid #E0A000; padding: 8px 12px; display: flex; align-items: center; gap: 8px;">
+      <span style="font-family: monospace; font-size: 10px; color: #888;">24h Price:</span>
+      <span class="dw-phosphor" style="color: #FFAA00; font-size: 16px;">+312.47%</span>
+      <span style="flex: 1;"></span>
+      <!-- Mini sparkline -->
+      <div style="display: flex; gap: 1px; align-items: flex-end; height: 16px;">
+        <div style="width: 4px; height: 4px;  background: #E0A000; opacity: 0.3;"></div>
+        <div style="width: 4px; height: 6px;  background: #E0A000; opacity: 0.3;"></div>
+        <div style="width: 4px; height: 10px; background: #E0A000; opacity: 0.4;"></div>
+        <div style="width: 4px; height: 14px; background: #E0A000; opacity: 0.5;"></div>
+        <div style="width: 4px; height: 16px; background: #E0A000; opacity: 0.7;"></div>
+        <div style="width: 4px; height: 12px; background: #E0A000; opacity: 0.5;"></div>
+        <div style="width: 4px; height: 8px;  background: #E0A000; opacity: 0.4;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ␂────── ANALYSIS BLOCKS ────── -->
+  <div class="section-hdr">-- Analysis Blocks (6) --</div>
+
+  <!-- Block 1: Metric row (2 side-by-side) -->
+  <div style="margin: 2px 8px; text-align: center;">
+    <div style="display: inline-block; width: 46%;">
+      <div class="block-metric">
+        <div style="font-family: monospace; font-size: 9px; color: #888;">Current Price</div>
+        <div class="dw-phosphor" style="color: #00FF88; font-size: 16px; margin-top: 3px;">$0.000284</div>
+        <div style="font-family: monospace; font-size: 8px; color: #FFAA00; margin-top: 2px;">+12.3%</div>
+      </div>
+    </div>
+    <div style="display: inline-block; width: 46%;">
+      <div class="block-metric">
+        <div style="font-family: monospace; font-size: 9px; color: #888;">24h Volume</div>
+        <div class="dw-phosphor" style="color: #FFAA00; font-size: 16px; margin-top: 3px;">$8.7M</div>
+        <div style="font-family: monospace; font-size: 8px; color: #FFAA00; margin-top: 2px;">+312.5%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Block 2: Text (narrative) -->
+  <div class="block-text">
+    <div style="font-family: sans-serif; font-size: 12px; color: #AAA; line-height: 1.5;">
+      Volume surge began approximately <span class="dw-phosphor" style="color: #888; font-size: 12px;">4</span> hours ago, coinciding with a series of KOM posts on Telegram. The buy/sell ratio skews heavily toward buys at <span class="dw-phosphor" style="color: #00FF88; font-size: 12px;">72%</span>, suggesting organic interest rather than bot activity. Top trader analysis shows 3 new whale wallets accumulating.
+    </div>
+  </div>
+
+  <!-- Block 3: Metrics row (again) -->
+  <div style="margin: 2px 8px; text-align: center;">
+    <div style="display: inline-block; width: 30%;">
+      <div class="block-metric" style="width: auto;">
+        <div style="font-family: monospace; font-size: 8px; color: #888;">Holders</div>
+        <div class="dw-phosphor" style="color: #00FF88; font-size: 13px;">2,847</div>
+      </div>
+    </div>
+    <div style="display: inline-block; width: 30%;">
+      <div class="block-metric" style="width: auto;">
+        <div style="font-family: monospace; font-size: 8px; color: #888;">TVL</div>
+        <div class="dw-phosphor" style="color: #44BBAA; font-size: 13px;">$890K</div>
+      </div>
+    </div>
+    <div style="display: inline-block; width: 30%;">
+      <div class="block-metric" style="width: auto;">
+        <div style="font-family: monospace; font-size: 8px; color: #888;">Mcap</div>
+        <div class="dw-phosphor" style="color: #00C96C; font-size: 13px;">$2.1M</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Block 4: Bar chart -->
+  <div class="block-chart">
+    <div style="font-family: monospace; font-size: 10px; color: #999; margin-bottom: 8px;">Volume (24h) by Hour</div>
+    <div style="display: flex; gap: 2px; align-items: flex-end; height: 50px; padding: 4px 0;">
+      <div style="flex: 1; height: 10px; background: #00BFFF; border-radius: 2px; opacity: 0.2;"></div>
+      <div style="flex: 1; height: 14px; background: #00BFFF; border-radius: 2px; opacity: 0.25;"></div>
+      <div style="flex: 1; height: 18px; background: #00BFFF; border-radius: 2px; opacity: 0.3;"></div>
+      <div style="flex: 1; height: 22px; background: #00BFFF; border-radius: 2px; opacity: 0.4;"></div>
+      <div style="flex: 1; height: 28px; background: #00BFFF; border-radius: 2px; opacity: 0.5;"></div>
+      <div style="flex: 1; height: 36px; background: #00BFFF; border-radius: 2px; opacity: 0.6;"></div>
+      <div style="flex: 1; height: 42px; background: #00BFFF; border-radius: 2px; opacity: 0.7;"></div>
+      <div style="flex: 1; height: 48px; background: #00BFFF; border-radius: 2px; opacity: 0.85;"></div>
+      <div style="flex: 1; height: 44px; background: #00BFFF; border-radius: 2px; opacity: 0.75;"></div>
+      <div style="flex: 1; height: 38px; background: #00BFFF; border-radius: 2px; opacity: 0.6;"></div>
+      <div style="flex: 1; height: 30px; background: #00BFFF; border-radius: 2px; opacity: 0.5;"></div>
+      <div style="flex: 1; height: 24px; background: #00BFFF; border-radius: 2px; opacity: 0.35;"></div>
+    </div>
+    <div style="display: flex; justify-content: space-between; margin-top: 4px;">
+      <span style="font-family: monospace; font-size: 7px; color: #666;">-12h</span>
+      <span style="font-family: monospace; font-size: 7px; color: #666;">now</span>
+    </div>
+  </div>
+
+  <!-- Block 5: Tags block -->
+  <div class="section-hdr" style="margin-top: 2px;">-- Tags --</div>
+  <div class="block-tags">
+    <span class="tag-chip info">volume-spike</span>
+    <span class="tag-chip success">accumulating</span>
+    <span class="tag-chip warning">high-social</span>
+    <span class="tag-chip error">whale-activity</span>
+    <span class="tag-chip info">kombuy</span>
+    <span class="tag-chip">defi</span>
+    <span class="tag-chip">ethereum</span>
+  </div>
+
+  <!-- ␂────── MARKET DATA ────── -->
+  <div class="section-hdr">-- Market Data --</div>
+  <div style="margin: 2px 8px; background: #0E0E16; border-radius: 8px; border: 1px solid #2A2A34;">
+    <div class="mkt-row"><span class="label">Price</span><span class="value">$0.000284</span></div>
+    <div class="mkt-row"><span class="label">Volume</span><span class="value">$8,742,000</span></div>
+    <div class="mkt-row"><span class="label">Liquidity</span><span class="value">$890,000</span></div>
+    <div class="mkt-row"><span class="label">Market Cap</span><span class="value">$2,184,000</span></div>
+  </div>
+
+  <!-- ␂────── SIGNALS DETECTED ────── -->
+  <div class="section-hdr">-- Signals Detected --</div>
+  <div style="margin: 2px 8px;">
+    <div style="display: flex; align-items: center; padding: 7px 10px; border: 1px solid #2A2A34; border-radius: 6px; background: #0E0E16; margin: 2px 0;">
+      <span style="font-family: monospace; font-size: 10px; color: #6C3BFF; margin-right: 6px;">[!]</span>
+      <span style="flex: 1; font-family: sans-serif; font-size: 12px; color: #BBB;">Volume spike exceeds 300% threshold</span>
+      <span style="font-family: monospace; font-size: 9px; color: #E0A000;">HIGH</span>
+    </div>
+    <div style="display: flex; align-items: center; padding: 7px 10px; border: 1px solid #2A2A34; border-radius: 6px; background: #0E0E16; margin: 2px 0;">
+      <span style="font-family: monospace; font-size: 10px; color: #6C3BFF; margin-right: 6px;">[!]</span>
+      <span style="flex: 1; font-family: sans-serif; font-size: 12px; color: #BBB;">Social mentions up 840% across channels</span>
+      <span style="font-family: monospace; font-size: 9px; color: #E0A000;">HIGH</span>
+    </div>
+    <div style="display: flex; align-items: center; padding: 7px 10px; border: 1px solid #2A2A34; border-radius: 6px; background: #0E0E16; margin: 2px 0;">
+      <span style="font-family: monospace; font-size: 10px; color: #6C3BFF; margin-right: 6px;">[!]</span>
+      <span style="flex: 1; font-family: sans-serif; font-size: 12px; color: #BBB;">New whale wallets accumulating</span>
+      <span style="font-family: monospace; font-size: 9px; color: #FFAA00;">MEDIUM</span>
+    </div>
+  </div>
+
+  <!-- ␂────── SOURCES ────── -->
+  <div class="section-hdr">-- Sources --</div>
+  <div style="margin: 2px 8px;">
+    <div class="source-item">
+      <span class="icon">[L]</span>
+      <div style="flex: 1;">
+        <div class="title">DexScreener BONGO Pool</div>
+        <div class="sub">dexscreener.com/bongo/0x...</div>
+      </div>
+    </div>
+    <div class="source-item">
+      <span class="icon">[L]</span>
+      <div style="flex: 1;">
+        <div class="title">Telegram KOM Channel</div>
+        <div class="sub">t.me/bongo_community</div>
+      </div>
+    </div>
+    <div class="source-item">
+      <span class="icon">[L]</span>
+      <div style="flex: 1;">
+        <div class="title">CoinGecko Market Data</div>
+        <div class="sub">coingecko.com/coins/bongo</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ␂────── BOTTOM SPACER ────── -->
+  <div style="height: 30px;"></div>
+
+</div>
+
+<div style="margin-top: 20px; max-width: 600px; margin: 0 auto;">
+  <h2 style="font-size: 18px; margin-bottom: 8px; color: #E0E4EE;">⡂ Dark Web Detail — Design Decisions</h2>
+  <div style="background: #0E0E16; border-radius: 8px; border: 1px solid #2A2A34; padding: 16px 20px;">
+
+    <p style="font-family: sans-serif; font-size: 13px; color: #BBB; line-height: 1.6; margin-bottom: 12px;">
+      <strong style="color: #E0E4EE;">Header section:</strong> Token avatar with urgency-colored border. Title and summary in sans-serif for readability. Key observations use <span style="color: #00C96C;">green</span> phosphor numbers for positive signals.
+    </p>
+    <p style="font-family: sans-serif; font-size: 13px; color: #BBB; line-height: 1.6; margin-bottom: 12px;">
+      <strong style="color: #E0E4EE;">Metadata bar:</strong> Sentiment badge (+colored border), confidence score, category tag, scan ID. All in pill-style chips with subtle borders.
+    </p>
+    <p style="font-family: sans-serif; font-size: 13px; color: #BBB; line-height: 1.6; margin-bottom: 12px;">
+      <strong style="color: #E0E4EE;">Analysis blocks:</strong> Same block components as feed, but full-width and detail page. Metrics display as side-by-side cards. Charts show full bar charts with rounded bars and opacity gradients. Tags appear here (never on feed).
+    </p>
+    <p style="font-family: sans-serif; font-size: 13px; color: #BBB; line-height: 1.6; margin-bottom: 12px;">
+      <strong style="color: #E0E4EE;">Market data table:</strong> Clean monospace rows with phosphor-styled values. Sources as clickable cards with domain metadata.
+    </p>
+    <p style="font-family: sans-serif; font-size: 13px; color: #BBB; line-height: 1.6;">
+      <strong style="color: #E0E4EE;">Consistent Dark Web patterns:</strong> 8px radius throughout, colored shadows on urgency elements, hybrid fonts (sans-serif for narrative, monospace for data), phosphor glow on all numeric values, live pulse dot in top bar.
+    </p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
