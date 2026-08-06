@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=900, initial-scale=1">
+<title>Term-Plus Mockup — Crypto AI Portfolio</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #08080D; color: #E0E0EC; font-family: system-ui, sans-serif; padding: 24px; }
+  .page { max-width: 1200px; margin: 0 auto; }
+
+  h1 { font-size: 22px; color: #6C3BFF; margin-bottom: 2px; font-family: 'Courier New', monospace; }
+  .subtitle { color: #A0A0AA; font-size: 12px; margin-bottom: 6px; font-family: 'Courier New', monospace; }
+  .section-divider { border: none; border-top: 1px solid #2A2A34; margin: 24px 0; }
+
+  /* ── Feature Key ── */
+  .feature-grid { display: flex; gap: 10px; flex-wrap: wrap; margin: 8px 0 20px; }
+  .feature-tag { font-size: 11px; padding: 4px 10px; background: #0D0D15; color: #6C3BFF; border: 1px solid #6C3BFF; font-family: 'Courier New', monospace; }
+
+  /* ── Phone Frame ── */
+  .phone { width: 390px; background: #08080D; border: 1px solid #2A2A34; padding: 0; display: inline-block; margin: 10px; vertical-align: top; overflow: hidden; }
+  .phone-label { text-align: center; color: #A0A0AA; font-size: 10px; margin-top: 4px; font-family: 'Courier New', monospace; }
+
+  /* ── TOP STATUS BAR ── */
+  .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; font-family: 'Courier New', monospace; font-size: 10px; border-bottom: 1px solid #1A1A24; }
+  .top-bar .left { color: #6C3BFF; }
+  .top-bar .right { color: #A0A0AA; }
+  .blink { animation: blink 1s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ── CATEGORY FILTER ROW ── */
+  .filter-row { display: flex; gap: 4px; padding: 6px 8px; flex-wrap: wrap; }
+  .filter-pill { font-family: 'Courier New', monospace; font-size: 9px; padding: 3px 8px; border: 1px solid #2A2A34; color: #A0A0AA; background: transparent; }
+  .filter-pill.active { border-color: #6C3BFF; color: #6C3BFF; background: transparent; }
+
+  /* ── FEED CARD V2 ── */
+  .card { width: 374px; border: 1px solid #00BFFF; background: #101018; position: relative; margin: 6px 8px; }
+  
+  /* Top neon accent bar — wider/thicker for higher urgency */
+  .neon-bar { height: 2px; background: #00BFFF; }
+  .neon-bar.critical { height: 4px; background: #FF3B1D; box-shadow: 0 0 6px #FF3B1D; }
+  .neon-bar.urgent { height: 3px; background: #FF7B2D; }
+  .neon-bar.alert { height: 2.5px; background: #FFB02D; }
+  .neon-bar.watch { height: 2px; background: #FFB02D; }
+  .neon-bar.info { height: 2px; background: #00BFFF; }
+  
+  /* ⡂ Watermark badge */
+  .ai-badge { position: absolute; bottom: 4px; right: 6px; font-size: 8px; font-family: 'Courier New', monospace; color: #FF44AA; opacity: 0.5; }
+
+  /* ── CARD HEADER ── */
+  .card-header { display: flex; align-items: center; gap: 6px; padding: 8px 8px 4px 8px; }
+  .token-icon { width: 24px; height: 24px; background: #0D0D15; border: 1px solid #00BFFF; text-align: center; line-height: 24px; font-size: 11px; color: #00BFFF; font-family: 'Courier New', monospace; }
+  .token-symbol { font-size: 12px; font-weight: 700; font-family: 'Courier New', monospace; color: #E0E0EC; }
+  .token-name { font-size: 9px; color: #A0A0AA; font-family: 'Courier New', monospace; }
+  .urgency-badge { font-size: 7px; padding: 1px 5px; border: 1px solid; font-family: 'Courier New', monospace; font-weight: 700; }
+  .urgency-badge.critical { border-color: #FF3B1D; color: #FF3B1D; background: #0D0D15; }
+  .urgency-badge.alert { border-color: #FFB02D; color: #FFB02D; }
+  .urgency-badge.info { border-color: #00BFFF; color: #00BFFF; }
+  .urgency-badge.urgent { border-color: #FF7B2D; color: #FF7B2D; }
+  
+  .card-title { font-size: 11px; font-family: system-ui, sans-serif; font-weight: 500; color: #C0C0CC; padding: 2px 8px 6px 8px; line-height: 1.2; }
+
+  /* ── ⡂ BLOCK ZONES ── */
+  .block-zone { display: flex; align-items: center; }
+
+  /* Vertical accent rail */
+  .accent-rail { width: 2px; min-height: 100%; }
+  .rail-text { background: #0D0D15; border: 1px solid #6C3BFF; }
+  .rail-metric { background: #00C96C; }
+  .rail-chart { background: #00BFFF; }
+  .rail-callout { background: #E0C000; }
+  .rail-sentiment { background: #FF44AA; }
+  .rail-social { background: #FFB02D; }
+
+  .block-content { flex: 1; padding: 5px 6px 5px 4px; }
+
+  /* ── Text Block ── */
+  .block-text { font-size: 11px; font-family: system-ui, sans-serif; color: #C8C8D4; line-height: 1.35; }
+
+  /* ── Metric Block ── */
+  .block-metric { display: flex; align-items: center; gap: 8px; }
+  .metric-value { font-size: 18px; font-weight: 700; font-family: 'Courier New', monospace; color: #E0E0EC; }
+  .metric-value.up { color: #00C96C; }
+  .metric-value.down { color: #FF4444; }
+  .metric-trend { font-size: 13px; font-family: 'Courier New', monospace; }
+  .metric-trend.up { color: #00C96C; }
+  .metric-trend.down { color: #FF4444; }
+  .metric-label { font-size: 9px; color: #A0A0AA; font-family: 'Courier New', monospace; }
+
+  /* ── Metrics Row (2-up) ── */
+  .metrics-row { display: flex; gap: 10px; }
+  .metric-cell { flex: 1; text-align: center; }
+  .metric-cell .mv { font-size: 15px; font-weight: 700; font-family: 'Courier New', monospace; color: #E0E0EC; }
+  .metric-cell .ml { font-size: 8px; color: #A0A0AA; font-family: 'Courier New', monospace; }
+
+  /* ── Callout Block ── */
+  .callout-block { display: flex; align-items: center; gap: 5px; border: 1px solid #E0C000; background: #0D0D14; padding: 4px 6px; }
+  .callout-icon { font-size: 10px; font-family: 'Courier New', monospace; color: #E0C000; }
+  .callout-text { font-size: 10px; font-family: system-ui, sans-serif; color: #D0D0DC; flex: 1; }
+
+  /* ── Sentiment Row ── */
+  .sentiment-row { display: flex; gap: 3px; }
+  .sentiment-pip { flex: 1; height: 3px; }
+  .sentiment-pip.pos { background: #00C96C; }
+  .sentiment-pip.neg { background: #FF4444; }
+  .sentiment-pip.neu { background: #A0A0AA; }
+
+  /* ── Progress Bar ── */
+  .prog-bar { height: 4px; background: #1A1A24; }
+  .prog-fill { height: 100%; background: #00BFFF; }
+  .prog-label { font-size: 8px; color: #A0A0AA; font-family: 'Courier New', monospace; text-align: center; }
+
+  /* ── Section Divider (block group separator) ── */
+  .block-divider { display: flex; align-items: center; gap: 4px; padding: 2px 6px; }
+  .divider-line { flex: 1; height: 1px; background: #1A1A24; }
+  .divider-dot { width: 4px; height: 4px; background: #6C3BFF; }
+
+  /* ── ⡂ Chart Block ── */
+  .chart-area { height: 28px; border: 1px solid #2A2A34; background: #08080F; }
+
+  /* ── ⡂ META BAR ── */
+  .meta-bar { display: flex; align-items: center; gap: 4px; padding: 3px 8px; background: #0D0D15; font-size: 7px; font-family: 'Courier New', monospace; color: #A0A0AA; }
+  .meta-dot { width: 3px; height: 3px; border-radius: 50%; background: #6C3BFF; }
+  .meta-accent { color: #6C3BFF; }
+  .meta-signal { color: #00BFFF; }
+
+  /* ── ⡂ FLOATING "Jarvis v1.0" in bottom-right ── */
+  .jarvis-stamp { position: absolute; bottom: 2px; right: 4px; font-size: 7px; font-family: 'Courier New', monospace; color: #FF44AA; opacity: 0.35; }
+
+  /* ── ⡂ BOTTOM TAB BAR ── */
+  .tab-bar { display: flex; justify-content: space-around; padding: 6px 0 10px; border-top: 1px solid #1A1A24; background: #08080D; font-family: 'Courier New', monospace; font-size: 9px; text-align: center; }
+  .tab { flex: 1; padding: 4px; color: #666; }
+  .tab.active { color: #6C3BFF; }
+  .tab .underline { height: 2px; background: transparent; margin: 2px auto 0; width: 16px; }
+  .tab.active .underline { background: #6C3BFF; width: 24px; }
+  .tab .status-dot { width: 4px; height: 4px; background: #00BFFF; border-radius: 0; }
+  .tab-icon { font-size: 16px; display: block; }
+
+  /* ── Design Annotations ── */
+  .annotation { background: #1A1A24; border: 1px solid #6C3BFF; padding: 12px; margin: 8px 0; font-family: system-ui, sans-serif; font-size: 13px; color: #CCC; line-height: 1.5; }
+  .annotation strong { color: #00BFFF; }
+  .annotation code { font-family: 'Courier New', monospace; font-size: 11px; color: #6C3BFF; background: #0D0D15; padding: 1px 4px; }
+  .annotation .tag { font-family: 'Courier New', monospace; font-size: 10px; color: #FF44AA; background: #0D0D15; border: 1px solid #FF44AA44; padding: 1px 5px; margin: 0 2px; }
+
+  .before-after { display: flex; gap: 16px; background: #1A1A24; padding: 14px; border-radius: 0; }
+  .ba-col { flex: 1; }
+  .ba-col h3 { font-size: 14px; font-family: 'Courier New', monospace; font-weight: 700; color: #A0A0AA; border-bottom: 1px solid #2A2A34; padding-bottom: 6px; }
+  .ba-col ul { font-size: 11px; color: #C0C0CC; padding: 6px; line-height: 1.6; }
+  .ba-col ul li { margin: 2px 0; }
+  .ba-col ul .new { color: #00C96C; }
+
+  /* ── FEATURE SHOWCASE ── */
+  .showcase { display: flex; gap: 24px; background: #101018; border: 1px solid #2A2A34; padding: 16px; margin: 12px 0; }
+  .showcase-item { flex: 1; text-align: center; }
+  .showcase-item .icon { font-size: 20px; display: block; margin-bottom: 4px; }
+  .showcase-item .label { font-size: 10px; font-family: 'Courier New', monospace; color: #A0A0AA; }
+  .showcase-item .desc { font-size: 9px; color: #666; font-family: 'Courier New', monospace; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<h1>⡂ TERM-PLUS · Terminal Redesigned</h1>
+<div class="subtitle">Same terminal soul. More visual rhythm, hierarchy, and polish.</div>
+<div class="subtitle" style="color: #FF44AA;">Jarvis ID: design-v2.0 · 2026-08-05</div>
+
+<!-- ── FEATURE KEY ── -->
+<div class="feature-grid">
+  <span class="feature-tag">⡂ Accent Rails</span>
+  <span class="feature-tag">⡂ Block Zones</span>
+  <span class="feature-tag">⡂ Weighted Neon Bars</span>
+  <span class="feature-tag">⡂ Meta Bar</span>
+  <span class="feature-tag">⡂ Hybrid Fonts</span>
+  <span class="feature-tag">⡂ Block Dividers</span>
+  <span class="feature-tag">⡂ AI Watermark</span>
+  <span class="feature-tag">⡂ Entry Animation</span>
+</div>
+
+<hr class="section-divider">
+
+<!-- ␐═══════════════════════════════════════════════════ -->
+<!-- SECTION: BEFORE vs AFTER -->
+<!-- ␐═══════════════════════════════════════════════════ -->
+<h2 style="font-size: 16px; font-family: 'Courier New', monospace; color: #00BFFF; margin-bottom: 8px;">⡂ BEFORE vs AFTER</h2>
+
+<div class="before-after">
+  <div class="ba-col">
+    <h3>BEFORE · Current Terminal</h3>
+    <ul>
+      <li>Flat card with uniform 1px border</li>
+      <li>All blocks stacked with same bg (#0D0D14)</li>
+      <li>No visual separation between block types</li>
+      <li>All text in Courier New</li>
+      <li>No metadata / provenance on card</li>
+      <li>Cards feel like containers, not reports</li>
+      <li>No brand identity on cards</li>
+    </ul>
+  </div>
+  <div class="ba-col">
+    <h3>AFTER · Term-Plus</h3>
+    <ul>
+      <li class="new">Weighted neon top bar (urgency = thickness + glow)</li>
+      <li class="new">Per-block accent rails (color-coded by block type)</li>
+      <li class="new">Section dividers with § dots between block groups</li>
+      <li class="new">Hybrid font: system-ui for narrative, monospace for data</li>
+      <li class="new">Meta bar: scan ID, confidence, liquidity, timestamp</li>
+      <li class="new">Block zones have distinct bg shades (subtle depth)</li>
+      <li class="new">🤖 AI watermark (branded, subtle)</li>
+      <li class="new">Cards feel like intelligence reports</li>
+    </ul>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ␐═══════════════════════════════════════════════════ -->
+<!-- SECTION: FEATURE SHOWCASE -->
+<!-- ␐═══════════════════════════════════════════════════ -->
+<h2 style="font-size: 16px; font-family: 'Courier New', monospace; color: #00BFFF; margin-bottom: 8px;">⡂ What's New — Design Dimensions</h2>
+
+<div class="showcase">
+  <div class="showcase-item">
+    <div class="icon" style="color: #00BFFF;">█</div>
+    <div class="label">⡂ Accent Rails</div>
+    <div class="desc">2px vertical bar per block, color-coded by type</div>
+  </div>
+  <div class="showcase-item">
+    <div class="icon" style="color: #6C3BFF;">§</div>
+    <div class="label">⡂ Block Dividers</div>
+    <div class="desc">§ dot separators between logical block groups</div>
+  </div>
+  <div class="showcase-item">
+    <div class="icon" style="color: #FF44AA;">$</div>
+    <div class="label">⡂ Meta Bar</div>
+    <div class="desc">Provenance line: scan·conf·liq·timestamp</div>
+  </div>
+  <div class="showcase-item">
+    <div class="icon" style="color: #FF3B1D;">▄</div>
+    <div class="label">⡂ Weighted Bar</div>
+    <div class="desc">Urgency = thicker neon + glow on critical</div>
+  </div>
+  <div class="showcase-item">
+    <div class="icon" style="color: #00C96C;">Aa</div>
+    <div class="label">⡂ Hybrid Fonts</div>
+    <div class="desc">Sans-serif for narrative, mono for data</div>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ␐═══════════════════════════════════════════════════ -->
+<!-- SECTION: PHONE MOCKUPS — 3 Example Feed Cards -->
+<!-- ␐═══════════════════════════════════════════════════ -->
+<h2 style="font-size: 16px; font-family: 'Courier New', monospace; color: #00BFFF; margin-bottom: 8px;">⡂ Feed View · Scrollable Cards (430w × 580h)</h2>
+
+<div class="phone">
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <span class="left">⡂ intelligence feed</span>
+    <span class="right">🤖 Meme Trader <span style="color: #00BFFF;">●</span></span>
+  </div>
+
+  <!-- Category Pills -->
+  <div class="filter-row">
+    <span class="filter-pill active">[+] ALL</span>
+    <span class="filter-pill">[N] NEWS</span>
+    <span class="filter-pill">[P] PRICE</span>
+    <span class="filter-pill">[S] SOCIAL</span>
+    <span class="filter-pill">[D] DEV</span>
+  </div>
+
+  <!-- ␐ CARD 1: CRITICAL — PEPE surge -->
+  <div class="card" style="border-color: #FF3B1D;">
+    <div class="neon-bar critical"></div>
+
+    <!-- Header -->
+    <div class="card-header">
+      <div class="token-icon" style="color: #FF3B1D; border-color: #FF3B1D;">P</div>
+      <div style="flex: 1;">
+        <span class="token-symbol">PEPE</span>
+        <span class="token-name" style="margin-left: 4px;">ETH</span>
+      </div>
+      <span class="urgency-badge critical">CRITICAL</span>
+    </div>
+
+    <!-- Title (hybrid font) -->
+    <div class="card-title">🚨 Whale accumulation detected — 112% surge in 1h</div>
+
+    <!-- ⡂ BLOCK DIVIDER -->
+    <div class="block-divider"><span class="divider-line"></span><span class="divider-dot"></span><span class="divider-line"></span></div>
+
+    <!-- Block: Metric (Accent Rail = green) -->
+    <div class="block-zone">
+      <div class="accent-rail rail-metric"></div>
+      <div class="block-content">
+        <div class="block-metric">
+          <div>
+            <div class="metric-value up">$0.000524 <span class="metric-trend up">↑ +112%</span></div>
+            <div class="metric-label">Price · 1h change</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⡂ BLOCK DIVIDER -->
+    <div class="block-divider"><span class="divider-line"></span><span class="divider-dot"></span><span class="divider-line"></span></div>
+
+    <!-- Block: Metrics Row (2-up) -->
+    <div class="block-zone">
+      <div class="accent-rail rail-chart"></div>
+      <div class="block-content">
+        <div class="metrics-row">
+          <div class="metric-cell"><div class="mv" style="color:#00BFFF;">$12.4M</div><div class="ml">Volume</div></div>
+          <div class="metric-cell"><div class="mv" style="color:#A0A0AA;">42.9K</div><div class="ml">Holders</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Block: Text (Accent Rail = purple/analysis) -->
+    <div class="block-zone">
+      <div class="accent-rail rail-text"></div>
+      <div class="block-content">
+        <span class="block-text">Volume spiked 12x across 3 DEX pairs. Whales accumulating on ETH chain. Social sentiment strongly bullish across Telegram and X.</span>
+      </div>
+    </div>
+
+    <!-- ⡂ BLOCK DIVIDER -->
+    <div class="block-divider"><span class="divider-line"></span><span class="divider-dot"></span><span class="divider-line"></span></div>
+
+    <!-- Block: Sentiment (Accent Rail = AI/pink) -->
+    <div class="block-zone">
+      <div class="accent-rail rail-sentiment"></div>
+      <div class="block-content">
+        <div class="sentiment-row">
+          <div class="sentiment-pip pos" style="flex: 0.72;"></div>
+          <div class="sentiment-pip neg" style="flex: 0.08;"></div>
+          <div class="sentiment-pip neu" style="flex: 0.20;"></div>
+        </div>
+        <div style="font-size: 8px; color: #A0A0AA; font-family: 'Courier New', monospace; margin-top: 1px;">72% pos · 8% neg · 20% neu</div>
+      </div>
+    </div>
+
+    <!-- ⡂ META BAR -->
+    <div class="meta-bar">
+      <span class="meta-dot"></span>
+      <span>scan #284 ·</span>
+      <span class="meta-accent">conf 0.84</span>
+      <span>·</span>
+      <span class="meta-signal">$4.2K liq</span>
+      <span>· 2m ago</span>
+      <span style="flex: 1;"></span>
+      <span style="color: #888;">[DEEP]</span>
+    </div>
+
+    <!-- AI stamp -->
+    <div class="jarvis-stamp">🤖 v1.0</div>
+  </div>
+
+  <!-- ␐ CARD 2: ALERT — BONK volume spike -->
+  <div class="card" style="border-color: #FFB02D; margin-top: 4px;">
+    <div class="neon-bar alert"></div>
+
+    <div class="card-header">
+      <div class="token-icon" style="color: #FFB02D; border-color: #FFB02D;">B</div>
+      <div style="flex: 1;">
+        <span class="token-symbol">BONK</span>
+        <span class="token-name" style="margin-left: 4px;">SOL</span>
+      </div>
+      <span class="urgency-badge alert">ALERT</span>
+    </div>
+
+    <div class="card-title">Volume spiked 3x in 15 minutes — social buzz rising</div>
+
+    <div class="block-divider"><span class="divider-line"></span><span class="divider-dot"></span><span class="divider-line"></span></div>
+
+    <!-- Metric -->
+    <div class="block-zone">
+      <div class="accent-rail rail-metric"></div>
+      <div class="block-content">
+        <div class="block-metric">
+          <div>
+            <div class="metric-value up">$0.000003 <span class="metric-trend up">↑ +8.2%</span></div>
+            <div class="metric-label">Price · 15m change</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metrics Row -->
+    <div class="block-zone">
+      <div class="accent-rail rail-chart"></div>
+      <div class="block-content">
+        <div class="metrics-row">
+          <div class="metric-cell"><div class="mv" style="color:#FFB02D;">$2.1M</div><div class="ml">Volume</div></div>
+          <div class="metric-cell"><div class="mv" style="color:#A0A0AA;">800K</div><div class="ml">Liquidity</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Callout -->
+    <div class="block-zone">
+      <div class="accent-rail rail-callout"></div>
+      <div class="block-content">
+        <div class="callout-block">
+          <span class="callout-icon">(!)</span>
+          <span class="callout-text">3x volume spike in 15m. Monitor for potential whale activity.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="block-divider"><span class="divider-line"></span><span class="divider-dot"></span><span class="divider-line"></span></div>
+
+    <!-- Sentiment -->
+    <div class="block-zone">
+      <div class="accent-rail rail-sentiment"></div>
+      <div class="block-content">
+        <div class="sentiment-row">
+          <div class="sentiment-pip pos" style="flex: 0.55;"></div>
+          <div class="sentiment-pip neg" style="flex: 0.12;"></div>
+          <div class="sentiment-pip neu" style="flex: 0.33;"></div>
+        </div>
+        <div style="font-size: 8px; color: #A0A0AA; font-family: 'Courier New', monospace; margin-top: 1px;">55% pos · 12% neg · 33% neu</div>
+      </div>
+    </div>
+
+    <div class="meta-bar">
+      <span class="meta-dot"></span>
+      <span>scan #281 ·</span>
+      <span class="meta-accent">conf 0.62</span>
+      <span>·</span>
+      <span class="meta-signal">$800K liq</span>
+      <span>· 15m ago</span>
+      <span style="flex: 1;"></span>
+      <span style="color: #888;">[QUICK]</span>
+    </div>
+
+    <div class="jarvis-stamp">🤖 v1.0</div>
+  </div>
+
+  <!-- ␐ CARD 3: INFO — SHIB stading -->
+  <div class="card" style="border-color: #00BFFF; margin-top: 4px;">
+    <div class="neon-bar info"></div>
+
+    <div class="card-header">
+      <div class="token-icon" style="color: #00BFFF; border-color: #00BFFF;">S</div>
+      <div style="flex: 1;">
+        <span class="token-symbol">SHIB</span>
+        <span class="token-name" style="margin-left: 4px;">ETH</span>
+      </div>
+      <span class="urgency-badge info">INFO</span>
+    </div>
+
+    <div class="card-title">Stading steady — no significant changes detected</div>
+
+    <div class="block-divider"><span class="divider-line"></span><span class="divider-dot"></span><span class="divider-line"></span></div>
+
+    <div class="block-zone">
+      <div class="accent-rail rail-metric"></div>
+      <div class="block-content">
+        <div class="block-metric">
+          <div>
+            <div class="metric-value" style="color: #A0A0AA;">$0.000018 <span class="metric-trend" style="color: #A0A0AA;">→ 0.0%</span></div>
+            <div class="metric-label">Price · stading</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart (simple bar) -->
+    <div class="block-zone">
+      <div class="accent-rail rail-chart"></div>
+      <div class="block-content">
+        <div class="chart-area">
+          <div style="display: flex; align-items: flex-end; height: 24px; padding: 2px 3px; gap: 2px;">
+            <div style="width: 8%; height: 60%; background: #00BFFF;"></div>
+            <div style="width: 8%; height: 45%; background: #00BFFF;"></div>
+            <div style="width: 8%; height: 70%; background: #00BFFF;"></div>
+            <div style="width: 8%; height: 55%; background: #00BFFF;"></div>
+            <div style="width: 8%; height: 80%; background: #00BFFF;"></div>
+            <div style="width: 8%; height: 65%; background: #00BFFF;"></div>
+            <div style="width: 8%; height: 50%; background: #00BFFF;"></div>
+            <div style="width: 8%; height: 75%; background: #00BFFF;"></div>
+            <div style="width: 8%; height: 55%; background: #00BFFF;"></div>
+            <div style="width: 8%; height: 60%; background: #00BFFF;"></div>
+          </div>
+        </div>
+        <div style="font-size: 8px; color: #A0A0AA; font-family: 'Courier New', monospace; text-align: center;">24h volume trend</div>
+      </div>
+    </div>
+
+    <!-- Block: Text -->
+    <div class="block-zone">
+      <div class="accent-rail rail-text"></div>
+      <div class="block-content">
+        <span class="block-text">Social activity stable. No significant wallet movements. Tracked for next scan.</span>
+      </div>
+    </div>
+
+    <div class="meta-bar">
+      <span class="meta-dot"></span>
+      <span>scan #280 ·</span>
+      <span class="meta-accent">conf 0.32</span>
+      <span>·</span>
+      <span class="meta-signal">$4.1M liq</span>
+      <span>· 32m ago</span>
+      <span style="flex: 1;"></span>
+      <span style="color: #888;">[QUICK]</span>
+    </div>
+
+    <div class="jarvis-stamp">🤖 v1.0</div>
+  </div>
+
+  <!-- Bottom Tab Bar -->
+  <div class="tab-bar">
+    <div class="tab active">
+      <div class="tab-icon">⚡<span class="status-dot" style="position: absolute; top: 0; right: -2px;"></span></div>
+      Feed
+      <div class="underline"></div>
+    </div>
+    <div class="tab"><div class="tab-icon">◆</div>Tracked<div class="underline"></div></div>
+    <div class="tab"><div class="tab-icon" style="color: #6C3BFF;">+</div><div class="underline"></div></div>
+    <div class="tab"><div class="tab-icon">▄</div>Reports<div class="underline"></div></div>
+    <div class="tab"><div class="tab-icon">⚙</div>Settings<div class="underline"></div></div>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ␐═══════════════════════════════════════════════════ -->
+<!-- SECTION: DETAILED CALLOUTS OF EACH CHANGE -->
+<!-- ␐═══════════════════════════════════════════════════ -->
+<h2 style="font-size: 16px; font-family: 'Courier New', monospace; color: #00BFFF; margin-bottom: 8px;">⡂ Design System Breakdown</h2>
+
+<div class="annotation">
+  <strong>⡂ 1. Weighted Neon Top Bar</strong><br>
+  Currently all cards have a uniform 1px top border. In Term-Plus, the top bar's <strong>thickness scales with urgency</strong>:<br>
+  <code>INFO • 2px</code>
+  <code>WATCH • 2px</code>
+  <code>ALERT • 2.5px</code>
+  <code>URGENT • 3px</code>
+  <code>CRITICAL • 4px + outer glow (box-shadow)</code><br><br>
+  This creates <strong>felt urgency</strong> — critical cards literally loom larger in the scroll without adding visual noise.
+</div>
+
+<div class="annotation">
+  <strong>⡂ 2. Per-Block Accent Rails</strong><br>
+  Each block inside a card gets a 2px left-side vertical rail, <strong>color-coded by block type</strong>:<br>
+  <span class="tag">text → #6C3BFF (purple/analysis)</span>
+  <span class="tag">metric → #00C96C (green/data)</span>
+  <span class="tag">chart → #00BFFF (cyan/visualization)</span>
+  <span class="tag">callout → #E0C000 (warning/signal)</span>
+  <span class="tag">sentiment → #FF44AA (pink/AI)</span>
+  <span class="tag">social → #FFB02D (orange/social)</span><br><br>
+  This turns a flat wall of blocks into a <strong>visual rhythm</strong> — you can scan a card by the rainbow of left rails alone.
+</div>
+
+<div class="annotation">
+  <strong>⡂ 3. Block Dividers (§)</strong><br>
+  Between logical block groups, a thin line + centered <code>§</code> dot in <code>#6C3BFF</code>. Groups are: header section, data section, analysis section, meta section.<br>
+  This replaces the current "everything just touching everything" feel with intentional breathing room.
+</div>
+
+<div class="annotation">
+  <strong>⡂ 4. Hybrid Font Stack</strong><br>
+  Currently 100% Courier New. In Term-Plus:<br>
+  <code>Card titles → system-ui (sans-serif)</code><br>
+  <code>Narrative text → system-ui (sans-serif)</code><br>
+  <code>Metrics, labels, timestamps, badges → Courier New (monospace)</code><br><br>
+  This is the biggest readability win — prose is read in a proportional font, data stays in monospace where it belongs. Terminal feel preserved for everything data.
+</div>
+
+<div class="annotation">
+  <strong>⡂ 5. Meta Bar (Provenance Line)</strong><br>
+  Every card gets a thin meta bar at the bottom showing:<br>
+  <code>● scan #284 · conf 0.84 · $4.2K liq · 2m ago · [DEEP]</code><br><br>
+  Makes each card feel like an <strong>intelligence report</strong> with provenance. Also useful for debugging — you can see which scan generated it and how confident the model was.
+</div>
+
+<div class="annotation">
+  <strong>⡂ 6. 🤖 AI Watermark</strong><br>
+  A subtle <code>🤖 v1.0</code> stamp in the bottom-right of every card in <code>#FF44AA</code> at 35% opacity. Brand recognition without being in-your-face. Like a terminal MOTD.
+</div>
+
+<div class="annotation">
+  <strong>⡂ 7. Active Tab Underline (Tab Bar)</strong><br>
+  Active tab gets a 2px neon underline (like <code>▃▃▃</code>) instead of just color change. Feed tab shows a <strong>blinking status dot</strong> when new items are streaming in.
+</div>
+
+<div class="annotation">
+  <strong>⡂ 8. Card Entry Animation (Future)</strong><br>
+  New cards fade in with <code>opacity: 0 → 1</code> + slight <code>translateY: 20px → 0</code> as they enter the viewport. Like <code>less</code> in terminal. Subtle but makes the feed feel alive.
+</div>
+
+<hr class="section-divider">
+
+<!-- ␐═══════════════════════════════════════════════════ -->
+<!-- SECTION: IMPLEMENTATION ORDER -->
+<!-- ␐═══════════════════════════════════════════════════ -->
+<h2 style="font-size: 16px; font-family: 'Courier New', monospace; color: #00BFFF; margin-bottom: 8px;">⡂ Recommended Build Order</h2>
+
+<div class="annotation" style="border-color: #00BFFF;">
+  <span class="tag">Phase 1 · Data Layer (safe, no visual risk)</span><br>
+  Add <code>blocks[].type</code> metadata to each block object in the backend feed response. No rendering changes yet.<br><br>
+
+  <span class="tag">Phase 2 · Accent Rails + Block Dividers</span><br>
+  Update <code>BlockFrame</code> in <code>CardRenderer.tsx</code> to render the left rail and conditional dividers between blocks. This is the highest-impact visual change and can be done in one component.<br><br>
+
+  <span class="tag">Phase 3 · Weighted Neon Bar</span><br>
+  Update the card's top border in <code>index.js</code> (feed) and <code>TerminalCard.tsx</code> (detail) to use thickness + glow based on urgency.<br><br>
+
+  <span class="tag">Phase 4 · Hybrid Typography</span><br>
+  Switch card <code>title</code> and <code>narrative block text</code> to system-ui (sans-serif). Keep <code>block-metric</code>, labels, badges, meta in Courier New. Update font utilities in <code>ThemeContext</code>.<br><br>
+
+  <span class="tag">Phase 5 · Meta Bar</span><br>
+  Add a new <code>MetaBar.tsx</code> component and inject it into the card footer in feed renderItem. Pull data from <code>item.scanId</code>, <code>item.confidence</code>, <code>item.liquidity</code>, <code>item.scanType</code>.<br><br>
+
+  <span class="tag">Phase 6 · AI Watermark</span><br>
+  Add <code>🤖 v1.0</code> stamp to <code>TerminalCard.tsx</code>. One line.<br><br>
+
+  <span class="tag">Phase 7 · Tab Bar Enhancements</span><br>
+  Add neon underline to active tab + blinking status dot on Feed tab when new items arrive.
+</div>
+
+<hr class="section-divider">
+
+<!-- ␐═══════════════════════════════════════════════════ -->
+<!-- SECTION: SUMMARY -->
+<!-- ␐═══════════════════════════════════════════════════ -->
+<h2 style="font-size: 16px; font-family: 'Courier New', monospace; color: #6C3BFF; margin-bottom: 8px;">⡂ TL;DR</h2>
+
+<div class="annotation" style="border-color: #6C3BFF; background: #181826;">
+  <strong style="color: #6C3BFF;">Term-Plus</strong> is the same terminal feed you know — same black bg, same neon urgency, same 1-per-scroll cards — but with <strong>visual texture added through: accent rails, block dividers, weighted neon bars, hybrid fonts, meta bars, and AI branding</strong>.<br><br>
+  Nothing changes about the feed layout, scrolling, or interaction model. It just <em>looks</em> more professional, more polished, and more like a finished product — without losing the terminal soul you chose.
+</div>
+
+</div>
+</body>
+</html>
