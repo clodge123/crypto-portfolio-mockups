@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1300, initial-scale=1">
-<title>Term-Plus v2 — Block Cards + Accent Rails + Animations</title>
+<title>Term-Plus — Block Catalog</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: #08080D; color: #E0E0EC; font-family: 'Courier New', 'Courier', system-ui, sans-serif; padding: 20px; }
@@ -11,1008 +11,1019 @@
 
   h1 { font-size: 22px; color: #6C3BFF; margin-bottom: 2px; }
   h1::before { content: '⡂ '; }
-  .subtitle { color: #A0A0AA; font-size: 11px; margin-bottom: 6px; }
+  .subtitle { color: #A0A0AA; font-size: 11px; margin-bottom: 4px; }
   .note { color: #FF44AA; font-size: 10px; margin-bottom: 16px; }
 
   /* ════ Animations ════ */
   @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
   @keyframes breathe { 0%,100% { opacity:0.35; filter:brightness(0.6); } 50% { opacity:1; filter:brightness(1.2); } }
-  @keyframes pulse-bar { 0%,100% { width:var(--pw); } 50% { width:calc(var(--pw) + 8%); } }
-  @keyframes glow-rail { 0%,100% { opacity:0.4; } 50% { opacity:1; } }
-  @keyframes neon-sweep { 0% { left:0; } 100% { left:100%; } }
-  @keyframes type-cursor { 0%,100% { opacity:1; } 50% { opacity:0; } }
-  @keyframes flicker { 0%,50%,100% { opacity:1; } 25%,75% { opacity:0.2; } }
-  @keyframes progress-fill { 0% { width:0; } 100% { width:var(--pct); } }
+  @keyframes pulse-bar { 0%,100% { opacity:0.5; } 50% { opacity:1; } }
+  @keyframes neon-rotate { 0%,100% { color:#00BFFF; } 33% { color:#FFB02D; } 66% { color:#6C3BFF; } }
   .anim-blink { animation: blink 1s steps(2) infinite; }
   .anim-breathe { animation: breathe 2s ease-in-out infinite; }
-  .anim-glow-rail { animation: glow-rail 2s ease-in-out infinite; }
-  .anim-flicker { animation: flicker 0.7s steps(4) infinite; }
-  .anim-cursor { animation: type-cursor 1s steps(2) infinite; }
+  .anim-pulse { animation: pulse-bar 1.5s ease-in-out infinite; }
+  .anim-rotate { animation: neon-rotate 4s linear infinite; }
 
-  .section { margin: 40px 0; padding: 10px 0; }
-  .section h2 { font-size: 18px; margin-bottom: 2px; color: #E0E4EE; }
+  .section { margin: 36px 0; padding: 8px 0; }
+  .section h2 { font-size: 18px; margin-bottom: 0; color: #E0E4EE; }
   .section h2::before { content: '═══ '; color: #2A2A34; }
-  .section .tagline { color: #888; font-size: 11px; margin-bottom: 16px; }
+  .section .tagline { color: #888; font-size: 10px; margin-bottom: 14px; }
 
-  .example-badge {
-    font-size: 10px; padding: 2px 10px; background: #1A1A24; border: 1px solid #2A2A34;
-    color: #6C3BFF; display: inline-block; margin-bottom: 8px;
-  }
+  .pg { display: flex; gap: 20px; margin-bottom: 36px; align-items: flex-start; }
+  .pf { width: 390px; background: #08080D; position: relative; overflow: hidden; display: inline-block; vertical-align: top; }
+  .pl { text-align: center; color: #888; font-size: 9px; margin-top: 4px; }
 
-  .pg { display: flex; gap: 24px; margin-bottom: 40px; align-items: flex-start; }
-  .pf {
-    width: 390px; height: 700px; background: #08080D; position: relative;
-    overflow: hidden; display: inline-block; vertical-align: top;
-  }
-  .pl { text-align: center; color: #888; font-size: 10px; margin-top: 4px; font-weight: bold; }
-  .pf.detail { width: 430px; height: 700px; }
+  /* ════ Card ════ */
+  .card { width: 374px; margin: 5px 8px; background: #101018; border: 1px solid #2A2A34; position: relative; }
+  .nbar { height: var(--nb, 2px); background: var(--nb-c, #3388CC); }
+  .ai-badge { position: absolute; bottom: 3px; right: 5px; font-size: 6px; color: #FF44AA; opacity: 0.5; }
 
-  /* ════ Top Bar ════ */
-  .top-bar {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 6px 8px; font-size: 10px; border-bottom: 1px solid #1A1A24;
-  }
-  .top-bar .left { color: #6C3BFF; }
-  .top-bar .right { color: #A0A0AA; }
-
-  /* ════ Filter Row ════ */
-  .filter-row { display: flex; gap: 3px; padding: 5px 8px; flex-wrap: wrap; }
-  .fpill { font-size: 8px; padding: 2px 7px; border: 1px solid #2A2A34; color: #A0A0AA; }
-  .fpill.ac { border-color: #6C3BFF; color: #6C3BFF; }
-  .fpill.al { border-color: #E0A000; color: #E0A000; }
-
-  /* ════ TAB BAR ════ */
-  .tab-bar {
-    height: 22px; display: flex; align-items: center;
-    background: #0A0A12; border-top: 1px solid #2A2A34; padding: 0 8px; font-size: 9px;
-  }
-  .tab-bar .tab { color: #4A4A54; margin-right: 14px; }
-  .tab-bar .tab.ac { color: #6C3BFF; }
-
-  /* ════ CARD ════ */
-  .card {
-    width: 374px; margin: 6px 8px; background: #101018; position: relative;
-    border: 1px solid #2A2A34;
-  }
-
-  /* Neon accent bar — thicker = more urgent */
-  .nbar { height: 2px; }
-  .nbar.info { height: 2px; background: #3388CC; }
-  .nbar.watch { height: 2.5px; background: #44BBAA; }
-  .nbar.alrt { height: 3px; background: #E0A000; }
-  .nbar.urgent { height: 3.5px; background: #FF6633; }
-  .nbar.critical { height: 4px; background: #FF0044; }
-
-  /* AI watermark badge */
-  .ai-badge { position: absolute; bottom: 4px; right: 6px; font-size: 7px; color: #FF44AA; opacity: 0.5; }
-
-  /* ─── HEADER ─── */
   .chdr {
-    display: flex; align-items: center; gap: 5px; padding: 6px 8px 2px 8px;
+    display: flex; align-items: center; gap: 4px; padding: 5px 7px 1px 7px;
   }
-  .chdr .icon {
-    width: 22px; height: 22px; border: 1px solid #6C3BFF; text-align: center;
-    font-size: 10px; color: #6C3BFF; background: #0D0D15;
-  }
-  .chdr .sym { font-size: 12px; font-weight: 700; color: #E0E0EC; }
-  .chdr .name { font-size: 8px; color: #A0A0AA; }
-  .chdr .bdg {
-    font-size: 7px; padding: 1px 5px; border: 1px solid #2A2A34;
-    color: #888; background: #0D0D15;
-  }
+  .chdr .icon { width: 20px; height: 20px; border: 1px solid #6C3BFF; text-align: center; font-size: 9px; color: #6C3BFF; background: #0D0D15; }
+  .chdr .sym { font-size: 11px; font-weight: 700; color: #E0E0EC; }
+  .chdr .bdg { font-size: 6px; padding: 1px 4px; border: 1px solid #2A2A34; color: #888; }
   .chdr .bdg.cy { border-color: #3388CC; color: #3388CC; }
   .chdr .bdg.yl { border-color: #E0A000; color: #E0A000; }
   .chdr .bdg.og { border-color: #FF6633; color: #FF6633; }
   .chdr .bdg.rd { border-color: #FF0044; color: #FF0044; }
+  .chdr .bdg.pk { border-color: #FF44AA; color: #FF44AA; }
+  .chdr .tm { flex:1; text-align:right; font-size:7px; color:#5E5E68; }
 
-  .chdr .tm { flex:1; text-align:right; font-size:8px; color:#5E5E68; }
-
-  /* �═══ Block Zones with Accent Rails �═══ */
-  .bzone { display: flex; min-height: 24px; }
+  /* �═══ Block Zone with Accent Rail �═══ */
+  .bzone { display: flex; min-height: 20px; }
   .rail { width: 2px; min-height: 100%; }
-  .rail.rt { background: #6C3BFF; }    /* text */
-  .rail.rm { background: #00C96C; }    /* metric */
-  .rail.rc { background: #00BFFF; }    /* chart */
-  .rail.rco { background: #E0C000; }   /* callout */
-  .rail.rs { background: #FF44AA; }    /* sentiment */
-  .rail.rg { background: #888; }       /* grid */
+  .rail.rm { background: #00C96C; }
+  .rail.rc { background: #00BFFF; }
+  .rail.rt { background: #6C3BFF; }
+  .rail.rl { background: #FF44AA; }
+  .rail.rco { background: #E0C000; }
+  .rail.rs { background: #FF44AA; }
+  .rail.rg { background: #888; }
+  .rail.rp { background: #44BBAA; }
+  .rail.rx { background: #FF3B1D; }
+  .bcont { flex: 1; padding: 3px 5px 3px 2px; font-size: 9px; }
 
-  .bcont { flex: 1; padding: 4px 6px 4px 3px; }
+  /* ─── BLOCK LABEL ─── */
+  .blabel { font-size: 6px; color: rgba(255,68,170,0.4); padding: 0 2px; font-family: monospace; }
 
-  /* Price Block */
-  .bp {
-    display: flex; align-items: center; justify-content: space-between;
+  /* �═══ BLOCK STYLES ─── ALL 16 BLOCK TYPES �═══ */
+
+  /* 1. TEXT BLOCK */
+  .b-text { font-size: 10px; color: #C8C8D4; line-height: 1.4; padding: 2px 0; }
+
+  /* 2. METRIC BLOCK (single BIG value) */
+  .b-metric {
+    text-align: center; padding: 3px 0;
   }
-  .bp .pr { font-size: 18px; font-weight: 700; color: #E0E0EC; }
-  .bp .ch { font-size: 13px; font-weight: 700; }
-  .bp .ch.up { color: #00C96C; }
-  .bp .ch.dn { color: #FF4444; }
-  .bp .ch.fl { color: #888; }
+  .b-metric .mv { font-size: 22px; font-weight: 700; color: #E0E0EC; }
+  .b-metric .ml { font-size: 8px; color: #A0A0AA; display: block; margin-top: 1px; }
+  .b-metric .ch { font-size: 11px; font-weight: 600; }
+  .b-metric .ch.up { color: #00C96C; }
+  .b-metric .ch.dn { color: #FF4444; }
 
-  /* Metrics Row */
-  .bmet { display: flex; gap: 6px; padding: 2px 0; }
-  .bmet .mi {
+  /* 3. METRICS ROW BLOCK */
+  .b-metrics-row { display: flex; gap: 4px; padding: 2px 0; }
+  .b-metrics-row .mi {
     flex: 1; text-align: center; padding: 3px 4px;
     background: #0D0D15; border: 1px solid #1A1A24;
   }
-  .bmet .mi .ml { font-size: 7px; color: #A0A0AA; }
-  .bmet .mi .mv { font-size: 11px; font-weight: 700; color: #E0E0EC; }
+  .b-metrics-row .mi .ml { font-size: 7px; color: #A0A0AA; }
+  .b-metrics-row .mi .mv { font-size: 13px; font-weight: 700; color: #E0E0EC; }
+  .b-metrics-row .mi .sub { font-size: 7px; color: #888; }
 
-  /* Chart Block */
-  .bc { height: 24px; padding: 1px 0; }
+  /* 4. COMPARISON BLOCK */
+  .b-comparison { display: flex; gap: 3px; padding: 2px 0; }
+  .b-comparison .ci {
+    flex: 1; padding: 4px 5px; background: #0D0D15; border: 1px solid #1A1A24;
+  }
+  .b-comparison .ci .cl { font-size: 7px; color: #A0A0AA; }
+  .b-comparison .ci .cv { font-size: 11px; font-weight: 700; color: #E0E0EC; padding-top: 1px; }
+  .b-comparison .ci .sub { font-size: 7px; color: #888; }
 
-  /* Callout Block */
-  .bco {
-    display: flex; align-items: center; gap: 4px;
-    border: 1px solid #E0C000; background: #0D0D14; padding: 3px 5px;
+  /* 5. GRID BLOCK */
+  .b-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 2px 0; }
+  .b-grid .gi { padding: 2px 4px; background: #0D0D15; border: 1px solid #1A1A24; }
+  .b-grid .gi .gl { font-size: 7px; color: #A0A0AA; }
+  .b-grid .gi .gv { font-size: 10px; font-weight: 700; color: #E0E0EC; }
+
+  /* 6. CHART BLOCK */
+  .b-chart { height: 28px; padding: 2px 0; }
+
+  /* 7. CALLOUT BLOCK */
+  .b-callout {
+    display: flex; align-items: center; gap: 3px;
+    border: 1px solid #E0C000; background: #0D0D14; padding: 2px 5px;
     font-size: 9px; color: #D0D0DC;
   }
-  .bco .ico { font-size: 9px; color: #E0C000; }
+  .b-callout .ico { font-size: 8px; color: #E0C000; }
 
-  /* Comparison Block */
-  .bcomp { display: flex; gap: 3px; padding: 2px 0; }
-  .bcomp .ci {
-    flex: 1; padding: 3px 5px; background: #0D0D15; border: 1px solid #1A1A24;
-    font-size: 8px;
+  /* 8. LIST BLOCK */
+  .b-list { padding: 2px 0; }
+  .b-list .li {
+    display: flex; align-items: center; gap: 4px; padding: 2px 4px;
+    font-size: 9px; color: #C0C0CC; line-height: 1.3;
+  }
+  .b-list .li .dot { width: 3px; height: 3px; border-radius: 50%; }
+  .b-list .li .dot.cy { background: #3388CC; }
+  .b-list .li .dot.yl { background: #E0A000; }
+  .b-list .li .dot.rd { background: #FF3B1D; }
+  .b-list .li .dot.pk { background: #FF44AA; }
+
+  /* 9. SENTIMENT BLOCK */
+  .b-sentiment { padding: 2px 0; }
+  .b-sentiment .pips { display: flex; gap: 2px; margin: 2px 0; }
+  .b-sentiment .pip { flex: 1; height: 4px; border-radius: 2px; }
+  .b-sentiment .pip.pos { background: #00C96C; }
+  .b-sentiment .pip.neg { background: #FF4444; }
+  .b-sentiment .pip.neu { background: #A0A0AA; }
+  .b-sentiment .sc { font-size: 8px; color: #888; }
+
+  /* 10. PROGRESS BLOCK */
+  .b-progress { padding: 2px 4px; }
+  .b-progress .ph { font-size: 7px; color: #888; }
+  .b-progress .pb { height: 5px; background: #1A1A24; margin: 2px 0; border: 1px solid #2A2A34; }
+  .b-progress .pf { height: 100%; border: none; }
+  .b-progress .pf.p1 { width: 60%; background: #3388CC; }
+  .b-progress .pf.p2 { width: 85%; background: #00C96C; }
+  .b-progress .pf.p3 { width: 34%; background: #E0A000; }
+  .b-progress .pf.p4 { width: 92%; background: #00BFFF; }
+  .b-progress .pf.p5 { width: 18%; background: #FF3B1D; }
+
+  /* 11. PERCENTAGE BAR BLOCK */
+  .b-pct-bar { padding: 2px 4px; }
+  .b-pct-bar .bh { font-size: 7px; color: #888; display: flex; justify-content: space-between; width: 100%; }
+  .b-pct-bar .bb { height: 8px; background: #1A1A24; border: 1px solid #2A2A34; margin: 2px 0; position: relative; }
+  .b-pct-bar .bf {
+    height: 100%;
+    background: linear-gradient(90deg, #3388CC, #00C96C, #44BBAA);
+    width: var(--pct, 65%);
+  }
+  .b-pct-bar .bm { font-size: 7px; color: #888; }
+
+  /* 12. TAGS BLOCK */
+  .b-tags { display: flex; gap: 2px; padding: 2px 0; flex-wrap: wrap; }
+  .b-tags .tg {
+    font-size: 7px; padding: 1px 5px; border: 1px solid #2A2A34; color: #6C3BFF;
+    background: #0D0D15;
   }
 
-  /* Sentiment Block (pip style from term-plus) */
-  .bs {
-    padding: 2px 0;
+  /* 13. CODE BLOCK */
+  .b-code {
+    padding: 3px 5px; background: #08080F; border: 1px solid #2A2A34;
+    font-size: 8px; font-family: monospace; color: #C0C0CC; line-height: 1.4;
+    white-space: pre;
   }
-  .bs .pips { display: flex; gap: 2px; }
-  .bs .pip { flex: 1; height: 3px; }
-  .bs .pip.pos { background: #00C96C; }
-  .bs .pip.neg { background: #FF4444; }
-  .bs .pip.neu { background: #A0A0AA; }
-  .bs .pip.pos.anim { animation: breathe 1.5s ease-in-out infinite; }
-  .bs .bl { font-size: 7px; color: #888; }
 
-  /* Grid Block */
-  .bg { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
-  .bg .gi { padding: 2px 4px; font-size: 8px; }
-
-  /* Progress Block */
-  .bprog { padding: 2px 4px; margin: 2px 0; }
-  .bprog .ph { font-size: 7px; color: #888; }
-  .bprog .pb { height: 4px; background: #1A1A24; margin: 1px 0; }
-  .bprog .pf { height: 100%; background: #00BFFF; width: var(--p,60%); }
-
-  /* Tags Block */
-  .btags { display: flex; gap: 3px; padding: 2px 0; flex-wrap: wrap; }
-  .btags .tg { font-size: 7px; padding: 1px 5px; border: 1px solid #2A2A34; color: #6C3BFF; }
-
-  /* Block Divider */
-  .bdiv {
-    display: flex; align-items: center; gap: 3px; padding: 1px 6px;
+  /* 14. LINK BLOCK */
+  .b-link {
+    display: flex; align-items: center; gap: 4px; padding: 3px 5px;
+    background: #0D0D15; border: 1px solid #2A2A34;
   }
+  .b-link .favicon { width: 16px; height: 16px; background: #1A1A24; border: 1px solid #3A3A44; text-align: center; font-size: 7px; color: #6C3BFF; }
+  .b-link .lt { flex: 1; }
+  .b-link .lt .tt { font-size: 9px; color: #C8C8D4; font-weight: 600; }
+  .b-link .lt .url { font-size: 7px; color: #00BFFF; }
+  .b-link .arrow { font-size: 10px; color: #6C3BFF; }
+
+  /* 15. TIMELINE BLOCK */
+  .b-timeline { padding: 2px 0; }
+  .b-timeline .te {
+    display: flex; align-items: center; gap: 4px;
+    padding: 2px 4px; font-size: 8px; color: #C0C0CC;
+  }
+  .b-timeline .te .tl-dot { width: 4px; height: 4px; border-radius: 50%; }
+  .b-timeline .te .tl-dot.cy { background: #3388CC; }
+  .b-timeline .te .tl-dot.yl { background: #E0A000; }
+  .b-timeline .te .tl-dot.rd { background: #FF3B1D; }
+  .b-timeline .te .tl-dot.pk { background: #FF44AA; }
+  .b-timeline .te .tl-dot.gn { background: #00C96C; }
+  .b-timeline .te .tl-time { color: #5E5E68; width: 24px; }
+  .b-timeline .te .tl-label { flex: 1; }
+
+  /* 16. TRANSFER BLOCK */
+  .b-transfer {
+    padding: 3px 5px; background: #0D0D15; border: 1px solid #2A2A34;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .b-transfer .who { flex: 1; font-size: 8px; color: #C0C0CC; }
+  .b-transfer .who .addr { color: #3388CC; font-family: monospace; }
+  .b-transfer .amt { font-size: 11px; font-weight: 700; text-align: right; }
+  .b-transfer .amt.in { color: #00C96C; }
+  .b-transfer .amt.out { color: #FF3B1D; }
+
+  /* Block divider */
+  .bdiv { display: flex; align-items: center; gap: 2px; padding: 1px 5px; }
   .bdiv .dl { flex: 1; height: 1px; background: #1A1A24; }
   .bdiv .dd { width: 3px; height: 3px; background: #6C3BFF; border-radius: 50%; }
 
-  /* �═══ Detail �═══ */
-  .dtop {
-    height: 26px; background: #0A0A12; border-bottom: 1px solid #2A2A34;
-    padding: 0 10px; display: flex; align-items: center; font-size: 9px;
+  /* Tab bar */
+  .tab-bar {
+    height: 20px; display: flex; align-items: center;
+    background: #0A0A12; border-top: 1px solid #2A2A34; padding: 0 7px; font-size: 8px;
   }
-  .dtop .bk { color: #6C3BFF; }
-  .dtop .tt { flex: 1; text-align: center; color: #E0E0EC; }
-
-  .dsec {
-    padding: 8px; margin: 4px; background: #0A0A12; border: 1px solid #2A2A34;
-  }
-
-  .dsig {
-    padding: 6px; background: #0D0D15; border: 1px solid #3388CC;
-    margin-top: 4px;
-  }
-  .dsig.al { border-color: #E0A000; }
-  .dsig.ur { border-color: #FF6633; }
-  .dsig.sh { font-size: 9px; font-weight: bold; color: #3388CC; }
-  .dsig.sb { font-size: 9px; color: #A0A0AA; line-height: 1.4; }
-
-  .dlog {
-    padding: 6px; background: #0A0A12; border: 1px solid #2A2A34;
-    height: 56px; overflow: hidden; font-size: 8px;
-  }
-  .dlog .lg { color: #5E5E68; line-height: 1.5; }
-  .dlog .lg.hl { color: #3388CC; font-weight: bold; }
-  .dlog .lg.al { color: #E0A000; }
-
-  .pros-cons { display: flex; gap: 16px; margin: 12px auto; max-width: 840px; }
-  .pros, .cons { background: #0E0E18; padding: 10px 14px; border: 1px solid #2A2A34; flex: 1; }
-  .pros h4, .cons h4 { font-size: 11px; font-weight: bold; margin-bottom: 4px; }
-  .pros h4 { color: #00C96C; } .cons h4 { color: #FF3B1D; }
-  .pros li, .cons li { font-size: 10px; color: #CCC; margin: 2px 0; line-height: 1.4; }
+  .tab-bar .tab { color: #4A4A54; margin-right: 12px; }
+  .tab-bar .tab.ac { color: #6C3BFF; }
 </style>
 </head>
 <body>
 <div class="page">
 
-<h1>Term-Plus v2</h1>
-<div class="subtitle"># term-plus · accent rails · weighted neon bars · block dividers · AI badges · full block system + animations</div>
-<div class="note">�> Animations active: blinking alerts, breathing sentiment pips, pulsing neon glow rails, flickering critical indicators, scanning progress bars.</div>
+<h1>Term-Plus Block Catalog</h1>
+<div class="subtitle"># block-catalog · all 16 block types rendered in Term-Plus theme with accent rails, animations, and neon bars</div>
+<div class="note">�> Each card showcases a different combination of blocks. Every block type is labeled and highlighted with its own accent rail color.</div>
 
 <!-- ═══════════════════════════════════════════════════════════
-     FEED EXAMPLES ═══════════════════════════════════════════ -->
+     CARD 1: TEXT + METRIC + METRICSROW + COMPARISON ␐══════ -->
 <section class="section">
-<h2>Feed — Accent Rail Block Cards</h2>
-<p class="tagline">Cards with weighted neon top-bars (thicker = more urgent), color-coded vertical accent rails per block type, category filter pills, AI watermark badges.</p>
-<span class="example-badge">EXAMPLE A: Info + Watch — Price, Metrics, Callout blocks with rail colors</span>
-
+<span class="tagline" style="color:#6C3BFF;font-size:10px;">⡂ BLOCKS: TEXT · METRIC · METRICSROW · COMPARISON · TAGS</span>
 <div class="pg">
 <div class="pf">
-  <div class="top-bar">
-    <span class="left">⡂ FEED</span>
-    <span class="right"><span class="anim-breathe" style="color:#00CC66;">●</span> LIVE</span>
+<div class="card">
+  <div class="nbar" style="--nb:2px;--nb-c:#3388CC;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#3388CC;color:#3388CC;">S</span>
+    <span class="sym">SOL</span>
+    <span class="bdg cy">● DEEP</span>
+    <span class="tm">2m ago</span>
   </div>
 
-  <!-- Filter pills -->
-  <div class="filter-row">
-    <span class="fpill ac">ALL</span>
-    <span class="fpill">PRICE</span>
-    <span class="fpill">VOLUME</span>
-    <span class="fpill">WHALE</span>
-    <span class="fpill al anim-blink">ALERTS</span>
-  </div>
-
-  <!-- ── CARD: SOL (INFO) ── -->
-  <div class="card">
-    <div class="nbar info"></div>
-    <div class="chdr">
-      <span class="icon" style="border-color:#3388CC;color:#3388CC;">S</span>
-      <span class="sym">SOL</span>
-      <span class="name">Solana</span>
-      <span class="bdg cy">● DEEP</span>
-      <span class="tm">2m ago</span>
-    </div>
-
-    <!-- Block 1: Price (metric rail) -->
-    <div class="bzone">
-      <div class="rail rm anim-glow-rail"></div>
-      <div class="bcont">
-        <div class="bp">
-          <span class="pr">$142.38</span>
-          <span class="ch up">+3.2% <span style="font-size:8px;color:#888;">24h</span></span>
-        </div>
-      </div>
-    </div>
-
-    <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
-
-    <!-- Block 2: Chart (chart rail) -->
-    <div class="bzone">
-      <div class="rail rc"></div>
-      <div class="bcont">
-        <div class="bc">
-          <svg width="100%" height="22" viewBox="0 0 100 22">
-            <defs><linearGradient id="sg1" x1="0" y1="0" x2="100" y2="0"><stop offset="0" stop-color="#3388CC"/><stop offset="100" stop-color="#00BFFF"/></linearGradient></defs>
-            <polyline points="0,16 12,14 25,17 38,12 50,10 62,13 75,7 88,5 100,6" stroke="url(#sg1)" stroke-width="1.5" fill="none"/>
-          </svg>
-        </div>
-      </div>
-    </div>
-
-    <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
-
-    <!-- Block 3: Metrics row (metric rail) -->
-    <div class="bzone">
-      <div class="rail rm"></div>
-      <div class="bcont">
-        <div class="bmet">
-          <div class="mi"><span class="ml">MCap</span><br><span class="mv">$78.2B</span></div>
-          <div class="mi"><span class="ml">Vol 24h</span><br><span class="mv anim-breathe" style="color:#3388CC;">$4.1B</span></div>
-          <div class="mi"><span class="ml">Holders</span><br><span class="mv">4.2M</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Block 4: Callout (callout rail) -->
-    <div class="bzone">
-      <div class="rail rco"></div>
-      <div class="bcont">
-        <div class="bco">
-          <span class="ico">◆</span> Price within range. Vol consistent. <span style="color:#00C96C;">Confidence: 92%</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Block 5: Tags -->
-    <div class="bzone">
-      <div class="rail rt" style="background:#2A2A34;"></div>
-      <div class="bcont">
-        <div class="btags">
-          <span class="tg">:stable</span>
-          <span class="tg anim-blink" style="border-color:#3388CC;color:#3388CC;">:deep-scan</span>
-          <span class="tg">:detail</span>
-        </div>
-      </div>
-    </div>
-
-    <span class="ai-badge">⡂ JARVIS</span>
-  </div>
-
-  <!-- ── CARD: BONK (WATCH) with glow vol ── -->
-  <div class="card">
-    <div class="nbar watch"></div>
-    <div class="chdr">
-      <span class="icon" style="border-color:#44BBAA;color:#44BBAA;">B</span>
-      <span class="sym">BONK</span>
-      <span class="name">Meme</span>
-      <span class="bdg yl anim-blink">● VOL SPIKE</span>
-      <span class="tm">45s</span>
-    </div>
-
-    <div class="bzone">
-      <div class="rail rm anim-glow-rail"></div>
-      <div class="bcont">
-        <div class="bp">
-          <span class="pr">$0.000024</span>
-          <span class="ch up" style="color:#44BBAA;">+12.7%</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
-
-    <div class="bzone">
-      <div class="rail rc"></div>
-      <div class="bcont">
-        <div class="bc">
-          <svg width="100%" height="22" viewBox="0 0 100 22">
-            <polyline points="0,18 12,16 25,12 38,10 50,6 62,4 75,5 88,3 100,3" stroke="#44BBAA" stroke-width="1.5" fill="none"/>
-          </svg>
-        </div>
-      </div>
-    </div>
-
-    <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
-
-    <div class="bzone">
-      <div class="rail rm"></div>
-      <div class="bcont">
-        <div class="bmet">
-          <div class="mi"><span class="ml">MCap</span><br><span class="mv">$3.8B</span></div>
-          <div class="mi"><span class="ml">Vol 24h</span><br><span class="mv anim-breathe" style="color:#E0A000;">$890M</span></div>
-          <div class="mi"><span class="ml">Vol Δ</span><br><span class="mv" style="color:#E0A000;">+340%</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="bzone">
-      <div class="rail rco"></div>
-      <div class="bcont">
-        <div class="bco" style="border-color:#E0A000;">
-          <span class="ico anim-blink" style="color:#E0A000;">⚠</span> Volume spike: <span style="color:#E0A000;font-weight:bold;">+340%</span> — 8.2σ from mean.
-        </div>
-      </div>
-    </div>
-
-    <!-- Comparison block -->
-    <div class="bzone">
-      <div class="rail rg"></div>
-      <div class="bcont">
-        <div class="bcomp">
-          <div class="ci"><span style="color:#888;font-size:7px;">Liq</span><br><span style="font-size:10px;color:#E0E0EC;">$4.2M</span></div>
-          <div class="ci"><span style="color:#888;font-size:7px;">Holders</span><br><span style="font-size:10px;color:#E0E0EC;">284K</span></div>
-        </div>
-      </div>
-    </div>
-
-    <span class="ai-badge">⡂ JARVIS</span>
-  </div>
-
-  <!-- ── CARD: JEW (STABLE) ── -->
-  <div class="card" style="border-color:#1A1A24;">
-    <div class="nbar info" style="height:1.5px;background:#2A2A34;"></div>
-    <div class="chdr">
-      <span class="icon" style="border-color:#A0A0AA;color:#A0A0AA;">J</span>
-      <span class="sym" style="color:#A0A0AA;">JEW</span>
-      <span class="name">Stable</span>
-      <span class="tm">12m ago</span>
-    </div>
-
-    <div class="bzone">
-      <div class="rail rm"></div>
-      <div class="bcont">
-        <div class="bp">
-          <span class="pr">$0.0042</span>
-          <span class="ch fl">+0.1%</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="bzone">
-      <div class="rail rm"></div>
-      <div class="bcont">
-        <div class="bmet">
-          <div class="mi"><span class="ml">MCap</span><br><span class="mv">$420M</span></div>
-          <div class="mi"><span class="ml">Liq</span><br><span class="mv">$8.2M</span></div>
-        </div>
-      </div>
-    </div>
-
-    <span class="ai-badge">⡂ JARVIS</span>
-  </div>
-
-  <div class="tab-bar">
-    <span class="tab ac">FEED</span>
-    <span class="tab">PORTFOLIO</span>
-    <span class="tab">SEARCH</span>
-    <span class="tab anim-blink" style="color:#E0A000;">● 3 ALERTS</span>
-  </div>
-</div>
-<div><div class="pl">[FEED] Info + Watch</div></div>
-</div>
-
-<span class="example-badge">EXAMPLE B: Critical + Urgent — full block variety, sentiment pips, progress bars</span>
-
-<div class="pg">
-<div class="pf">
-  <div class="top-bar">
-    <span class="left">⡂ FEED</span>
-    <span class="right"><span class="anim-breathe" style="color:#FF0044;">●</span> 2 CRITICAL</span>
-  </div>
-
-  <div class="filter-row">
-    <span class="fpill ac">ALL</span>
-    <span class="fpill">CRITICAL</span>
-    <span class="fpill al anim-blink">URGENT</span>
-    <span class="fpill">WHALE</span>
-  </div>
-
-  <!-- ── CARD: HAHA (CRITICAL) ── -->
-  <div class="card" style="border-color:#4A3A44;">
-    <div class="nbar critical"></div>
-    <div class="chdr">
-      <span class="icon" style="border-color:#FF0044;color:#FF0044;" class="anim-flicker">⚠</span>
-      <span class="sym" style="color:#FF0044;">HAHA</span>
-      <span class="name">SUSPECT</span>
-      <span class="bdg rd anim-blink">● CRITICAL</span>
-      <span class="tm"><span class="anim-blink" style="color:#FF0044;">●</span> NOW</span>
-    </div>
-
-    <div class="bzone">
-      <div class="rail rm anim-glow-rail"></div>
-      <div class="bcont">
-        <div class="bp">
-          <span class="pr" style="color:#FF0044;">$0.000001</span>
-          <span class="ch dn" style="color:#FF0044;">-67.1%</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
-
-    <div class="bzone">
-      <div class="rail rc"></div>
-      <div class="bcont">
-        <div class="bc">
-          <svg width="100%" height="22" viewBox="0 0 100 22">
-            <polyline points="0,2 12,1 25,3 38,2 50,6 62,10 75,14 88,16 100,16" stroke="#FF0044" stroke-width="1.5" fill="none"/>
-          </svg>
-        </div>
-      </div>
-    </div>
-
-    <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
-
-    <!-- Comparison block: liquidity vs holders crash -->
-    <div class="bzone">
-      <div class="rail rg"></div>
-      <div class="bcont">
-        <div class="bcomp">
-          <div class="ci" style="border-color:#FF0044;"><span style="color:#888;font-size:7px;">Liquidity</span><br><span style="font-size:11px;color:#FF0044;">$12K <span style="font-size:7px;">↓95%</span></span></div>
-          <div class="ci" style="border-color:#FF0044;"><span style="color:#888;font-size:7px;">Holders</span><br><span style="font-size:11px;color:#FF0044;">142 <span style="font-size:7px;">↓82%</span></span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Callout: rug alert -->
-    <div class="bzone">
-      <div class="rail rco"></div>
-      <div class="bcont">
-        <div class="bco" style="border-color:#FF0044;background:#1A0A12;">
-          <span class="ico anim-blink" style="color:#FF0044;">⚠</span> <span style="color:#FF0044;font-weight:bold;">Possible rug pull</span> — Wallet drained 94% of LP.
-        </div>
-      </div>
-    </div>
-
-    <!-- Progress: confidence -->
-    <div class="bzone">
-      <div class="rail rc"></div>
-      <div class="bcont">
-        <div class="bprog">
-          <span class="ph">Confidence: <span style="color:#FF0044;">94%</span> — rug indicators</span>
-          <div class="pb"><div class="pf" style="width:94%;background:#FF0044;"></div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="btags" style="padding:2px 8px;">
-      <span class="tg anim-blink" style="border-color:#FF0044;color:#FF0044;">:rug-alert</span>
-      <span class="tg" style="color:#FF0044;">:critical</span>
-    </div>
-
-    <span class="ai-badge">⡂ JARVIS</span>
-  </div>
-
-  <!-- ── CARD: WIF (URGENT — volume spike) ── -->
-  <div class="card" style="border-color:#3A3A44;">
-    <div class="nbar urgent"></div>
-    <div class="chdr">
-      <span class="icon" style="border-color:#FF6633;color:#FF6633;">W</span>
-      <span class="sym">WIF</span>
-      <span class="name">Meme</span>
-      <span class="bdg og anim-blink">● URGENT</span>
-      <span class="tm">3m ago</span>
-    </div>
-
-    <div class="bzone">
-      <div class="rail rm anim-glow-rail"></div>
-      <div class="bcont">
-        <div class="bp">
-          <span class="pr" style="color:#FF6633;">$0.84</span>
-          <span class="ch up" style="color:#FF6633;">+18.9%</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
-
-    <div class="bzone">
-      <div class="rail rc"></div>
-      <div class="bcont">
-        <div class="bc">
-          <svg width="100%" height="22" viewBox="0 0 100 22">
-            <polyline points="0,18 12,16 25,12 38,10 50,6 62,5 75,3 88,3 100,3" stroke="#FF6633" stroke-width="1.5" fill="none"/>
-          </svg>
-        </div>
-      </div>
-    </div>
-
-    <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
-
-    <div class="bzone">
-      <div class="rail rm"></div>
-      <div class="bcont">
-        <div class="bmet">
-          <div class="mi"><span class="ml">MCap</span><br><span class="mv">$840M</span></div>
-          <div class="mi"><span class="ml">Vol 24h</span><br><span class="mv anim-breathe" style="color:#FF6633;">$2.1B</span></div>
-          <div class="mi"><span class="ml">Vol Δ</span><br><span class="mv" style="color:#FF6633;">↑412%</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Sentiment block (pip style) -->
-    <div class="bzone">
-      <div class="rail rs"></div>
-      <div class="bcont">
-        <div class="bs">
-          <div class="pips">
-            <span class="pip pos anim-breathe"></span>
-            <span class="pip pos"></span>
-            <span class="pip pos"></span>
-            <span class="pip neu"></span>
-            <span class="pip neg"></span>
-            <span class="pip neg"></span>
-          </div>
-          <span class="bl">Social: bullish spike — volume driving sentiment</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Grid block -->
-    <div class="bzone">
-      <div class="rail rg"></div>
-      <div class="bcont">
-        <div class="bg" style="gap:2px;">
-          <div class="gi"><span style="color:#888;font-size:7px;">Price Range</span><br><span style="font-size:9px;color:#E0E0EC;">$0.62 — $0.91</span></div>
-          <div class="gi"><span style="color:#888;font-size:7px;">Holders</span><br><span style="font-size:9px;color:#E0E0EC;">42.8K</span></div>
-        </div>
-      </div>
-    </div>
-
-    <span class="ai-badge">⡂ JARVIS</span>
-  </div>
-
-  <div class="tab-bar">
-    <span class="tab ac">FEED</span>
-    <span class="tab">PORTFOLIO</span>
-    <span class="tab">SEARCH</span>
-    <span class="tab anim-blink" style="color:#FF0044;">● 2 CRITICAL</span>
-  </div>
-</div>
-<div><div class="pl">[FEED] Critical + Urgent</div></div>
-</div>
-
-<span class="example-badge">EXAMPLE C: Alert cards with Sentiment, Comparison, Grid blocks</span>
-
-<div class="pg">
-<div class="pf">
-  <div class="top-bar">
-    <span class="left">⡂ FEED</span>
-    <span class="right"><span class="anim-blink" style="color:#E0A000;">⚠</span> 3 ALERTS</span>
-  </div>
-
-  <div class="filter-row">
-    <span class="fpill ac">ALL</span>
-    <span class="fpill">PRICE</span>
-    <span class="fpill al anim-blink">ALERTS</span>
-    <span class="fpill">WHALE</span>
-    <span class="fpill">SENTIMENT</span>
-  </div>
-
-  <!-- ── CARD: PEPE (ALERT) ── -->
-  <div class="card" style="border-color:#3A3A34;">
-    <div class="nbar alrt"></div>
-    <div class="chdr">
-      <span class="icon" style="border-color:#E0A000;color:#E0A000;">P</span>
-      <span class="sym">PEPE</span>
-      <span class="name">Meme</span>
-      <span class="bdg yl anim-blink">● ALERT</span>
-      <span class="tm">4m</span>
-    </div>
-
-    <div class="bzone">
-      <div class="rail rm anim-glow-rail"></div>
-      <div class="bcont">
-        <div class="bp">
-          <span class="pr" style="color:#E0A000;">$0.000008</span>
-          <span class="ch dn" style="color:#E0A000;">-8.3%</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
-
-    <div class="bzone">
-      <div class="rail rc"></div>
-      <div class="bcont">
-        <div class="bc">
-          <svg width="100%" height="22" viewBox="0 0 100 22">
-            <polyline points="0,4 12,6 25,10 38,8 50,12 62,14 75,16 88,17 100,18" stroke="#E0A000" stroke-width="1.5" fill="none"/>
-          </svg>
-        </div>
-      </div>
-    </div>
-
-    <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
-
-    <!-- Comparison -->
-    <div class="bzone">
-      <div class="rail rg"></div>
-      <div class="bcont">
-        <div class="bcomp">
-          <div class="ci"><span style="color:#888;font-size:7px;">MCap</span><br><span style="font-size:10px;">$1.2B</span></div>
-          <div class="ci"><span style="color:#888;font-size:7px;">Vol/MCap</span><br><span style="font-size:10px;color:#E0A000;">1.75x</span></div>
-          <div class="ci"><span style="color:#888;font-size:7px;">Holders Δ</span><br><span style="font-size:10px;color:#E0A000;">-4.2K</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Sentiment pips (bearish) -->
-    <div class="bzone">
-      <div class="rail rs"></div>
-      <div class="bcont">
-        <div class="bs">
-          <div class="pips">
-            <span class="pip pos"></span>
-            <span class="pip neu"></span>
-            <span class="pip neg"></span>
-            <span class="pip neg anim-breathe"></span>
-            <span class="pip neg"></span>
-            <span class="pip neg"></span>
-          </div>
-          <span class="bl" style="color:#E0A000;">Social: bearish — sell pressure mounting</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Callout -->
-    <div class="bzone">
-      <div class="rail rco"></div>
-      <div class="bcont">
-        <div class="bco" style="border-color:#E0A000;">
-          <span class="ico" style="color:#E0A000;">⚠</span> Sustained sell pressure. Vol/MCap <span style="color:#E0A000;font-weight:bold;">1.75x</span>.
-        </div>
-      </div>
-    </div>
-
-    <!-- Progress: confidence -->
-    <div class="bzone">
-      <div class="rail rc"></div>
-      <div class="bcont">
-        <div class="bprog">
-          <span class="ph">Confidence: <span style="color:#E0A000;">74%</span> — moderate</span>
-          <div class="pb"><div class="pf" style="width:74%;background:#E0A000;"></div></div>
-        </div>
-      </div>
-    </div>
-
-    <span class="ai-badge">⡂ JARVIS</span>
-  </div>
-
-  <!-- ── CARD: SOL (ALERT — deviation) ── -->
-  <div class="card" style="border-color:#3A3A34;">
-    <div class="nbar alrt"></div>
-    <div class="chdr">
-      <span class="icon" style="border-color:#E0A000;color:#E0A000;">S</span>
-      <span class="sym">SOL</span>
-      <span class="name">Solana</span>
-      <span class="bdg yl">● DEVIATION</span>
-      <span class="tm">8m ago</span>
-    </div>
-
-    <div class="bzone">
-      <div class="rail rm"></div>
-      <div class="bcont">
-        <div class="bp">
-          <span class="pr">$142.38</span>
-          <span class="ch dn" style="color:#E0A000;">-4.2%</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="bzone">
-      <div class="rail rm"></div>
-      <div class="bcont">
-        <div class="bmet">
-          <div class="mi"><span class="ml">24h Avg</span><br><span class="mv">$148.60</span></div>
-          <div class="mi"><span class="ml">Deviation</span><br><span class="mv anim-breathe" style="color:#E0A000;">-4.2%</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="bzone">
-      <div class="rail rco"></div>
-      <div class="bcont">
-        <div class="bco" style="border-color:#E0A000;">
-          <span class="ico" style="color:#E0A000;">⚠</span> Price below avg by <span style="color:#E0A000;font-weight:bold;">-4.2%</span>. Volume normal.
-        </div>
-      </div>
-    </div>
-
-    <span class="ai-badge">⡂ JARVIS</span>
-  </div>
-
-  <div class="tab-bar">
-    <span class="tab ac">FEED</span>
-    <span class="tab">PORTFOLIO</span>
-    <span class="tab">SEARCH</span>
-    <span class="tab anim-blink" style="color:#E0A000;">⚠ 3 ALERTS</span>
-  </div>
-</div>
-<div><div class="pl">[FEED] Alerts + Sentiment</div></div>
-</div>
-</section>
-
-<!-- ␐══════════════════════════════════════════════════════════
-     DETAIL SCREEN EXAMPLES ␐═════════════════════════════════ -->
-<section class="section">
-<h2>Detail — Accent Rail Deep Dive</h2>
-<p class="tagline">Full detail page with weighted neon bars, color-coded block rails, sentiment pips, event logs, all with animations.</p>
-<span class="example-badge">EXAMPLE D: SOL Detail — Healthy, full block detail</span>
-
-<div class="pg">
-<div class="pf detail">
-  <div class="dtop">
-    <span class="bk">← [BACK]</span>
-    <span class="tt">SOL / DETAIL</span>
-    <span class="anim-breathe" style="color:#3388CC;">●</span>
-  </div>
-
-  <div class="dsec">
-    <div class="bzone">
-      <div class="rail rm" style="height:60px;"></div>
-      <div class="bcont">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-          <span style="font-size:13px;font-weight:bold;color:#6C3BFF;">SOL</span>
-          <span style="font-size:8px;padding:1px 6px;border:1px solid #3388CC;color:#3388CC;">● DEEP SCAN</span>
-          <span style="font-size:8px;color:#888;flex:1;text-align:right;">2m ago</span>
-        </div>
-        <div class="bp">
-          <span class="pr" style="font-size:22px;">$142.38</span>
-          <span class="ch up" style="font-size:15px;">+3.2% <span style="font-size:9px;color:#888;">24h</span></span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="dsec" style="padding:8px;">
-    <div class="bzone">
-      <div class="rail rm" style="height:40px;"></div>
-      <div class="bcont">
-        <div class="bmet" style="gap:5px;">
-          <div class="mi" style="padding:5px 8px;"><span class="ml">MCap</span><br><span class="mv" style="font-size:13px;">$78.2B</span></div>
-          <div class="mi" style="padding:5px 8px;"><span class="ml">Vol 24h</span><br><span class="mv anim-breathe" style="font-size:13px;color:#3388CC;">$4.1B</span></div>
-          <div class="mi" style="padding:5px 8px;"><span class="ml">FDV</span><br><span class="mv" style="font-size:13px;">$82.4B</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Grid stats -->
-  <div class="dsec" style="padding:8px;">
-    <div class="bzone">
-      <div class="rail rg" style="height:44px;"></div>
-      <div class="bcont">
-        <div class="bg" style="gap:3px;">
-          <div class="gi"><span style="color:#888;font-size:7px;">Price Range 24h</span><br><span style="font-size:10px;">$138 — $148</span></div>
-          <div class="gi"><span style="color:#888;font-size:7px;">Liq. USD</span><br><span style="font-size:10px;">$42.1M</span></div>
-          <div class="gi"><span style="color:#888;font-size:7px;">Holders</span><br><span style="font-size:10px;">4.2M</span></div>
-          <div class="gi"><span style="color:#888;font-size:7px;">Token Age</span><br><span style="font-size:10px;">891d</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Signal assessment -->
-  <div class="dsec" style="padding:8px;">
-    <div class="dsig">
-      <span class="sh">[INFO] Signal Assessment <span class="anim-breathe" style="color:#3388CC;">●</span></span>
-      <div class="sb">
-        Price within expected range. Volume consistent with 7d avg.<br>
+  <!-- TEXT BLOCK (rail: purple) -->
+  <div class="bzone">
+    <div class="rail rt"></div>
+    <div class="bcont">
+      <span class="blabel">[text]</span>
+      <div class="b-text">
+        Deep scan detected price stability within expected range. Volume consistent with 7d average.
         <span style="color:#00C96C;">Confidence: 92%</span>
       </div>
     </div>
   </div>
 
-  <!-- Progress -->
-  <div class="dsec" style="padding:6px;">
-    <div class="bprog" style="margin:0;">
-      <span class="ph">Confidence Score · 24h tracking</span>
-      <div class="pb"><div class="pf anim-breathe" style="width:92%;background:#3388CC;"></div></div>
-      <span style="font-size:7px;color:#888;">Min 68% · Max 95% · Current <span style="color:#3388CC;">92%</span></span>
+  <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
+
+  <!-- METRIC BLOCK (rail: green) — single BIG value -->
+  <div class="bzone">
+    <div class="rail rm"></div>
+    <div class="bcont">
+      <span class="blabel">[metric]</span>
+      <div class="b-metric">
+        <span class="mv">$142.38</span>
+        <span class="ch up">+3.2%</span>
+        <span class="ml">Solana · 24h change</span>
+      </div>
     </div>
   </div>
 
-  <!-- Event log -->
-  <div class="dsec" style="padding:6px;">
-    <div class="dlog">
-      <div class="lg hl">[19:38] Deep scan: SOL — OK (92%) <span class="anim-blink" style="color:#3388CC;">●</span></div>
-      <div class="lg">[19:32] Price check: $142.38 — within σ</div>
-      <div class="lg al">[18:15] Volume spike: +140% (resolved)</div>
-      <div class="lg">[17:00] Holders: 4.2M (+12.4K / 24h)</div>
+  <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
+
+  <!-- METRICSROW BLOCK (rail: green) -->
+  <div class="bzone">
+    <div class="rail rm"></div>
+    <div class="bcont">
+      <span class="blabel">[metrics-row]</span>
+      <div class="b-metrics-row">
+        <div class="mi"><span class="ml">MCap</span><br><span class="mv">$78.2B</span></div>
+        <div class="mi"><span class="ml">Vol 24h</span><br><span class="mv anim-breathe" style="color:#3388CC;">$4.1B</span></div>
+        <div class="mi"><span class="ml">Holders</span><br><span class="mv">4.2M</span></div>
+        <div class="mi"><span class="ml">FDV</span><br><span class="mv">$82.4B</span></div>
+      </div>
     </div>
   </div>
 
-  <div class="tab-bar">
-    <span class="tab ac">DETAIL</span>
-    <span class="tab">CHARTS</span>
-    <span class="tab">HOLDERS</span>
-    <span class="tab">ALERTS</span>
+  <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
+
+  <!-- COMPARISON BLOCK (rail: grey) -->
+  <div class="bzone">
+    <div class="rail rg"></div>
+    <div class="bcont">
+      <span class="blabel">[comparison]</span>
+      <div class="b-comparison">
+        <div class="ci"><span class="cl">Price Range</span><br><span class="cv">$138</span><span class="sub">– $148</span></div>
+        <div class="ci"><span class="cl">Liq. USD</span><br><span class="cv">$42.1M</span></div>
+        <div class="ci"><span class="cl">Volume/MCap</span><br><span class="cv" style="color:#3388CC;">0.052</span></div>
+      </div>
+    </div>
   </div>
+
+  <!-- TAGS BLOCK (rail: purple) -->
+  <div class="bzone">
+    <div class="rail rt" style="background:#2A2A34;"></div>
+    <div class="bcont">
+      <span class="blabel">[tags]</span>
+      <div class="b-tags">
+        <span class="tg">:stable</span>
+        <span class="tg anim-blink" style="border-color:#3388CC;color:#3388CC;">:deep-scan</span>
+        <span class="tg">:solana</span>
+        <span class="tg">:detail</span>
+      </div>
+    </div>
+  </div>
+
+  <span class="ai-badge">⡂ JARVIS</span>
 </div>
-<div><div class="pl">[DETAIL] SOL — Healthy</div></div>
+<div class="pl">CARD 1: TEXT + METRIC + METRICSROW + COMPARISON + TAGS</div>
 </div>
 
-<span class="example-badge">EXAMPLE E: TRUMP Detail — Urgent with red rails, sentiment, alert log</span>
-
-<div class="pg">
-<div class="pf detail">
-  <div class="dtop">
-    <span class="bk">← [BACK]</span>
-    <span class="tt">TRUMP / DETAIL</span>
-    <span class="anim-blink" style="color:#FF6633;">⚠</span>
+<!-- ─── CARD 2: CHART + CALLOUT + LIST + SENTIMENT ─── -->
+<div class="pf">
+<div class="card">
+  <div class="nbar" style="--nb:3px;--nb-c:#E0A000;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#E0A000;color:#E0A000;">P</span>
+    <span class="sym">PEPE</span>
+    <span class="bdg yl anim-blink">● ALERT</span>
+    <span class="tm">4m ago</span>
   </div>
 
-  <div class="dsec" style="border-color:#3A3A44;">
-    <div class="bzone">
-      <div class="rail rm" style="height:60px;"></div>
-      <div class="bcont">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-          <span style="font-size:14px;font-weight:bold;color:#FF6633;">TRUMP</span>
-          <span style="font-size:8px;padding:1px 6px;border:1px solid #FF6633;color:#FF6633;" class="anim-blink">● URGENT</span>
-          <span style="font-size:8px;color:#888;flex:1;text-align:right;">active alert</span>
-        </div>
-        <div class="bp">
-          <span class="pr" style="font-size:22px;color:#FF6633;">$8.47</span>
-          <span class="ch dn" style="font-size:15px;color:#FF6633;">-22.4% <span style="font-size:9px;color:#888;">24h</span></span>
-        </div>
+  <!-- METRIC (BIG value) -->
+  <div class="bzone">
+    <div class="rail rm"></div>
+    <div class="bcont">
+      <div class="b-metric">
+        <span class="mv" style="color:#E0A000;">$0.000008</span>
+        <span class="ch dn" style="color:#E0A000;">-8.3%</span>
       </div>
     </div>
   </div>
 
-  <div class="dsec" style="padding:8px;">
-    <div class="bzone">
-      <div class="rail rm" style="height:40px;"></div>
-      <div class="bcont">
-        <div class="bmet" style="gap:5px;">
-          <div class="mi"><span class="ml">MCap</span><br><span class="mv" style="font-size:13px;">$847M</span><br><span style="font-size:7px;color:#FF6633;">↓22%</span></div>
-          <div class="mi"><span class="ml">Vol 24h</span><br><span class="mv" style="font-size:13px;">$534M</span></div>
-          <div class="mi"><span class="ml">Vol/MCap</span><br><span class="mv" style="font-size:13px;color:#E0A000;">0.63x</span></div>
+  <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
+
+  <!-- CHART BLOCK (rail: cyan) -->
+  <div class="bzone">
+    <div class="rail rc"></div>
+    <div class="bcont">
+      <span class="blabel">[chart]</span>
+      <div class="b-chart">
+        <svg width="100%" height="26" viewBox="0 0 100 26">
+          <polyline points="0,6 12,8 25,12 38,10 50,14 62,16 75,18 88,19 100,20" stroke="#E0A000" stroke-width="1.5" fill="none"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
+
+  <!-- METRICSROW -->
+  <div class="bzone">
+    <div class="rail rm"></div>
+    <div class="bcont">
+      <span class="blabel">[metrics-row]</span>
+      <div class="b-metrics-row">
+        <div class="mi"><span class="ml">MCap</span><br><span class="mv">$1.2B</span></div>
+        <div class="mi"><span class="ml">Vol/MCap</span><br><span class="mv" style="color:#E0A000;">1.75x</span></div>
+        <div class="mi"><span class="ml">Holders</span><br><span class="mv" style="color:#E0A000;">-4.2K</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIST BLOCK (rail: pink) -->
+  <div class="bzone">
+    <div class="rail rl"></div>
+    <div class="bcont">
+      <span class="blabel">[list]</span>
+      <div class="b-list">
+        <div class="li"><span class="dot rd"></span> Price decline: -8.3% in 24h</div>
+        <div class="li"><span class="dot yl"></span> Vol/MCap ratio elevated: 1.75x</div>
+        <div class="li"><span class="dot rd"></span> Holder count dropping: -4.2K</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALLOUT BLOCK (rail: yellow) -->
+  <div class="bzone">
+    <div class="rail rco"></div>
+    <div class="bcont">
+      <span class="blabel">[callout]</span>
+      <div class="b-callout" style="border-color:#E0A000;">
+        <span class="ico" style="color:#E0A000;">⚠</span> Sustained sell pressure detected. <span style="color:#E0A000;font-weight:bold;">Confidence: 74%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SENTIMENT BLOCK (rail: pink) -->
+  <div class="bzone">
+    <div class="rail rs"></div>
+    <div class="bcont">
+      <span class="blabel">[sentiment]</span>
+      <div class="b-sentiment">
+        <div class="pips">
+          <span class="pip pos"></span>
+          <span class="pip neu"></span>
+          <span class="pip neg"></span>
+          <span class="pip neg anim-breathe"></span>
+          <span class="pip neg"></span>
+          <span class="pip neg"></span>
         </div>
+        <span class="sc" style="color:#E0A000;">Bearish — sell pressure mounting across social</span>
       </div>
     </div>
   </div>
 
-  <div class="dsec" style="padding:8px;">
-    <div class="bzone">
-      <div class="rail rg" style="height:44px;"></div>
-      <div class="bcont">
-        <div class="bg" style="gap:3px;">
-          <div class="gi"><span style="color:#888;font-size:7px;">Price Range 24h</span><br><span style="font-size:10px;">$7.20 — $10.91</span></div>
-          <div class="gi"><span style="color:#888;font-size:7px;">Liq. USD</span><br><span style="font-size:10px;">$2.1M</span></div>
-          <div class="gi"><span style="color:#888;font-size:7px;">Holders</span><br><span style="font-size:10px;">42.8K</span></div>
-          <div class="gi"><span style="color:#888;font-size:7px;">Token Age</span><br><span style="font-size:10px;">187d</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Sentiment block -->
-  <div class="dsec" style="padding:8px;">
-    <div class="bzone">
-      <div class="rail rs" style="height:24px;"></div>
-      <div class="bcont">
-        <div class="bs">
-          <span style="font-size:8px;color:#888;">Social Sentiment</span>
-          <div class="pips" style="margin-top:2px;">
-            <span class="pip pos"></span>
-            <span class="pip neu"></span>
-            <span class="pip neg anim-breathe"></span>
-            <span class="pip neg"></span>
-            <span class="pip neg"></span>
-            <span class="pip neg"></span>
-          </div>
-          <span class="bl" style="color:#FF6633;">Bearish — sell-off underway, negative mentions rising</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="dsec" style="padding:8px;">
-    <div class="dsig ur">
-      <span class="sh" style="color:#FF6633;">⚠ Urgent: Sharp Price Decline <span class="anim-blink" style="color:#FF6633;">●</span></span>
-      <div class="sb">
-        Sustained sell-off: <span style="color:#FF6633;font-weight:bold;">-22.4%</span> in 24h. Price approaching 7d low.<br>
-        <span style="color:#FF6633;">Confidence: 81%</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="dsec" style="padding:6px;">
-    <div class="bprog" style="margin:0;">
-      <span class="ph">Alert Confidence</span>
-      <div class="pb"><div class="pf anim-breathe" style="width:81%;background:#FF6633;"></div></div>
-      <span style="font-size:7px;color:#888;">Threshold 60% · Current <span style="color:#FF6633;">81%</span></span>
-    </div>
-  </div>
-
-  <div class="dsec" style="padding:6px;">
-    <div class="dlog">
-      <div class="lg hl" style="color:#FF6633;">[19:33] URGENT: TRUMP -22.4% — sharp decline <span class="anim-blink" style="color:#FF6633;">●</span></div>
-      <div class="lg al">[19:27] Price check: $8.47 — approaching low</div>
-      <div class="lg">[18:30] Holders: 42.8K (-1.8K / 24h)</div>
-      <div class="lg">[16:15] Baseline price: $10.91 (24h ago)</div>
-    </div>
-  </div>
-
-  <div class="tab-bar">
-    <span class="tab ac">DETAIL</span>
-    <span class="tab">CHARTS</span>
-    <span class="tab">HOLDERS</span>
-    <span class="tab anim-blink" style="color:#FF6633;">⚠ ALERTS</span>
-  </div>
+  <span class="ai-badge">⡂ JARVIS</span>
 </div>
-<div><div class="pl">[DETAIL] TRUMP — Urgent</div></div>
+<div class="pl">CARD 2: CHART + CALLOUT + LIST + SENTIMENT</div>
+</div>
+
+<!-- ─── CARD 3: PROGRESS + PCTBAR + CODE + TAGS ─── -->
+<div class="pf">
+<div class="card">
+  <div class="nbar" style="--nb:4px;--nb-c:#FF0044;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#FF0044;color:#FF0044;" class="anim-blink">⚠</span>
+    <span class="sym" style="color:#FF0044;">HAHA</span>
+    <span class="bdg rd anim-blink">● CRITICAL</span>
+    <span class="tm"><span class="anim-blink" style="color:#FF0044;">●</span> NOW</span>
+  </div>
+
+  <!-- METRIC -->
+  <div class="bzone">
+    <div class="rail rm"></div>
+    <div class="bcont">
+      <div class="b-metric">
+        <span class="mv" style="color:#FF0044;">$0.000001</span>
+        <span class="ch dn" style="color:#FF0044;">-67.1%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
+
+  <!-- COMPARISON (liquidity crash) -->
+  <div class="bzone">
+    <div class="rail rg"></div>
+    <div class="bcont">
+      <span class="blabel">[comparison]</span>
+      <div class="b-comparison">
+        <div class="ci" style="border-color:#FF0044;"><span class="cl">Liquidity</span><br><span class="cv" style="color:#FF0044;">$12K <span style="font-size:7px;">↓95%</span></span></div>
+        <div class="ci" style="border-color:#FF0044;"><span class="cl">Holders</span><br><span class="cv" style="color:#FF0044;">142 <span style="font-size:7px;">↓82%</span></span></div>
+        <div class="ci" style="border-color:#FF0044;"><span class="cl">Liq/MCap</span><br><span class="cv" style="color:#FF0044;">0.001x</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS BLOCK (rail: cyan) -->
+  <div class="bzone">
+    <div class="rail rc"></div>
+    <div class="bcont">
+      <span class="blabel">[progress]</span>
+      <div class="b-progress">
+        <span class="ph">Rug-Pull Confidence <span style="color:#FF0044;">94%</span></span>
+        <div class="pb"><div class="pf p4 anim-pulse" style="width:94%;background:#FF0044;"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERCENTAGE BAR BLOCK (rail: cyan) -->
+  <div class="bzone">
+    <div class="rail rc"></div>
+    <div class="bcont">
+      <span class="blabel">[percentage-bar]</span>
+      <div class="b-pct-bar">
+        <div class="bh"><span>Liquidity Drop</span><span style="color:#FF0044;">-95%</span></div>
+        <div class="bb"><div class="bf" style="width:5%;background:linear-gradient(90deg,#FF3B1D,#FF0044);"></div></div>
+        <div class="bm">Remaining: 5% of initial liquidity</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
+
+  <!-- TAGS -->
+  <div class="bzone">
+    <div class="bcont" style="padding:2px 5px;">
+      <div class="b-tags">
+        <span class="tg anim-blink" style="border-color:#FF0044;color:#FF0044;">:rug-alert</span>
+        <span class="tg" style="color:#FF0044;">:critical</span>
+        <span class="tg">:liquidity-crash</span>
+      </div>
+    </div>
+  </div>
+
+  <span class="ai-badge">⡂ JARVIS</span>
+</div>
+<div class="pl">CARD 3: PROGRESS + PERCENTAGE-BAR + COMPARISON</div>
+</div>
 </div>
 </section>
 
-<section class="section" style="margin:20px 0;">
-<h2>Animations Used</h2>
-<div class="pros-cons">
-<div style="background:#0E0E18;padding:10px 14px;border:1px solid #2A2A34;flex:2;">
-  <h4 style="color:#6C3BFF;">● Animated Elements</h4>
-  <li><span class="anim-blink" style="display:inline-block;">● blink</span> — Critical badges, alert pills, alert indicators, rug-pull warnings</li>
-  <li><span class="anim-breathe" style="display:inline-block;">● breathe</span> — Status dots, volume values, OK indicators, sentiment pips, confidence bars</li>
-  <li><span class="anim-glow-rail" style="display:inline-block;">● glow-rail</span> — Vertical accent rails pulse on primary metric blocks</li>
-  <li><span class="anim-flicker" style="display:inline-block;">● flicker</span> — Critical icons on rug-pull / severe alerts</li>
-  <li>Weighted neon top-bars — 2px (info) through 4px (critical), proportional to urgency</li>
-  <li>Color-coded vertical accent rails per block type (metric=green, chart=cyan, callout=yellow, sentiment=pink)</li>
-  <li>Block dividers with dots between major block groups</li>
-  <li>AI watermark badges (⡂ JARVIS) in bottom-right corner</li>
+<!-- ═══════════════════════════════════════════════════════════
+     CARD 4-6: CODE + LINK + TIMELINE + TRANSFER + GRID �═══ -->
+<section class="section">
+<span class="tagline" style="color:#6C3BFF;font-size:10px;">⡂ BLOCKS: GRID · CODE · LINK · TIMELINE · TRANSFER · SENTIMENT</span>
+<div class="pg">
+<div class="pf">
+<div class="card">
+  <div class="nbar" style="--nb:2.5px;--nb-c:#44BBAA;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#44BBAA;color:#44BBAA;">W</span>
+    <span class="sym">WIF</span>
+    <span class="bdg yl anim-blink">● VOL</span>
+    <span class="tm">3m ago</span>
+  </div>
+
+  <!-- METRIC -->
+  <div class="bzone">
+    <div class="rail rm"></div>
+    <div class="bcont">
+      <div class="b-metric">
+        <span class="mv" style="color:#FF6633;">$0.84</span>
+        <span class="ch up" style="color:#FF6633;">+18.9%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
+
+  <!-- GRID BLOCK (rail: grey) -->
+  <div class="bzone">
+    <div class="rail rg"></div>
+    <div class="bcont">
+      <span class="blabel">[grid]</span>
+      <div class="b-grid">
+        <div class="gi"><span class="gl">MCap</span><br><span class="gv">$840M</span></div>
+        <div class="gi"><span class="gl">Vol 24h</span><br><span class="gv anim-breathe" style="color:#FF6633;">$2.1B</span></div>
+        <div class="gi"><span class="gl">Price Range</span><br><span class="gv">$0.62–$0.91</span></div>
+        <div class="gi"><span class="gl">Holders</span><br><span class="gv">42.8K</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALLOUT -->
+  <div class="bzone">
+    <div class="rail rco"></div>
+    <div class="bcont">
+      <div class="b-callout" style="border-color:#FF6633;">
+        <span class="ico anim-blink" style="color:#FF6633;">⚠</span> Volume surged <span style="color:#FF6633;font-weight:bold;">+412%</span> in 15m
+      </div>
+    </div>
+  </div>
+
+  <!-- SENTIMENT -->
+  <div class="bzone">
+    <div class="rail rs"></div>
+    <div class="bcont">
+      <span class="blabel">[sentiment]</span>
+      <div class="b-sentiment">
+        <div class="pips">
+          <span class="pip pos"></span>
+          <span class="pip pos anim-breathe"></span>
+          <span class="pip pos"></span>
+          <span class="pip neu"></span>
+          <span class="pip neg"></span>
+          <span class="pip neg"></span>
+        </div>
+        <span class="sc">Social: mixed but volume-driven bullish pump</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAGS -->
+  <div class="bzone">
+    <div class="bcont" style="padding:2px 5px;">
+      <div class="b-tags">
+        <span class="tg anim-blink" style="border-color:#FF6633;color:#FF6633;">:vol-surge</span>
+        <span class="tg">:meme</span>
+        <span class="tg">:watch</span>
+      </div>
+    </div>
+  </div>
+
+  <span class="ai-badge">⡂ JARVIS</span>
 </div>
+<div class="pl">CARD 4: GRID + CALLOUT + SENTIMENT</div>
+</div>
+
+<!-- ─── CARD 5: CODE + TIMELINE + TAGS ─── -->
+<div class="pf">
+<div class="card">
+  <div class="nbar" style="--nb:2px;--nb-c:#3388CC;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#3388CC;color:#3388CC;">O</span>
+    <span class="sym">ONCT</span>
+    <span class="bdg cy">● ON-CHAIN</span>
+    <span class="tm">7m ago</span>
+  </div>
+
+  <!-- TEXT -->
+  <div class="bzone">
+    <div class="rail rt"></div>
+    <div class="bcont">
+      <div class="b-text">
+        On-chain smart contract interaction detected. New mint authority revoked.
+      </div>
+    </div>
+  </div>
+
+  <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
+
+  <!-- CODE BLOCK (rail: purple) -->
+  <div class="bzone">
+    <div class="rail rt"></div>
+    <div class="bcont">
+      <span class="blabel">[code]</span>
+      <div class="b-code">
+        <span style="color:#888;">$</span> spl-token authorize --revoke-mint<br>
+        <span style="color:#888;">> </span>Signature: 3w9p...kR7j<br>
+        <span style="color:#00C96C;">✓</span> Mint authority revoked ✅
+      </div>
+    </div>
+  </div>
+
+  <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
+
+  <!-- TIMELINE BLOCK (rail: pink) -->
+  <div class="bzone">
+    <div class="rail rl"></div>
+    <div class="bcont">
+      <span class="blabel">[timeline]</span>
+      <div class="b-timeline">
+        <div class="te"><span class="tl-dot cy"></span><span class="tl-time">19:28</span><span class="tl-label">Contract verified</span></div>
+        <div class="te"><span class="tl-dot yl"></span><span class="tl-time">19:31</span><span class="tl-label">Mint authority revoked</span></div>
+        <div class="te"><span class="tl-dot gn"></span><span class="tl-time">19:32</span><span class="tl-label">LP locked confirmed</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAGS -->
+  <div class="bzone">
+    <div class="bcont" style="padding:2px 5px;">
+      <div class="b-tags">
+        <span class="tg">:on-chain</span>
+        <span class="tg">:contract</span>
+        <span class="tg anim-blink" style="border-color:#00C96C;color:#00C96C;">:verified ✅</span>
+      </div>
+    </div>
+  </div>
+
+  <span class="ai-badge">⡂ JARVIS</span>
+</div>
+<div class="pl">CARD 5: CODE + TIMELINE</div>
+</div>
+
+<!-- ─── CARD 6: LINK + TRANSFER + GRID ─── -->
+<div class="pf">
+<div class="card">
+  <div class="nbar" style="--nb:2px;--nb-c:#FF44AA;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#FF44AA;color:#FF44AA;">W</span>
+    <span class="sym">W</span>
+    <span class="bdg pk">● SOCIAL</span>
+    <span class="tm">12m ago</span>
+  </div>
+
+  <!-- TEXT -->
+  <div class="bzone">
+    <div class="rail rt"></div>
+    <div class="bcont">
+      <div class="b-text">
+        Whale transaction detected on <span style="color:#3388CC;">DexScreener</span>. Large holder movement.
+      </div>
+    </div>
+  </div>
+
+  <div class="bdiv"><span class="dl"></span><span class="dd"></span><span class="dl"></span></div>
+
+  <!-- LINK BLOCK (rail: purple) -->
+  <div class="bzone">
+    <div class="rail rt"></div>
+    <div class="bcont">
+      <span class="blabel">[link]</span>
+      <div class="b-link">
+        <span class="favicon">D</span>
+        <div class="lt">
+          <span class="tt">DexScreener — SOL / USDC</span><br>
+          <span class="url">dexscreener.com/solana/...</span>
+        </div>
+        <span class="arrow">▸</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRANSFER BLOCK (rail: red) -->
+  <div class="bzone">
+    <div class="rail rx"></div>
+    <div class="bcont">
+      <span class="blabel">[transfer]</span>
+      <div class="b-transfer">
+        <div class="who">
+          <span class="addr">DezXA....B263</span>
+          <span style="color:#888;font-size:7px;"> → 248M BONK</span>
+        </div>
+        <div class="amt out" style="color:#FF3B1D;">-$744</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRID -->
+  <div class="bzone">
+    <div class="rail rg"></div>
+    <div class="bcont">
+      <span class="blabel">[grid]</span>
+      <div class="b-grid">
+        <div class="gi"><span class="gl">Token</span><br><span class="gv">BONK</span></div>
+        <div class="gi"><span class="gl">Holders</span><br><span class="gv">284K</span></div>
+        <div class="gi"><span class="gl">Last Move</span><br><span class="gv">3mo ago</span></div>
+        <div class="gi"><span class="gl">Supply %</span><br><span class="gv">2.4%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <span class="ai-badge">⡂ JARVIS</span>
+</div>
+<div class="pl">CARD 6: LINK + TRANSFER + GRID</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CARD 7-9: ALL EXTRA BLOCK MIXES ␐══════════════════════ -->
+<section class="section">
+<span class="tagline" style="color:#6C3BFF;font-size:10px;">⡂ BLOCKS: ALL 16 TYPES SHOWN · MIX & MATCH COMBOS</span>
+<div class="pg">
+
+<div class="pf">
+<div class="card">
+  <div class="nbar" style="--nb:2px;--nb-c:#44BBAA;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#44BBAA;color:#44BBAA;">B</span>
+    <span class="sym">BONK</span>
+    <span class="bdg yl">● WATCH</span>
+    <span class="tm">45s ago</span>
+  </div>
+
+  <!-- METRIC -->
+  <div class="bzone">
+    <div class="rail rm"></div>
+    <div class="bcont">
+      <div class="b-metric">
+        <span class="mv">$0.000024</span>
+        <span class="ch up" style="color:#44BBAA;">+12.7%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHART -->
+  <div class="bzone">
+    <div class="rail rc"></div>
+    <div class="bcont">
+      <div class="b-chart">
+        <svg width="100%" height="22" viewBox="0 0 100 22">
+          <polyline points="0,18 12,16 25,12 38,10 50,6 62,4 75,5 88,3 100,3" stroke="#44BBAA" stroke-width="1.5" fill="none"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRICSROW -->
+  <div class="bzone">
+    <div class="rail rm"></div>
+    <div class="bcont">
+      <div class="b-metrics-row">
+        <div class="mi"><span class="ml">MCap</span><br><span class="mv">$3.8B</span></div>
+        <div class="mi"><span class="ml">Vol 24h</span><br><span class="mv anim-breathe" style="color:#E0A000;">$890M</span></div>
+        <div class="mi"><span class="ml">Vol Δ</span><br><span class="mv" style="color:#E0A000;">+340%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERCENTAGE BAR — volume spike -->
+  <div class="bzone">
+    <div class="rail rc"></div>
+    <div class="bcont">
+      <span class="blabel">[percentage-bar]</span>
+      <div class="b-pct-bar">
+        <div class="bh"><span>Volume vs Baseline</span><span style="color:#E0A000;">+340%</span></div>
+        <div class="bb"><div class="bf" style="width:100%;background:linear-gradient(90deg,#3388CC,#E0A000,#FF6633);"></div></div>
+        <div class="bm">8.2σ deviation from mean</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIST — indicators -->
+  <div class="bzone">
+    <div class="rail rl"></div>
+    <div class="bcont">
+      <span class="blabel">[list]</span>
+      <div class="b-list">
+        <div class="li"><span class="dot yl"></span> Volume: <span style="color:#E0A000;">+340%</span> in 15m</div>
+        <div class="li"><span class="dot yl"></span> Price impact: <span style="color:#44BBAA;">+12.7%</span></div>
+        <div class="li"><span class="dot pk"></span> Whale activity: elevated</div>
+      </div>
+    </div>
+  </div>
+
+  <span class="ai-badge">⡂ JARVIS</span>
+</div>
+<div class="pl" style="font-size:8px;">CHART + PERCENTAGE-BAR + LIST + METRICSROW</div>
+</div>
+
+<div class="pf">
+<div class="card">
+  <div class="nbar" style="--nb:4px;--nb-c:#FF0044;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#FF0044;color:#FF0044;">H</span>
+    <span class="sym" style="color:#FF0044;">HAHA</span>
+    <span class="bdg rd anim-blink">● CRITICAL</span>
+    <span class="tm">30s ago</span>
+  </div>
+
+  <!-- TEXT -->
+  <div class="bzone">
+    <div class="rail rt"></div>
+    <div class="bcont">
+      <div class="b-text">
+        <span style="color:#FF0044;font-weight:bold;">Critical alert:</span> Liquidity crisis detected. Wallet controlling 94% of LP has withdrawn.
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARISON -->
+  <div class="bzone">
+    <div class="rail rg"></div>
+    <div class="bcont">
+      <div class="b-comparison">
+        <div class="ci" style="border-color:#FF0044;"><span class="cl">Liquidity Before</span><br><span class="cv" style="color:#00C96C;">$240K</span></div>
+        <div class="ci" style="border-color:#FF0044;"><span class="cl">Liquidity Now</span><br><span class="cv" style="color:#FF0044;">$12K</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="bzone">
+    <div class="rail rc"></div>
+    <div class="bcont">
+      <div class="b-progress">
+        <span class="ph">LP Withdrawn <span style="color:#FF0044;">94%</span></span>
+        <div class="pb"><div class="pf p4 anim-pulse" style="width:94%;background:#FF0044;"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERCENTAGE BAR -->
+  <div class="bzone">
+    <div class="rail rc"></div>
+    <div class="bcont">
+      <div class="b-pct-bar">
+        <div class="bh"><span>LP Remaining</span><span style="color:#FF0044;">6%</span></div>
+        <div class="bb"><div class="bf" style="width:6%;background:#FF3B1D;"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="bzone">
+    <div class="rail rl"></div>
+    <div class="bcont">
+      <span class="blabel">[timeline]</span>
+      <div class="b-timeline">
+        <div class="te"><span class="tl-dot gn"></span><span class="tl-time">19:28</span><span class="tl-label">LP: $240K — healthy</span></div>
+        <div class="te"><span class="tl-dot yl"></span><span class="tl-time">19:35</span><span class="tl-label">LP withdrawn: -$228K</span></div>
+        <div class="te"><span class="tl-dot rd"></span><span class="tl-time">19:36</span><span class="tl-label" style="color:#FF0044;">⚠ CRITICAL: $12K remaining</span></div>
+      </div>
+    </div>
+  </div>
+
+  <span class="ai-badge">⡂ JARVIS</span>
+</div>
+<div class="pl" style="font-size:8px;">TEXT + COMPARISON + PROGRESS + PCT-BAR + TIMELINE</div>
+</div>
+
+<div class="pf">
+<div class="card">
+  <div class="nbar" style="--nb:2px;--nb-c:#FF44AA;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#FF44AA;color:#FF44AA;">A</span>
+    <span class="sym">AI</span>
+    <span class="bdg pk">● JARVIS</span>
+    <span class="tm">just now</span>
+  </div>
+
+  <!-- TEXT — AI insight -->
+  <div class="bzone">
+    <div class="rail rt"></div>
+    <div class="bcont">
+      <div class="b-text">
+        <span style="color:#FF44AA;font-weight:bold;">⡂ JARVIS:</span> Top 3 tokens showing strong accumulation patterns across DEX pairs. Consider adding to watchlist.
+      </div>
+    </div>
+  </div>
+
+  <!-- LINK — source -->
+  <div class="bzone">
+    <div class="rail rt"></div>
+    <div class="bcont">
+      <div class="b-link">
+        <span class="favicon" style="color:#FF44AA;">J</span>
+        <div class="lt">
+          <span class="tt" style="color:#FF44AA;">Jarvis AI — Accumulation Report</span><br>
+          <span class="url" style="color:#FF44AA;">⡂ ai-insight · 3 tokens flagged</span>
+        </div>
+        <span class="arrow" style="color:#FF44AA;">▸</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRID — recommendations -->
+  <div class="bzone">
+    <div class="rail rg"></div>
+    <div class="bcont">
+      <span class="blabel">[grid]</span>
+      <div class="b-grid">
+        <div class="gi"><span class="gl">Token</span><br><span class="gv">BONK</span><span class="sub" style="font-size:7px;color:#888;">+340% vol</span></div>
+        <div class="gi"><span class="gl">Token</span><br><span class="gv">WIF</span><span class="sub" style="font-size:7px;color:#888;">+412% vol</span></div>
+        <div class="gi"><span class="gl">Token</span><br><span class="gv">PEPE</span><span class="sub" style="font-size:7px;color:#888;">declining</span></div>
+        <div class="gi"><span class="gl">Confidence</span><br><span class="gv" style="color:#FF44AA;">87%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIST — actions -->
+  <div class="bzone">
+    <div class="rail rl"></div>
+    <div class="bcont">
+      <div class="b-list">
+        <div class="li"><span class="dot pk"></span> <span style="color:#FF44AA;">Track BONK</span> — vol anomaly active</div>
+        <div class="li"><span class="dot pk"></span> <span style="color:#FF44AA;">Track WIF</span> — vol surge 412%</div>
+        <div class="li"><span class="dot pk"></span> <span style="color:#FF44AA;">Monitor PEPE</span> — decline accelerating</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAGS -->
+  <div class="bzone">
+    <div class="bcont" style="padding:2px 5px;">
+      <div class="b-tags">
+        <span class="tg anim-blink" style="border-color:#FF44AA;color:#FF44AA;">:ai-insight</span>
+        <span class="tg">:accumulation</span>
+        <span class="tg anim-rotate">:live</span>
+      </div>
+    </div>
+  </div>
+
+  <span class="ai-badge">⡂ JARVIS</span>
+</div>
+<div class="pl" style="font-size:8px;">TEXT + LINK + GRID + LIST · JARVIS AI card</div>
+</div>
+
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     BLOCK TYPE INDEX ␐══════════════════════════════════════ -->
+<section class="section">
+<h2>Block Type Index</h2>
+<p class="tagline">All 16 block types rendered in Term-Plus style with accent rail colors</p>
+<div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-width: 840px; margin: 0 auto;">
+  <div style="background:#0E0E18;border:1px solid #2A2A34;padding:8px 10px;border-radius:4px;">
+    <div style="display:flex;align-items:center;gap:4px;"><div class="rail rt" style="width:3px;height:14px;"></div><div><span style="color:#6C3BFF;font-size:10px;font-weight:bold;">text</span><br><span style="color:#888;font-size:7px;">Rail: purple (#6C3BFF)</span></div></div>
+  </div>
+  <div style="background:#0E0E18;border:1px solid #2A2A34;padding:8px 10px;border-radius:4px;">
+    <div style="display:flex;align-items:center;gap:4px;"><div class="rail rm" style="width:3px;height:14px;"></div><div><span style="color:#00C96C;font-size:10px;font-weight:bold;">metric</span><br><span style="color:#888;font-size:7px;">Rail: green (#00C96C)</span></div></div>
+  </div>
+  <div style="background:#0E0E18;border:1px solid #2A2A34;padding:8px 10px;border-radius:4px;">
+    <div style="display:flex;align-items:center;gap:4px;"><div class="rail rm" style="width:3px;height:14px;"></div><div><span style="color:#00C96C;font-size:10px;font-weight:bold;">metrics-row</span><br><span style="color:#888;font-size:7px;">Rail: green</span></div></div>
+  </div>
+  <div style="background:#0E0E18;border:1px solid #2A2A34;padding:8px 10px;border-radius:4px;">
+    <div style="display:flex;align-items:center;gap:4px;"><div class="rail rc" style="width:3px;height:14px;"></div><div><span style="color:#00BFFF;font-size:10px;font-weight:bold;">chart</span><br><span style="color:#888;font-size:7px;">Rail: cyan (#00BFFF)</span></div></div>
+  </div>
+  <div style="background:#0E0E18;border:1px solid #2A2A34;padding:8px 10px;border-radius:4px;">
+    <div style="display:flex;align-items:center;gap:4px;"><div class="rail rco" style="width:3px;height:14px;"></div><div><span style="color:#E0C000;font-size:10px;font-weight:bold;">callout</span><br><span style="color:#888;font-size:7px;">Rail: yellow (#E0C000)</span></div></div>
+  </div>
+  <div style="background:#0E0E18;border:1px solid #2A2A34;padding:8px 10px;border-radius:4px;">
+    <div style="display:flex;align-items:center;gap:4px;"><div class="rail rg" style="width:3px;height:14px;"></div><div><span style="color:#888;font-size:10px;font-weight:bold;">comparison</span><br><span style="color:#888;font-size:7px;">Rail: grey (#888)</span></div></div>
+  </div>
+  <div style="background:#0E0E18;border:1px solid #2A2A34;padding:8px 10px;border-radius:4px;">
+    <div style="display:flex;align-items:center;gap:4px;"><div class="rail rg" style="width:3px;height:14px;"></div><div><span style="color:#888;font-size:10px;font-weight:bold;">grid</span><br><span style="color:#888;font-size:7px;">Rail: grey (#888)</span></div></div>
+  </div>
+  <div style="background:#0E0E18;border:1px solid #2A2A34;padding:8px 10px;border-radius:4px;">
+    <div style="display:flex;align-items:center;gap:4px;"><div class="rail rl" style="width:3px;height:14px;"></div><div><span style="color:#FF44AA;font-size:10px;font-weight:bold;">list</span><br><span style="color:#888;font-size:7px;">Rail: pink (#FF44AA)</span></div></div>
+  </div>
+  <div style="background:#0E0E18;border:1px solid #2A2A34;padding:8px 10px;border-radius:4px;">
+    <div style="display:flex;align-items:center;gap:4px;"><div class="rail rs" style="width:3px;height:14px;"></div><div><span style="color:#FF44AA;font-size:10px;font-weight:bold;">sentiment</span><br><span style="color:#888;font-size:7px;">Rail: pink (#FF44AA)</span></div></div>
+  </div>
+  <div style="background:#0E0E18;border:1px solid #2A2A34;padding:8px 10px;border-radius:4px;">
+    <div style="display:flex;align-items:center;gap:4px;"><div class="rail rc" style="width:3px;height:14px;"></div><div><span style="color:#00BFFF;font-size:10px;font-weight:bold;">progress</span><br><span style="color:#888;font-size:7px;">Rail: cyan (#00BFFF)</span></div></div>
+  </div>
+  <div style="background:#0E0E18;border:1px solid #2A2A34;padding:8px 10px;border-radius:4px;">
+    <div style="display:flex;align-items:center;gap:4px;"><div class="rail rc" style="width:3px;height:14px;"></div><div><span style="color:#00BFFF;font-size:10px;font-weight:bold;">percentage-bar</span><br><span style="color:#888;font-size:7px;">Rail: cyan</span></div></div>
+  </div>
+  <div style="background:#0E0E18;border:1px solid #2A2A34;padding:8px 10px;border-radius:4px;">
+    <div style="display:flex;align-items:center;gap:4px;"><div class="rail rt" style="width:3px;height:14px;"></div><div><span style="color:#6C3BFF;font-size:10px;font-weight:bold;">code</span><br><span style="color:#888;font-size:7px;">Rail: purple</span></div></div>
+  </div>
+  <div style="background:#0E0E18;border:1px solid #2A2A34;padding:8px 10px;border-radius:4px;">
+    <div style="display:flex;align-items:center;gap:4px;"><div class="rail rt" style="width:3px;height:14px;"></div><div><span style="color:#6C3BFF;font-size:10px;font-weight:bold;">link</span><br><span style="color:#888;font-size:7px;">Rail: purple</span></div></div>
+  </div>
+  <div style="background:#0E0E18;border:1px solid #2A2A34;padding:8px 10px;border-radius:4px;">
+    <div style="display:flex;align-items:center;gap:4px;"><div class="rail rl" style="width:3px;height:14px;"></div><div><span style="color:#FF44AA;font-size:10px;font-weight:bold;">timeline</span><br><span style="color:#888;font-size:7px;">Rail: pink</span></div></div>
+  </div>
+  <div style="background:#0E0E18;border:1px solid #2A2A34;padding:8px 10px;border-radius:4px;">
+    <div style="display:flex;align-items:center;gap:4px;"><div class="rail rx" style="width:3px;height:14px;"></div><div><span style="color:#FF3B1D;font-size:10px;font-weight:bold;">transfer</span><br><span style="color:#888;font-size:7px;">Rail: red (#FF3B1D)</span></div></div>
+  </div>
+  <div style="background:#0E0E18;border:1px solid #2A2A34;padding:8px 10px;border-radius:4px;">
+    <div style="display:flex;align-items:center;gap:4px;"><div class="rail rt" style="width:3px;height:14px;"></div><div><span style="color:#6C3BFF;font-size:10px;font-weight:bold;">tags</span><br><span style="color:#888;font-size:7px;">Rail: purple</span></div></div>
+  </div>
 </div>
 </section>
 
