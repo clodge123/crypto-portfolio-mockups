@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mobile Feed — Block + Animation Mockups</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #08080D; color: #E0E0EC; font-family: 'Courier New', 'Courier', system-ui, sans-serif; padding: 16px; }
+  .page { max-width: 820px; margin: 0 auto; }
+  h1 { font-size: 18px; color: #6C3BFF; }
+  h1::before { content: '⡂ '; }
+  .subtitle { color: #A0A0AA; font-size: 10px; margin-bottom: 2px; }
+  .note { color: #FF44AA; font-size: 9px; margin-bottom: 12px; }
+
+  @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+  @keyframes breathe { 0%,100% { opacity:0.35; filter:brightness(0.6); } 50% { opacity:1; filter:brightness(1.2); } }
+  @keyframes pulse-bar { 0%,100% { opacity:0.5; } 50% { opacity:1; } }
+  @keyframes float-up { 0% { transform: translateY(2px); } 100% { transform: translateY(-2px); } }
+  @keyframes glow-pulse { 0%,100% { box-shadow:0 0 2px #FF44AA; } 50% { box-shadow:0 0 10px #FF44AA; } }
+  @keyframes slide-in { 0% { opacity:0; transform: translateX(-4px); } 100% { opacity:1; transform: translateX(0); } }
+  @keyframes color-shift { 0% { color:#00C96C; } 50% { color:#6C3BFF; } 100% { color:#00C96C; } }
+  @keyframes wave { 0%,100% { opacity:0.4; } 25% { opacity:1; } 50% { opacity:0.4; } 75% { opacity:1; } }
+
+  .anim-blink { animation: blink 0.8s steps(2) infinite; }
+  .anim-breathe { animation: breathe 2.5s ease-in-out infinite; }
+  .anim-pulse-bar { animation: pulse-bar 1.8s ease-in-out infinite; }
+  .anim-float { animation: float-up 3s ease-in-out infinite; }
+  .anim-glow { animation: glow-pulse 1.5s ease-in-out infinite; }
+  .anim-slide { animation: slide-in 0.6s ease-out 1; }
+  .anim-color-shift { animation: color-shift 3s linear infinite; }
+
+  .section { margin: 24px 0; }
+  .section h2 { font-size: 15px; color: #E0E4EE; }
+  .section h2::before { content: '═══ '; color: #2A2A34; }
+  .section .tagline { color: #888; font-size: 9px; margin-bottom: 10px; }
+
+  .phone-frame { width: 390px; background: #06060A; border: 1px solid #1A1A24; border-radius: 6px; margin: 0 auto; }
+  .phone-frame .notch { display: flex; align-items: center; justify-content: center; height: 18px; background: #0A0A12; border-bottom: 1px solid #1A1A24; }
+  .phone-frame .notch .bar { width: 60px; height: 4px; border-radius: 2px; background: #2A2A34; }
+  .feed { padding: 6px; }
+
+  .card { width: 100%; background: #101018; border: 1px solid #2A2A34; border-radius: 4px; position: relative; margin-bottom: 10px; }
+  .nbar { height: var(--nb, 2px); background: var(--nb-c, #3388CC); border-radius: 4px 4px 0 0; }
+  .ai-badge { position: absolute; bottom: 2px; right: 4px; font-size: 5px; color: #FF44AA; opacity: 0.4; }
+  .chdr { display: flex; align-items: center; gap: 3px; padding: 4px 5px 1px 5px; }
+  .chdr .icon { width: 16px; height: 16px; border: 1px solid #6C3BFF; border-radius: 3px; text-align: center; font-size: 7px; color: #6C3BFF; background: #0D0D15; }
+  .chdr .sym { font-size: 9px; font-weight: 700; color: #E0E0EC; }
+  .chdr .bdg { font-size: 5px; padding: 1px 3px; border: 1px solid #2A2A34; border-radius: 2px; color: #888; }
+  .chdr .bdg.cy { border-color: #3388CC; color: #3388CC; }
+  .chdr .bdg.yl { border-color: #E0A000; color: #E0A000; }
+  .chdr .bdg.rd { border-color: #FF0044; color: #FF0044; }
+  .chdr .bdg.pk { border-color: #FF44AA; color: #FF44AA; }
+  .chdr .bdg.gn { border-color: #00C96C; color: #00C96C; }
+  .chdr .bdg.og { border-color: #FF6633; color: #FF6633; }
+  .chdr .tm { flex:1; text-align:right; font-size:6px; color:#5E5E68; }
+
+  .grid-card { display: grid; gap: 1px; background: #0C0C14; padding: 1px; }
+  .bzone { display: flex; min-height: 18px; height: 100%; }
+  .rail { width: 2px; min-height: 100%; border-radius: 1px; }
+  .rail.rm { background: #00C96C; }
+  .rail.rc { background: #00BFFF; }
+  .rail.rt { background: #6C3BFF; }
+  .rail.rl { background: #FF44AA; }
+  .rail.rco { background: #E0C000; }
+  .rail.rp { background: #44BBAA; }
+  .rail.ro { background: #FF6633; }
+  .rail.rs { background: #FF44AA; }
+  .bcont { flex: 1; padding: 2px 4px 2px 2px; font-size: 8px; height: 100%; }
+  .blabel { font-size: 5px; color: rgba(255,68,170,0.3); padding: 0 1px; font-family: monospace; }
+
+  .b-header { display: flex; align-items: center; gap: 4px; padding: 2px 1px; }
+  .b-header .hi { width: 22px; height: 22px; border-radius: 50%; border: 1px solid #6C3BFF; text-align: center; font-size: 9px; background: #0D0D15; }
+  .b-header .ht { flex: 1; }
+  .b-header .ht .tt { font-size: 10px; font-weight: 700; color: #E0E0EC; }
+  .b-header .ht .st { font-size: 7px; color: #A0A0AA; margin-top: 1px; }
+  .b-header .hb { display: flex; align-items: center; gap: 2px; }
+  .b-header .hb .tag { font-size: 5px; padding: 1px 3px; border: 1px solid #666; border-radius: 2px; color: #888; background: #0D0D15; }
+  .b-header .hb .tag.cy { border-color: #3388CC; color: #3388CC; }
+  .b-header .hb .tag.rd { border-color: #FF0044; color: #FF0044; }
+  .b-header .hb .tag.yl { border-color: #E0A000; color: #E0A000; }
+  .b-header .hb .tag.gn { border-color: #00C96C; color: #00C96C; }
+
+  .b-text { font-size: 8px; color: #C8C8D4; line-height: 1.3; padding: 1px 0; }
+  .b-narrative { padding: 2px 1px; font-size: 7.5px; color: #D0D0DC; line-height: 1.4; }
+  .b-narrative .hl { color: #FFB84A; font-weight: 700; }
+  .b-narrative .hl.d { color: #FF4444; font-weight: 700; }
+  .b-narrative .hl.g { color: #00C96C; font-weight: 700; }
+  .b-narrative .hl.i { color: #3388CC; font-weight: 700; }
+
+  .b-metric { text-align: center; padding: 2px 0; }
+  .b-metric .mv { font-size: 16px; font-weight: 700; color: #E0E0EC; }
+  .b-metric .ml { font-size: 6px; color: #A0A0AA; display: block; margin-top: 1px; }
+  .b-metric .ch { font-size: 9px; font-weight: 600; }
+  .b-metric .ch.up { color: #00C96C; }
+  .b-metric .ch.dn { color: #FF4444; }
+
+  .b-metrics-row { display: flex; gap: 3px; padding: 1px 0; }
+  .b-metrics-row .mi { flex: 1; text-align: center; padding: 2px 3px; background: #0D0D15; border: 1px solid #1A1A24; border-radius: 3px; }
+  .b-metrics-row .mi .ml { font-size: 6px; color: #A0A0AA; }
+  .b-metrics-row .mi .mv { font-size: 10px; font-weight: 700; color: #E0E0EC; }
+
+  .b-chart { height: 30px; padding: 1px 0; }
+
+  .b-callout { display: flex; align-items: flex-start; gap: 3px; border: 1px solid #E0C000; background: #0D0D14; border-radius: 3px; padding: 2px 4px; font-size: 7px; color: #D0D0DC; }
+  .b-callout .ico { font-size: 8px; }
+  .b-callout .ct { flex: 1; }
+  .b-callout .ct .ctt { font-weight: 700; font-size: 7px; }
+  .b-callout .ct .ctd { font-size: 6.5px; color: #C0C0CC; margin-top: 1px; }
+
+  .b-list { padding: 1px 0; }
+  .b-list .li { display: flex; align-items: center; gap: 3px; padding: 1px 3px; font-size: 7px; color: #C0C0CC; line-height: 1.2; }
+  .b-list .li .dot { width: 3px; height: 3px; border-radius: 50%; }
+  .b-list .li .dot.cy { background: #3388CC; }
+  .b-list .li .dot.yl { background: #E0A000; }
+  .b-list .li .dot.rd { background: #FF3B1D; }
+  .b-list .li .dot.pk { background: #FF44AA; }
+  .b-list .li .dot.gn { background: #00C96C; }
+
+  .b-comparison { display: flex; gap: 2px; padding: 1px 0; }
+  .b-comparison .ci { flex: 1; padding: 3px 4px; background: #0D0D15; border: 1px solid #1A1A24; border-radius: 3px; }
+  .b-comparison .ci .cl { font-size: 6px; color: #A0A0AA; }
+  .b-comparison .ci .cv { font-size: 9px; font-weight: 700; color: #E0E0EC; padding-top: 1px; }
+  .b-comparison .ci .sub { font-size: 6px; color: #888; }
+
+  .b-timeline { padding: 1px 0; }
+  .b-timeline .te { display: flex; align-items: center; gap: 3px; padding: 1px 3px; font-size: 7px; color: #C0C0CC; }
+  .b-timeline .te .tl-dot { width: 3px; height: 3px; border-radius: 50%; }
+  .b-timeline .te .tl-dot.cy { background: #3388CC; }
+  .b-timeline .te .tl-dot.yl { background: #E0A000; }
+  .b-timeline .te .tl-dot.rd { background: #FF3B1D; }
+  .b-timeline .te .tl-dot.pk { background: #FF44AA; }
+  .b-timeline .te .tl-dot.gn { background: #00C96C; }
+  .b-timeline .te .tl-time { color: #5E5E68; width: 22px; }
+  .b-timeline .te .tl-label { flex: 1; }
+
+  .b-sentiment { padding: 1px 0; }
+  .b-sentiment .pips { display: flex; gap: 2px; margin: 1px 0; }
+  .b-sentiment .pip { flex: 1; height: 3px; border-radius: 1.5px; }
+  .b-sentiment .pip.pos { background: #00C96C; }
+  .b-sentiment .pip.neg { background: #FF4444; }
+  .b-sentiment .pip.neu { background: #A0A0AA; }
+  .b-sentiment .sc { font-size: 6px; color: #888; }
+
+  .b-progress { padding: 1px 3px; }
+  .b-progress .ph { font-size: 6px; color: #888; display: flex; justify-content: space-between; width: 100%; }
+  .b-progress .pb { height: 5px; background: #1A1A24; margin: 1px 0; border: 1px solid #2A2A34; border-radius: 2.5px; }
+  .b-progress .pf { height: 100%; border-radius: 2.5px; }
+  .b-progress .pf.p1 { width: 60%; background: #3388CC; }
+  .b-progress .pf.p2 { width: 85%; background: #00C96C; }
+  .b-progress .pf.p3 { width: 34%; background: #E0A000; }
+  .b-progress .pf.p4 { width: 92%; background: #FF3B1D; }
+  .b-progress .pf.p5 { width: 18%; background: #44BBAA; }
+  .b-progress .pm { font-size: 6px; color: #888; }
+
+  .b-transfer { padding: 2px 4px; background: #0D0D15; border: 1px solid #2A2A34; border-radius: 3px; display: flex; justify-content: space-between; align-items: center; }
+  .b-transfer .who { flex: 1; font-size: 7px; color: #C0C0CC; }
+  .b-transfer .who .addr { color: #3388CC; font-family: monospace; }
+  .b-transfer .amt { font-size: 9px; font-weight: 700; text-align: right; }
+  .b-transfer .amt.in { color: #00C96C; }
+  .b-transfer .amt.out { color: #FF3B1D; }
+
+  .b-quote { padding: 2px 4px; background: #0D0D15; border: 1px solid #2A2A34; border-radius: 3px; }
+  .b-quote .qa { display: flex; align-items: center; gap: 3px; margin-bottom: 1px; }
+  .b-quote .qa .qav { width: 12px; height: 12px; border-radius: 50%; border: 1px solid #666; text-align: center; font-size: 5px; background: #0D0D15; }
+  .b-quote .qa .qn { font-size: 6px; color: #A0A0AA; flex: 1; }
+  .b-quote .qa .qsrc { font-size: 5px; color: #6C3BFF; }
+  .b-quote .qt { font-size: 7px; color: #C8C8D4; line-height: 1.2; font-style: italic; }
+
+  .b-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; padding: 1px 0; }
+  .b-grid .gi { padding: 1px 3px; background: #0D0D15; border: 1px solid #1A1A24; border-radius: 2px; }
+  .b-grid .gi .gl { font-size: 6px; color: #A0A0AA; }
+  .b-grid .gi .gv { font-size: 8px; font-weight: 700; color: #E0E0EC; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>Mobile Feed — Block + Animation Mockups</h1>
+<div class="subtitle"># mobile-first · 390px phone width · 14-block system · 7 animation types</div>
+<div class="note">�> Cards below simulate a real phone-width feed. Animation catalog follows. Open in browser to see CSS animations live.</div>
+
+<!-- ============================================================
+     FEED SECTION 1: 6 Feed Cards (Mobile Width)
+     ============================================================ -->
+<section class="section">
+<h2>Feed Mockups — 6 Card Combinations</h2>
+<div class="tagline" style="color:#888;">phone-width · Option E grid layouts · 14 blocks in action</div>
+</section>
+
+<div class="phone-frame">
+<div class="notch"><span class="bar"></span></div>
+<div class="feed">
+
+<!-- CARD 1: PRICE CRASH -->
+<div class="card">
+  <div class="nbar" style="--nb:2px;--nb-c:#FF0044;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#FF0044;color:#FF0044;">S</span>
+    <span class="sym" style="color:#FF0044;">SOL</span>
+    <span class="bdg rd anim-blink">● URGENT</span>
+    <span class="tm">3m ago</span>
+  </div>
+  <div class="grid-card" style="grid-template-areas: 'hero hero' 'narr narr' 'bottom bottom'; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto auto;">
+    <div style="grid-area: hero; background: #0C0C14;">
+      <div class="bzone"><div class="rail rc"></div><div class="bcont">
+        <span class="blabel">[comparison]</span>
+        <div class="b-comparison">
+          <div class="ci" style="border-color:#FF0044;">
+            <span class="cl">24h Ago</span>
+            <span class="cv" style="color:#00C96C;">$148</span>
+            <span class="sub">Vol: $2.1B</span>
+          </div>
+          <div class="ci" style="border-color:#00C96C;">
+            <span class="cl">Now</span>
+            <span class="cv" style="color:#FF0044;">$98</span>
+            <span class="sub" style="color:#FF0044;">-33.7%</span>
+          </div>
+        </div>
+      </div></div>
+    </div>
+    <div style="grid-area: narr; background: #0C0C14;">
+      <div class="bzone"><div class="rail rt"></div><div class="bcont">
+        <span class="blabel">[narrative]</span>
+        <div class="b-narrative">Solana <span class="hl d">crashed 33.7%</span> in 24h — largest drop in 90d. Volume collapsed <span class="hl d">58%</span>, suggesting <span class="hl">coordinated sell-off</span>. Binance cold wallet preceded the move by ~2h.</div>
+      </div></div>
+    </div>
+    <div style="grid-area: bottom; background: #0C0C14;">
+      <div class="bzone"><div class="rail rp"></div><div class="bcont">
+        <span class="blabel">[timeline]</span>
+        <div class="b-timeline">
+          <div class="te"><span class="tl-dot rd"></span><span class="tl-time">4h</span><span class="tl-label">Binance moved 12,500 SOL</span></div>
+          <div class="te"><span class="tl-dot yl"></span><span class="tl-time">2h</span><span class="tl-label">Price dropped 14%</span></div>
+          <div class="te"><span class="tl-dot gn"></span><span class="tl-time">Now</span><span class="tl-label">Risk: 86/100</span></div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+  <span class="ai-badge">� JARVIS</span>
+</div>
+
+<!-- CARD 2: GOVERNANCE -->
+<div class="card">
+  <div class="nbar" style="--nb:2px;--nb-c:#3388CC;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#6C3BFF;color:#6C3BFF;">G</span>
+    <span class="sym">GAL</span>
+    <span class="bdg cy">● VOTE</span>
+    <span class="tm">12m ago</span>
+  </div>
+  <div class="grid-card" style="grid-template-areas: 'head head' 'table prog'; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto;">
+    <div style="grid-area: head; background: #0C0C14;">
+      <div class="bzone"><div class="rail rt"></div><div class="bcont">
+        <span class="blabel">[header]</span>
+        <div class="b-header">
+          <span class="hi" style="border-color:#6C3BFF;">G</span>
+          <div class="ht">
+            <span class="tt">Proposal #42: Treasury Rebalance</span>
+            <span class="st">3d left · Quorum: 10%</span>
+          </div>
+          <div class="hb">
+            <span class="tag cy">● Vote</span>
+            <span class="tag rd">3d</span>
+          </div>
+        </div>
+      </div></div>
+    </div>
+    <div style="grid-area: table; background: #0C0C14;">
+      <div class="bzone"><div class="rail rm"></div><div class="bcont">
+        <span class="blabel">[grid]</span>
+        <div class="b-grid">
+          <div class="gi"><span class="gl">For</span><span class="gv" style="color:#00C96C;">12.4M</span></div>
+          <div class="gi"><span class="gl">Against</span><span class="gv" style="color:#FF4444;">3.2M</span></div>
+          <div class="gi"><span class="gl">Voters</span><span class="gv">15.6M</span></div>
+          <div class="gi"><span class="gl">Quorum?</span><span class="gv" style="color:#00C96C;">✅</span></div>
+        </div>
+      </div></div>
+    </div>
+    <div style="grid-area: prog; background: #0C0C14;">
+      <div class="bzone"><div class="rail rc"></div><div class="bcont">
+        <span class="blabel">[progress]</span>
+        <div class="b-progress">
+          <span class="ph">For 79.5%</span>
+          <div class="pb"><div class="pf p1 anim-pulse-bar" style="width:79.5%;background:#00C96C;"></div></div>
+          <span class="pm">Quorum: 10% ✅</span>
+        </div>
+      </div></div>
+    </div>
+  </div>
+  <span class="ai-badge">� JARVIS</span>
+</div>
+
+<!-- CARD 3: WHALE MOVEMENT -->
+<div class="card">
+  <div class="nbar" style="--nb:2px;--nb-c:#E0A000;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#E0A000;color:#E0A000;">B</span>
+    <span class="sym">BTC</span>
+    <span class="bdg yl">● ALERT</span>
+    <span class="tm">7m ago</span>
+  </div>
+  <div class="grid-card" style="grid-template-areas: 'head head' 'xfer xfer' 'cal cal'; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto auto;">
+    <div style="grid-area: head; background: #0C0C14;">
+      <div class="bzone"><div class="rail ro"></div><div class="bcont">
+        <span class="blabel">[header]</span>
+        <div class="b-header">
+          <span class="hi" style="border-color:#E0A000;color:#E0A000;">B</span>
+          <div class="ht">
+            <span class="tt" style="color:#E0A000;">Large Whale Movement</span>
+            <span class="st">Binance → Unknown · 2,500 BTC</span>
+          </div>
+          <div class="hb">
+            <span class="tag yl">Whale</span>
+            <span class="tag rd" style="color:#FF0044;">$168M</span>
+          </div>
+        </div>
+      </div></div>
+    </div>
+    <div style="grid-area: xfer; background: #0C0C14;">
+      <div class="bzone"><div class="rail rc"></div><div class="bcont">
+        <span class="blabel">[transfer]</span>
+        <div class="b-transfer">
+          <div class="who"><span class="addr">3fB2...9aC</span><br><span style="color:#888;font-size:6px;">Binance Cold</span></div>
+          <div style="font-size:8px;color:#888;">→</div>
+          <div class="who" style="text-align:right;"><span class="addr">7aD1...4fE</span><br><span style="color:#888;font-size:6px;">Unknown</span></div>
+        </div>
+        <div style="text-align:center;margin-top:1px;">
+          <span style="color:#FF3B1D;font-size:9px;font-weight:700;">2,500 BTC</span>
+          <span style="color:#888;font-size:6px;"> · $168M</span>
+        </div>
+      </div></div>
+    </div>
+    <div style="grid-area: cal; background: #0C0C14;">
+      <div class="bzone"><div class="rail rco"></div><div class="bcont">
+        <span class="blabel">[callout]</span>
+        <div class="b-callout" style="border-color:#E0A000;">
+          <span class="ico" style="color:#E0A000;">⚠</span>
+          <div class="ct">
+            <span class="ctt">Pattern preceded May 2026 sell-off</span>
+            <span class="ctd">Receiving wallet is fresh — accumulation or OTC desk.</span>
+          </div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+  <span class="ai-badge">� JARVIS</span>
+</div>
+
+<!-- CARD 4: SOCIAL SENTIMENT -->
+<div class="card">
+  <div class="nbar" style="--nb:2px;--nb-c:#FF44AA;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#FF44AA;color:#FF44AA;">H</span>
+    <span class="sym">HAHA</span>
+    <span class="bdg pk">● SOCIAL</span>
+    <span class="tm">18m ago</span>
+  </div>
+  <div class="grid-card" style="grid-template-areas: 'head head' 'quote senti' 'list list'; grid-template-columns: 1fr 1.2fr; grid-template-rows: auto auto auto;">
+    <div style="grid-area: head; background: #0C0C14;">
+      <div class="bzone"><div class="rail rs"></div><div class="bcont">
+        <span class="blabel">[header]</span>
+        <div class="b-header">
+          <span class="hi" style="border-color:#FF44AA;color:#FF44AA;">H</span>
+          <div class="ht">
+            <span class="tt">Social Sentiment Shift</span>
+            <span class="st">Bearish on Reddit, Twitter, TG</span>
+          </div>
+          <div class="hb">
+            <span class="tag rd" style="color:#FF0044;">92% bear</span>
+          </div>
+        </div>
+      </div></div>
+    </div>
+    <div style="grid-area: quote; background: #0C0C14;">
+      <div class="bzone"><div class="rail rco"></div><div class="bcont">
+        <span class="blabel">[quote]</span>
+        <div class="b-quote">
+          <div class="qa">
+            <span class="qav" style="border-color:#FF44AA;">R</span>
+            <span class="qn">u/crypto_sleuth</span>
+            <span class="qsrc">Reddit</span>
+          </div>
+          <div class="qt">Team rugged at 2AM. Liquidity removed from all pools.</div>
+        </div>
+      </div></div>
+    </div>
+    <div style="grid-area: senti; background: #0C0C14;">
+      <div class="bzone"><div class="rail rm"></div><div class="bcont">
+        <span class="blabel">[sentiment]</span>
+        <div class="b-sentiment">
+          <span class="sc" style="color:#FF4444;">92% Bearish</span>
+          <div class="pips">
+            <span class="pip neg anim-breathe"></span>
+            <span class="pip neg"></span>
+            <span class="pip neg"></span>
+            <span class="pip neg"></span>
+            <span class="pip neg"></span>
+            <span class="pip neg"></span>
+            <span class="pip neg"></span>
+            <span class="pip neg"></span>
+            <span class="pip neg"></span>
+            <span class="pip pos"></span>
+          </div>
+        </div>
+      </div></div>
+    </div>
+    <div style="grid-area: list; background: #0C0C14;">
+      <div class="bzone"><div class="rail rl"></div><div class="bcont">
+        <span class="blabel">[list]</span>
+        <div class="b-list">
+          <div class="li"><span class="dot rd"></span> TVL dropped 40% overnight</div>
+          <div class="li"><span class="dot yl"></span> 3 posts reporting possible rug</div>
+          <div class="li"><span class="dot gn"></span> Team is doxxed + KYC verified</div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+  <span class="ai-badge">� JARVIS</span>
+</div>
+
+<!-- CARD 5: DAILY BRIEF -->
+<div class="card">
+  <div class="nbar" style="--nb:2px;--nb-c:#00C96C;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#00C96C;color:#00C96C;">📊</span>
+    <span class="sym">PORTFOLIO</span>
+    <span class="bdg gn">● INFO</span>
+    <span class="tm">42m ago</span>
+  </div>
+  <div class="grid-card" style="grid-template-areas: 'metrics metrics' 'risk risk' 'high highlights'; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto auto;">
+    <div style="grid-area: metrics; background: #0C0C14;">
+      <div class="bzone"><div class="rail rm"></div><div class="bcont">
+        <span class="blabel">[metrics-row]</span>
+        <div class="b-metrics-row">
+          <div class="mi"><span class="ml">24h</span><span class="mv" style="color:#00C96C;">+2.1%</span></div>
+          <div class="mi"><span class="ml">7d</span><span class="mv" style="color:#00C96C;">+8.4%</span></div>
+          <div class="mi"><span class="ml">Volume</span><span class="mv">$1.2B</span></div>
+          <div class="mi"><span class="ml">Vol/MCap</span><span class="mv" style="color:#3388CC;">0.05</span></div>
+        </div>
+      </div></div>
+    </div>
+    <div style="grid-area: risk; background: #0C0C14;">
+      <div class="bzone"><div class="rail ro"></div><div class="bcont">
+        <span class="blabel">[progress]</span>
+        <div class="b-progress">
+          <span class="ph">Risk Score <span style="color:#00C96C;">24/100</span></span>
+          <div class="pb"><div class="pf p1" style="width:24%;background:#00C96C;"></div></div>
+          <span class="pm">Low risk · Stable behavior</span>
+        </div>
+        <div class="b-progress" style="margin-top:2px;">
+          <span class="ph">Holder Concentration <span style="color:#FF44AA;">45%</span></span>
+          <div class="pb"><div class="pf p5" style="width:45%;background:#FF44AA;"></div></div>
+        </div>
+      </div></div>
+    </div>
+    <div style="grid-area: highlights; background: #0C0C14;">
+      <div class="bzone"><div class="rail rl"></div><div class="bcont">
+        <span class="blabel">[list]</span>
+        <div class="b-list">
+          <div class="li"><span class="dot gn"></span> Price stable within 2% range</div>
+          <div class="li"><span class="dot cy"></span> 2 new governance proposals</div>
+          <div class="li"><span class="dot yl"></span> Top 10 hold 45% — elevated</div>
+          <div class="li"><span class="dot gn"></span> Sentiment: 72% positive</div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+  <span class="ai-badge">� JARVIS</span>
+</div>
+
+<!-- CARD 6: DEEP SCAN ETH -->
+<div class="card">
+  <div class="nbar" style="--nb:2px;--nb-c:#6C3BFF;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#6C3BFF;color:#6C3BFF;">E</span>
+    <span class="sym">ETH</span>
+    <span class="bdg cy">● DEEP</span>
+    <span class="tm">5m ago</span>
+  </div>
+  <div class="grid-card" style="grid-template-areas: 'hero hero' 'metric callout' 'narr narr'; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto auto;">
+    <div style="grid-area: hero; background: #0C0C14;">
+      <div class="bzone"><div class="rail rt"></div><div class="bcont">
+        <span class="blabel">[header] + [chart]</span>
+        <div class="b-header" style="margin-bottom:1px;">
+          <span class="hi" style="border-color:#6C3BFF;">E</span>
+          <div class="ht">
+            <span class="tt">ETH Deep Scan — Stable</span>
+            <span class="st">7d trend · Volume at baseline</span>
+          </div>
+          <div class="hb">
+            <span class="tag gn" style="color:#00C96C;">● Stable</span>
+          </div>
+        </div>
+        <div class="b-chart">
+          <svg width="100%" height="24" viewBox="0 0 100 24">
+            <defs>
+              <linearGradient id="ethGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#6C3BFF" stop-opacity="0.25"/>
+                <stop offset="100%" stop-color="#6C3BFF" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <polyline points="0,14 8,12 16,10 24,11 32,8 40,7 48,6 56,8 64,4 72,6 80,3 88,4 100,2" stroke="#6C3BFF" stroke-width="1.2" fill="none"/>
+            <polygon points="0,14 8,12 16,10 24,11 32,8 40,7 48,6 56,8 64,4 72,6 80,3 88,4 100,2 100,24 0,24" fill="url(#ethGrad)"/>
+          </svg>
+        </div>
+      </div></div>
+    </div>
+    <div style="grid-area: metric; background: #0C0C14;">
+      <div class="bzone"><div class="rail rm"></div><div class="bcont">
+        <span class="blabel">[metric]</span>
+        <div class="b-metric">
+          <span class="mv">$3,891</span>
+          <span class="ch up" style="color:#00C96C;">+5.2%</span>
+          <span class="ml">7d change</span>
+        </div>
+      </div></div>
+    </div>
+    <div style="grid-area: callout; background: #0C0C14;">
+      <div class="bzone"><div class="rail rco"></div><div class="bcont">
+        <span class="blabel">[callout]</span>
+        <div class="b-callout" style="border-color:#3388CC;">
+          <span class="ico" style="color:#3388CC;">i</span>
+          <div class="ct">
+            <span class="ctt">No Anomalies Detected</span>
+            <span class="ctd">Volume/MCap normal. No whale moves.</span>
+          </div>
+        </div>
+      </div></div>
+    </div>
+    <div style="grid-area: narr; background: #0C0C14;">
+      <div class="bzone"><div class="rail rn"></div><div class="bcont">
+        <span class="blabel">[narrative]</span>
+        <div class="b-narrative">
+          Ethereum showing <span class="hl g">steady accumulation</span> (price +5.2% 7d). No whale moves. Social sentiment <span class="hl g">72% positive</span>. Risk: <span class="hl">24/100</span>.
+        </div>
+      </div></div>
+    </div>
+  </div>
+  <span class="ai-badge">� JARVIS</span>
+</div>
+
+</div>
+</div>
+
+<!-- ============================================================
+     ANIMATION CATA LOG — Per Block
+     ============================================================ -->
+<hr style="border:1px solid #2A2A34;margin:24px 0;">
+
+<section class="section">
+<h2>Animation CataLog — 3 Options Per Block</h2>
+<div class="tagline" style="color:#888;">Open in browser to see CSS animations live. Each block type with 3 animation style options to choose from.</div>
+</section>
+
+<style>
+  .anim-card { background: #101018; border: 1px solid #2A2A34; border-radius: 4px; margin-bottom: 8px; }
+  .anim-card .ac-head { padding: 3px 8px; background: #0A0A12; border-bottom: 1px solid #2A2A34; }
+  .anim-card .ac-head .ac-title { font-size: 9px; font-weight: 700; color: #E0E0EC; }
+  .anim-card .ac-body { padding: 5px 8px; }
+  .anim-card .ac-opt { margin-bottom: 3px; }
+  .anim-card .ac-opt .ac-opt-label { font-size: 7px; color: #888; margin-bottom: 2px; }
+  .anim-card .ac-opt .ac-opt-demo { border: 1px solid #1A1A24; background: #0C0C14; padding: 3px 6px; }
+</style>
+
+<div style="max-width:390px;margin:0 auto;">
+
+<div class="anim-card">
+  <div class="ac-head"><span class="ac-title">01 · header</span></div>
+  <div class="ac-body">
+    <div class="ac-opt">
+      <div class="ac-opt-label">A | Breathe — badge fades in/out (subtle attention)</div>
+      <div class="ac-opt-demo">
+        <div class="b-header">
+          <span class="hi" style="border-color:#6C3BFF;">E</span>
+          <div class="ht"><span class="tt">ETH Deep Scan</span><span class="st">7d trend · Volume consistent</span></div>
+          <div class="hb"><span class="tag gn anim-breathe" style="color:#00C96C;">● Stable</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="ac-opt">
+      <div class="ac-opt-label">B | Color-shift — icon + title cycle colors (dynamic energy)</div>
+      <div class="ac-opt-demo">
+        <div class="b-header">
+          <span class="hi anim-color-shift" style="border-color:#6C3BFF;">S</span>
+          <div class="ht"><span class="tt anim-color-shift">SOL — 33.7% Crash</span><span class="st">Price alert · high confidence</span></div>
+          <div class="hb"><span class="tag rd anim-blink">● URGENT</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="ac-opt">
+      <div class="ac-opt-label">C | Float — avatar bobs gently (subtle life)</div>
+      <div class="ac-opt-demo">
+        <div class="b-header">
+          <span class="hi anim-float" style="border-color:#3388CC;">G</span>
+          <div class="ht"><span class="tt">Proposal #42</span><span class="st">Voting · 3d left</span></div>
+          <div class="hb"><span class="tag cy">● Vote</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="anim-card">
+  <div class="ac-head"><span class="ac-title">02 · narrative</span></div>
+  <div class="ac-body">
+    <div class="ac-opt">
+      <div class="ac-opt-label">A | Highlight breathe — key spans pulse gently</div>
+      <div class="ac-opt-demo">
+        <div class="b-narrative">Solana <span class="hl d anim-breathe">crashed 33.7%</span> in 24h — largest single-day drop in 90d.</div>
+      </div>
+    </div>
+    <div class="ac-opt">
+      <div class="ac-opt-label">B | Slide-in — text slides from left on mount (card appear)</div>
+      <div class="ac-opt-demo">
+        <div class="b-narrative anim-slide">This card just appeared. Narrative block slides into view.</div>
+      </div>
+    </div>
+    <div class="ac-opt">
+      <div class="ac-opt-label">C | Rainbow shift — highlight words cycle color</div>
+      <div class="ac-opt-demo">
+        <div class="b-narrative">The team <span class="hl d">rugged</span> the pool. <span class="hl anim-color-shift">92% bearish</span> across sources.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="anim-card">
+  <div class="ac-head"><span class="ac-title">03-04 · metric · metrics_row</span></div>
+  <div class="ac-body">
+    <div class="ac-opt">
+      <div class="ac-opt-label">A | Breathe + Float — value breathes, change% floats</div>
+      <div class="ac-opt-demo">
+        <div class="b-metric">
+          <span class="mv anim-breathe" style="font-size:20px;">$3,891</span>
+          <span class="ch up anim-float" style="color:#00C96C;">+5.2%</span>
+        </div>
+      </div>
+    </div>
+    <div class="ac-opt">
+      <div class="ac-opt-label">B | Pulse — each cell pulses on change</div>
+      <div class="ac-opt-demo">
+        <div class="b-metrics-row">
+          <div class="mi"><span class="ml">24h</span><span class="mv anim-breathe" style="color:#00C96C;">+2.1%</span></div>
+          <div class="mi"><span class="ml">Vol</span><span class="mv anim-pulse-bar">$1.2B</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="ac-opt">
+      <div class="ac-opt-label">C | Chart breathe — dashed line pulses (live data feel)</div>
+      <div class="ac-opt-demo">
+        <div class="b-chart" style="height:22px;">
+          <svg width="100%" height="20" viewBox="0 0 60 20">
+            <polyline points="0,12 8,8 16,10 24,6 32,4 40,6 48,2 56,3 60,1" stroke="#00BFFF" stroke-width="1.2" fill="none" stroke-dasharray="2 2" class="anim-breathe"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="anim-card">
+  <div class="ac-head"><span class="ac-title">05-07 · callout · progress · sentiment</span></div>
+  <div class="ac-body">
+    <div class="ac-opt">
+      <div class="ac-opt-label">A | Callout — Glow pulse when urgent, still when stable</div>
+      <div class="ac-opt-demo">
+        <div class="b-callout anim-glow" style="border-color:#FF0044;">
+          <span class="ico" style="color:#FF0044;">⚠</span>
+          <div class="ct"><span class="ctt">URGENT: This pattern preceded May crash</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="ac-opt">
+      <div class="ac-opt-label">B | Progress — Pulse bar (live polling feel)</div>
+      <div class="ac-opt-demo">
+        <div class="b-progress">
+          <span class="ph">For 79.5%</span>
+          <div class="pb"><div class="pf p1 anim-pulse-bar" style="width:79.5%;background:#00C96C;"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="ac-opt">
+      <div class="ac-opt-label">C | Sentiment — Wave (pips light up sequentially, scanning feel)</div>
+      <div class="ac-opt-demo">
+        <div class="b-sentiment">
+          <span class="sc">92% Bearish</span>
+          <div class="pips">
+            <span class="pip neg anim-breathe"></span>
+            <span class="pip neg" style="animation:wave 2s linear infinite;"></span>
+            <span class="pip neg anim-breathe"></span>
+            <span class="pip neg"></span>
+            <span class="pip neg"></span>
+            <span class="pip neg"></span>
+            <span class="pip neg"></span>
+            <span class="pip neg"></span>
+            <span class="pip neg"></span>
+            <span class="pip pos"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="anim-card">
+  <div class="ac-head"><span class="ac-title">08-12 · list · timeline · transfer · quote</span></div>
+  <div class="ac-body">
+    <div class="ac-opt">
+      <div class="ac-opt-label">A | List — Slide rows in (staggered appear)</div>
+      <div class="ac-opt-demo">
+        <div class="b-list">
+          <div class="li anim-slide"><span class="dot rd"></span> TVL dropped 40% overnight</div>
+          <div class="li anim-slide"><span class="dot yl"></span> 3 posts reporting possible rug</div>
+        </div>
+      </div>
+    </div>
+    <div class="ac-opt">
+      <div class="ac-opt-label">B | Timeline — Dots pulse (live scanning)</div>
+      <div class="ac-opt-demo">
+        <div class="b-timeline">
+          <div class="te"><span class="tl-dot rd anim-breathe"></span><span class="tl-time">4h</span><span class="tl-label">Binance moved 12k SOL</span></div>
+          <div class="te"><span class="tl-dot gn anim-blink"></span><span class="tl-time">Now</span><span class="tl-label">Risk: 86/100</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="ac-opt">
+      <div class="ac-opt-label">C | Transfer amount breathes + Quote source floats</div>
+      <div class="ac-opt-demo" style="padding:2px;">
+        <div class="b-transfer" style="margin-bottom:2px;">
+          <div class="who"><span class="addr">3fB2...9aC</span></div>
+          <div class="amt out anim-breathe">2,500 BTC</div>
+        </div>
+        <div class="b-quote">
+          <div class="qa">
+            <span class="qav anim-float" style="border-color:#FF44AA;">R</span>
+            <span class="qn">u/crypto_sleuth</span>
+          </div>
+          <div class="qt anim-breathe">Team rugged at 2AM.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="anim-card">
+  <div class="ac-head"><span class="ac-title">13-14 · comparison · grid</span></div>
+  <div class="ac-body">
+    <div class="ac-opt">
+      <div class="ac-opt-label">A | Comparison — Side pulses when value is critical</div>
+      <div class="ac-opt-demo">
+        <div class="b-comparison">
+          <div class="ci"><span class="cl">Ago</span><span class="cv" style="color:#00C96C;">$148</span></div>
+          <div class="ci" style="border-color:#FF0044;"><span class="cl">Now</span><span class="cv anim-breathe" style="color:#FF0044;">$98</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="ac-opt">
+      <div class="ac-opt-label">B | Comparison — Float up/down for +/- change</div>
+      <div class="ac-opt-demo">
+        <div class="b-comparison">
+          <div class="ci"><span class="cl">Price</span><span class="cv anim-float" style="color:#00C96C;">+5.2%</span></div>
+          <div class="ci"><span class="cl">Volume</span><span class="cv anim-breathe">$1.2B</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="ac-opt">
+      <div class="ac-opt-label">C | Grid — Cells glow on data change</div>
+      <div class="ac-opt-demo">
+        <div class="b-grid">
+          <div class="gi anim-glow" style="border-color:#FF0044;"><span class="gl">For</span><span class="gv" style="color:#00C96C;">12.4M</span></div>
+          <div class="gi"><span class="gl">Vs</span><span class="gv" style="color:#FF4444;">3.2M</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- ============================================================
+     ANIMATION STYLE REFERENCE TABLE
+     ============================================================ -->
+<hr style="border:1px solid #2A2A34;margin:24px 0;">
+
+<section class="section">
+<h2>Animation Style Reference</h2>
+<div class="tagline" style="color:#888;">7 animation primitives. Each has a feeling, best blocks, and overuse caution.</div>
+</section>
+
+<div style="background:#101018;border:1px solid #2A2A34;border-radius:4px;padding:8px 12px;max-width:390px;margin:0 auto;">
+
+<div style="display:grid;gap:2px;">
+<div style="display:flex;padding:2px 4px;background:#0D0D15;border:1px solid #2A2A34;">
+  <span style="width:20px;font-size:7px;color:#888;">1</span>
+  <span style="width:60px;font-size:7px;color:#FF44AA;">blink</span>
+  <span style="flex:1;font-size:7px;color:#888;">Urgent · attention</span>
+  <span style="width:80px;font-size:6px;color:#FF4444;">Max 1/card</span>
+</div>
+<div style="display:flex;padding:2px 4px;border:1px solid #2A2A34;">
+  <span style="width:20px;font-size:7px;color:#888;">2</span>
+  <span style="width:60px;font-size:7px;color:#00C96C;">breathe</span>
+  <span style="flex:1;font-size:7px;color:#888;">Gentle pulse · alive</span>
+  <span style="width:80px;font-size:6px;color:#888;">Safe default</span>
+</div>
+<div style="display:flex;padding:2px 4px;background:#0D0D15;border:1px solid #2A2A34;">
+  <span style="width:20px;font-size:7px;color:#888;">3</span>
+  <span style="width:60px;font-size:7px;color:#3388CC;">pulse-bar</span>
+  <span style="flex:1;font-size:7px;color:#888;">Live progress</span>
+  <span style="width:80px;font-size:6px;color:#888;">Bars only</span>
+</div>
+<div style="display:flex;padding:2px 4px;border:1px solid #2A2A34;">
+  <span style="width:20px;font-size:7px;color:#888;">4</span>
+  <span style="width:60px;font-size:7px;color:#44BBAA;">float</span>
+  <span style="flex:1;font-size:7px;color:#888;">Bobbing · subtle life</span>
+  <span style="width:80px;font-size:6px;color:#888;">Avatars only</span>
+</div>
+<div style="display:flex;padding:2px 4px;background:#0D0D15;border:1px solid #2A2A34;">
+  <span style="width:20px;font-size:7px;color:#888;">5</span>
+  <span style="width:60px;font-size:7px;color:#FF44AA;">glow</span>
+  <span style="flex:1;font-size:7px;color:#888;">Border pulse · urgent</span>
+  <span style="width:80px;font-size:6px;color:#FF4444;">Max 1/card</span>
+</div>
+<div style="display:flex;padding:2px 4px;border:1px solid #2A2A34;">
+  <span style="width:20px;font-size:7px;color:#888;">6</span>
+  <span style="width:60px;font-size:7px;color:#6C3BFF;">slide-in</span>
+  <span style="flex:1;font-size:7px;color:#888;">Reveal · stagger</span>
+  <span style="width:80px;font-size:6px;color:#888;">On-mount only</span>
+</div>
+<div style="display:flex;padding:2px 4px;background:#0D0D15;border:1px solid #2A2A34;">
+  <span style="width:20px;font-size:7px;color:#888;">7</span>
+  <span style="width:60px;font-size:7px;color:#FFB84A;">color-shift</span>
+  <span style="flex:1;font-size:7px;color:#888;">Rainbow · dynamic</span>
+  <span style="width:80px;font-size:6px;color:#FF4444;">Max 1/card</span>
+</div>
+</div>
+
+<div style="margin-top:6px;font-size:7px;color:#888;">
+<strong>Rule:</strong> Max 2 animation types per card. <strong>breathe</strong> is the safe default — subtle enough for 3-4 instances. <strong>blink + glow + color-shift</strong> are high-impact — use sparingly (max 1 each per card).
+</div>
+
+</div>
+
+<br>
+<p style="color:#FF44AA;font-size:8px;text-align:center;">� Open this HTML in a browser to see live CSS animations. All timing is configurable in the @keyframes at the top of the file.</p>
+
+</div>
+</body>
+</html>
