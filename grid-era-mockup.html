@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1300, initial-scale=1">
+<title>Grid Era — Block Redesign Mockups</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #08080D; color: #E0E0EC; font-family: 'Courier New', 'Courier', system-ui, sans-serif; padding: 20px; }
+  .page { max-width: 1400px; margin: 0 auto; }
+
+  h1 { font-size: 22px; color: #6C3BFF; margin-bottom: 2px; }
+  h1::before { content: '⡂ '; }
+  .subtitle { color: #A0A0AA; font-size: 11px; margin-bottom: 4px; }
+  .note { color: #FF44AA; font-size: 10px; margin-bottom: 16px; }
+
+  /* ════ Animations ════ */
+  @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+  @keyframes breathe { 0%,100% { opacity:0.35; filter:brightness(0.6); } 50% { opacity:1; filter:brightness(1.2); } }
+  @keyframes pulse-bar { 0%,100% { opacity:0.5; } 50% { opacity:1; } }
+  .anim-blink { animation: blink 1s steps(2) infinite; }
+  .anim-breathe { animation: breathe 2s ease-in-out infinite; }
+  .anim-pulse { animation: pulse-bar 1.5s ease-in-out infinite; }
+
+  .section { margin: 36px 0; padding: 8px 0; }
+  .section h2 { font-size: 18px; margin-bottom: 0; color: #E0E4EE; }
+  .section h2::before { content: '═══ '; color: #2A2A34; }
+  .section .tagline { color: #888; font-size: 10px; margin-bottom: 14px; }
+
+  .pg { display: flex; gap: 24px; margin-bottom: 40px; align-items: flex-start; }
+  .pf { flex: 1; min-width: 380px; max-width: 500px; background: #08080D; }
+  .pl { text-align: center; color: #888; font-size: 9px; margin-top: 6px; }
+
+  /* ════ Card Base ════ */
+  .card { width: 100%; background: #101018; border: 1px solid #2A2A34; position: relative; }
+  .nbar { height: var(--nb, 2px); background: var(--nb-c, #3388CC); }
+  .ai-badge { position: absolute; bottom: 3px; right: 5px; font-size: 6px; color: #FF44AA; opacity: 0.5; }
+
+  /* ════ Card Header ════ */
+  .chdr {
+    display: flex; align-items: center; gap: 4px; padding: 5px 7px 1px 7px;
+  }
+  .chdr .icon { width: 20px; height: 20px; border: 1px solid #6C3BFF; text-align: center; font-size: 9px; color: #6C3BFF; background: #0D0D15; }
+  .chdr .sym { font-size: 11px; font-weight: 700; color: #E0E0EC; }
+  .chdr .bdg { font-size: 6px; padding: 1px 4px; border: 1px solid #2A2A34; color: #888; }
+  .chdr .bdg.cy { border-color: #3388CC; color: #3388CC; }
+  .chdr .bdg.yl { border-color: #E0A000; color: #E0A000; }
+  .chdr .bdg.og { border-color: #FF6633; color: #FF6633; }
+  .chdr .bdg.rd { border-color: #FF0044; color: #FF0044; }
+  .chdr .bdg.pk { border-color: #FF44AA; color: #FF44AA; }
+  .chdr .bdg.gn { border-color: #00C96C; color: #00C96C; }
+  .chdr .tm { flex:1; text-align:right; font-size:7px; color:#5E5E68; }
+
+  /* ⡂ OPTION E: Named Grid Areas Layout ⡂ */
+  /* Each card uses CSS grid with named template areas */
+  .grid-card {
+    display: grid;
+    gap: 1px;
+    background: #0C0C14;
+    padding: 1px;
+  }
+
+  /* ␐═══ Block Zones (accent rail on left, content fills area) ␐═══ */
+  .bzone { display: flex; min-height: 20px; height: 100%; }
+  .rail { width: 2px; min-height: 100%; }
+  .rail.rm { background: #00C96C; }
+  .rail.rc { background: #00BFFF; }
+  .rail.rt { background: #6C3BFF; }
+  .rail.rl { background: #FF44AA; }
+  .rail.rco { background: #E0C000; }
+  .rail.rs { background: #FF44AA; }
+  .rail.rg { background: #888; }
+  .rail.rp { background: #44BBAA; }
+  .rail.rx { background: #FF3B1D; }
+  .rail.rn { background: #00C96C; }
+  .rail.ro { background: #FF6633; }
+  .bcont { flex: 1; padding: 3px 6px 3px 3px; font-size: 9px; height: 100%; }
+
+  /* �─────────────────────────────────────────────
+     BLOCK STYLES — All 14 Blocks (post-merge)
+     �───────────────────────────────────────────── */
+
+  /* 1. HEADER (NEW) — Card Hero */
+  .b-header { display: flex; align-items: center; gap: 6px; padding: 3px 2px; }
+  .b-header .hi { width: 28px; height: 28px; border-radius: 50%; border: 1px solid #6C3BFF; text-align: center; font-size: 12px; background: #0D0D15; }
+  .b-header .ht { flex: 1; }
+  .b-header .ht .tt { font-size: 13px; font-weight: 700; color: #E0E0EC; }
+  .b-header .ht .st { font-size: 9px; color: #A0A0AA; margin-top: 1px; }
+  .b-header .hb { display: flex; align-items: center; gap: 3px; }
+  .b-header .hb .tag { font-size: 6px; padding: 1px 5px; border: 1px solid #666; color: #888; background: #0D0D15; }
+  .b-header .hb .tag.cy { border-color: #3388CC; color: #3388CC; }
+  .b-header .hb .tag.rd { border-color: #FF0044; color: #FF0044; }
+  .b-header .hb .tag.yl { border-color: #E0A000; color: #E0A000; }
+  .b-header .hb .tag.gn { border-color: #00C96C; color: #00C96C; }
+
+  /* 2. TEXT */
+  .b-text { font-size: 10px; color: #C8C8D4; line-height: 1.4; padding: 2px 0; }
+
+  /* 3. NARRATIVE (NEW) — AI Voice */
+  .b-narrative {
+    padding: 4px 2px;
+    font-size: 9.5px; color: #D0D0DC; line-height: 1.5;
+  }
+  .b-narrative .hl { color: #FFB84A; font-weight: 700; }
+  .b-narrative .hl.d { color: #FF4444; font-weight: 700; }
+  .b-narrative .hl.g { color: #00C96C; font-weight: 700; }
+  .b-narrative .hl.i { color: #3388CC; font-weight: 700; }
+
+  /* 4. METRIC */
+  .b-metric { text-align: center; padding: 3px 0; }
+  .b-metric .mv { font-size: 18px; font-weight: 700; color: #E0E0EC; }
+  .b-metric .ml { font-size: 8px; color: #A0A0AA; display: block; margin-top: 1px; }
+  .b-metric .ch { font-size: 10px; font-weight: 600; }
+  .b-metric .ch.up { color: #00C96C; }
+  .b-metric .ch.dn { color: #FF4444; }
+
+  /* 5. METRICS_ROW */
+  .b-metrics-row { display: flex; gap: 4px; padding: 2px 0; }
+  .b-metrics-row .mi {
+    flex: 1; text-align: center; padding: 3px 4px;
+    background: #0D0D15; border: 1px solid #1A1A24;
+  }
+  .b-metrics-row .mi .ml { font-size: 7px; color: #A0A0AA; }
+  .b-metrics-row .mi .mv { font-size: 12px; font-weight: 700; color: #E0E0EC; }
+  .b-metrics-row .mi .sub { font-size: 7px; color: #888; }
+
+  /* 6. CHART */
+  .b-chart { height: 36px; padding: 2px 0; }
+
+  /* 7. CALLOUT */
+  .b-callout {
+    display: flex; align-items: flex-start; gap: 4px;
+    border: 1px solid #E0C000; background: #0D0D14; padding: 3px 6px;
+    font-size: 9px; color: #D0D0DC;
+  }
+  .b-callout .ico { font-size: 10px; color: var(--cico, #E0C000); }
+  .b-callout .ct { flex: 1; }
+  .b-callout .ct .ctt { font-weight: 700; font-size: 9px; }
+  .b-callout .ct .ctd { font-size: 8.5px; color: #C0C0CC; margin-top: 1px; }
+
+  /* 8. LIST */
+  .b-list { padding: 2px 0; }
+  .b-list .li {
+    display: flex; align-items: center; gap: 4px; padding: 2px 4px;
+    font-size: 9px; color: #C0C0CC; line-height: 1.3;
+  }
+  .b-list .li .dot { width: 3px; height: 3px; border-radius: 50%; }
+  .b-list .li .dot.cy { background: #3388CC; }
+  .b-list .li .dot.yl { background: #E0A000; }
+  .b-list .li .dot.rd { background: #FF3B1D; }
+  .b-list .li .dot.pk { background: #FF44AA; }
+  .b-list .li .dot.gn { background: #00C96C; }
+
+  /* 9. COMPARISON */
+  .b-comparison { display: flex; gap: 3px; padding: 2px 0; }
+  .b-comparison .ci {
+    flex: 1; padding: 4px 5px; background: #0D0D15; border: 1px solid #1A1A24;
+  }
+  .b-comparison .ci .cl { font-size: 7px; color: #A0A0AA; }
+  .b-comparison .ci .cv { font-size: 10px; font-weight: 700; color: #E0E0EC; padding-top: 1px; }
+  .b-comparison .ci .sub { font-size: 7px; color: #888; }
+
+  /* 10. TIMELINE */
+  .b-timeline { padding: 2px 0; }
+  .b-timeline .te {
+    display: flex; align-items: center; gap: 4px;
+    padding: 2px 4px; font-size: 8px; color: #C0C0CC;
+  }
+  .b-timeline .te .tl-dot { width: 4px; height: 4px; border-radius: 50%; }
+  .b-timeline .te .tl-dot.cy { background: #3388CC; }
+  .b-timeline .te .tl-dot.yl { background: #E0A000; }
+  .b-timeline .te .tl-dot.rd { background: #FF3B1D; }
+  .b-timeline .te .tl-dot.pk { background: #FF44AA; }
+  .b-timeline .te .tl-dot.gn { background: #00C96C; }
+  .b-timeline .te .tl-time { color: #5E5E68; width: 28px; }
+  .b-timeline .te .tl-label { flex: 1; }
+
+  /* 11. SENTIMENT */
+  .b-sentiment { padding: 2px 0; }
+  .b-sentiment .pips { display: flex; gap: 2px; margin: 2px 0; }
+  .b-sentiment .pip { flex: 1; height: 4px; border-radius: 2px; }
+  .b-sentiment .pip.pos { background: #00C96C; }
+  .b-sentiment .pip.neg { background: #FF4444; }
+  .b-sentiment .pip.neu { background: #A0A0AA; }
+  .b-sentiment .sc { font-size: 8px; color: #888; }
+
+  /* 12. PROGRESS (merged percentage_bar into this) */
+  .b-progress { padding: 2px 4px; }
+  .b-progress .ph { font-size: 7px; color: #888; display: flex; justify-content: space-between; width: 100%; }
+  .b-progress .pb { height: 6px; background: #1A1A24; margin: 2px 0; border: 1px solid #2A2A34; position: relative; }
+  .b-progress .pf { height: 100%; }
+  .b-progress .pf.p1 { width: 60%; background: #3388CC; }
+  .b-progress .pf.p2 { width: 85%; background: #00C96C; }
+  .b-progress .pf.p3 { width: 34%; background: #E0A000; }
+  .b-progress .pf.p4 { width: 92%; background: #FF3B1D; }
+  .b-progress .pf.p5 { width: 18%; background: #44BBAA; }
+  .b-progress .pm { font-size: 7px; color: #888; }
+
+  /* 13. TRANSFER */
+  .b-transfer {
+    padding: 3px 5px; background: #0D0D15; border: 1px solid #2A2A34;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .b-transfer .who { flex: 1; font-size: 8px; color: #C0C0CC; }
+  .b-transfer .who .addr { color: #3388CC; font-family: monospace; }
+  .b-transfer .amt { font-size: 10px; font-weight: 700; text-align: right; }
+  .b-transfer .amt.in { color: #00C96C; }
+  .b-transfer .amt.out { color: #FF3B1D; }
+
+  /* 14. QUOTE (NEW) — Social Source Embed */
+  .b-quote {
+    padding: 3px 6px; background: #0D0D15; border: 1px solid #2A2A34;
+  }
+  .b-quote .qa { display: flex; align-items: center; gap: 4px; margin-bottom: 2px; }
+  .b-quote .qa .qav { width: 14px; height: 14px; border-radius: 50%; border: 1px solid #666; text-align: center; font-size: 6px; background: #0D0D15; }
+  .b-quote .qa .qn { font-size: 7px; color: #A0A0AA; flex: 1; }
+  .b-quote .qa .qsrc { font-size: 6px; color: #6C3BFF; }
+  .b-quote .qt { font-size: 9px; color: #C8C8D4; line-height: 1.3; font-style: italic; }
+  .b-quote .qt::before { content: '"'; }
+  .b-quote .qt::after { content: '"'; }
+
+  /* Block label */
+  .blabel { font-size: 6px; color: rgba(255,68,170,0.3); padding: 0 2px; font-family: monospace; }
+
+  /* Grid area label — shows the named area */
+  .arealabel { position: absolute; top: 1px; right: 3px; font-size: 5px; color: rgba(100,60,255,0.25); font-family: monospace; }
+
+  /* Tab bar */
+  .tab-bar {
+    height: 20px; display: flex; align-items: center;
+    background: #0A0A12; border-top: 1px solid #2A2A34; padding: 0 7px; font-size: 8px;
+  }
+  .tab-bar .tab { color: #4A4A54; margin-right: 12px; }
+  .tab-bar .tab.ac { color: #6C3BFF; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>Grid Era — Block Redesign Mockups</h1>
+<div class="subtitle"># option-e · named-grid-areas · 14-block catalog · post-merge</div>
+<div class="note">�> Merged percentage_bar→progress, code→text(variant:code). Added header, narrative, quote. Tags → detail-page-only filter system. Each card shows grid layout with named areas.</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CARD 1: PRICE CRASH — HEADER + NARRATIVE + COMPARISON + TIMELINE ␐══════ -->
+<section class="section">
+<span class="tagline" style="color:#6C3BFF;font-size:10px;">⡂ CARD 1 — PRICE CRASH STORY · Grid: 3x4 · Areas: [hero] [sidebar] [timeline] [bottom]</span>
+<div class="pg">
+<div class="pf">
+<div class="card">
+  <div class="nbar" style="--nb:3px;--nb-c:#FF0044;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#FF0044;color:#FF0044;">S</span>
+    <span class="sym" style="color:#FF0044;">SOL</span>
+    <span class="bdg rd anim-blink">● URGENT</span>
+    <span class="tm">3m ago</span>
+  </div>
+
+  <div class="grid-card" style="grid-template-areas: 'hero hero sidebar' 'hero hero sidebar' 'narr narr sidebar' 'bottom bottom bottom'; grid-template-columns: 1.5fr 1.5fr 1fr; grid-template-rows: auto auto auto auto;">
+    <div style="grid-area: hero; background: #0C0C14; min-height: 100px;">
+      <div class="bzone">
+        <div class="rail rc"></div>
+        <div class="bcont">
+          <span class="blabel">[comparison]</span>
+          <div class="b-comparison">
+            <div class="ci" style="border-color:#FF0044;">
+              <span class="cl">24h Ago</span>
+              <span class="cv" style="color:#00C96C;">$148.20</span>
+              <span class="sub">Volume: $2.1B</span>
+            </div>
+            <div class="ci" style="border-color:#00C96C;">
+              <span class="cl">Now</span>
+              <span class="cv" style="color:#FF0044;">$98.40</span>
+              <span class="sub" style="color:#FF0044;">Volume: $890M ↓58%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="grid-area: sidebar; background: #0C0C14;">
+      <div class="bzone">
+        <div class="rail rm"></div>
+        <div class="bcont">
+          <span class="blabel">[metric]</span>
+          <div class="b-metric">
+            <span class="mv" style="color:#FF0044;font-size:24px;">-33.7%</span>
+            <span class="ch dn" style="color:#FF0044;">24h change</span>
+            <span class="ml">Price dropped 1/3 in 24h</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="grid-area: narr; background: #0C0C14;">
+      <div class="bzone">
+        <div class="rail rt"></div>
+        <div class="bcont">
+          <span class="blabel">[narrative]</span>
+          <div class="b-narrative">
+            Solana's price <span class="hl d">crashed 33.7%</span> in the last 24 hours — the largest single-day drop in 90 days. Volume collapsed by <span class="hl d">58%</span> suggesting a coordinated sell-off, not organic trading. Binance cold wallet activity preceded the move by ~2 hours.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="grid-area: bottom; background: #0C0C14;">
+      <div class="bzone">
+        <div class="rail rp"></div>
+        <div class="bcont">
+          <span class="blabel">[timeline]</span>
+          <div class="b-timeline">
+            <div class="te"><span class="tl-dot rd"></span><span class="tl-time">4h</span><span class="tl-label">Binance cold wallet moved 12,500 SOL</span></div>
+            <div class="te"><span class="tl-dot yl"></span><span class="tl-time">2h</span><span class="tl-label">Price dropped 14%, volume spiked</span></div>
+            <div class="te"><span class="tl-dot rd"></span><span class="tl-time">1h</span><span class="tl-label">Mass sell-off: 8 large transactions detected</span></div>
+            <div class="te"><span class="tl-dot gn"></span><span class="tl-time">Now</span><span class="tl-label">Risk score: 86/100 — elevated monitoring</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="ai-badge">⡂ JARVIS</span>
+</div>
+<div class="pl">GRID: hero(comparison) + sidebar(metric) + narr(narrative) + bottom(timeline)</div>
+</div>
+
+<!-- ─── CARD 2: GOVERNANCE PROPOSAL — HEADER + TABLE + PROGRESS + METRIC ─── -->
+<div class="pf">
+<div class="card">
+  <div class="nbar" style="--nb:2px;--nb-c:#3388CC;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#6C3BFF;color:#6C3BFF;">G</span>
+    <span class="sym">GAL</span>
+    <span class="bdg cy">● WATCH</span>
+    <span class="tm">12m ago</span>
+  </div>
+
+  <div class="grid-card" style="grid-template-areas: 'header header header' 'table table progress' 'narr narr narr'; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: auto auto auto;">
+    <!-- HEADER area (new block) -->
+    <div style="grid-area: header; background: #0C0C14;">
+      <div class="bzone">
+        <div class="rail rt"></div>
+        <div class="bcont">
+          <span class="blabel">[header]</span>
+          <div class="b-header">
+            <span class="hi" style="border-color:#6C3BFF;">G</span>
+            <div class="ht">
+              <span class="tt">Proposal #42: Treasury Rebalance</span>
+              <span class="st">Voting ends in 3 days · Quorum: 10% of supply</span>
+            </div>
+            <div class="hb">
+              <span class="tag cy">● Voting</span>
+              <span class="tag rd">🔥 3d left</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLE in middle-left (using grid block as table) -->
+    <div style="grid-area: table; background: #0C0C14;">
+      <div class="bzone">
+        <div class="rail rm"></div>
+        <div class="bcont">
+          <span class="blabel">[grid]</span>
+          <div class="b-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap: 2px;">
+            <div class="gi" style="padding:2px 4px; background:#0D0D15; border:1px solid #1A1A24;">
+              <span class="gl" style="font-size:7px;color:#A0A0AA;">For</span>
+              <span class="gv" style="font-size:11px;font-weight:700;color:#00C96C;">12.4M GAL</span>
+            </div>
+            <div class="gi" style="padding:2px 4px; background:#0D0D15; border:1px solid #1A1A24;">
+              <span class="gl" style="font-size:7px;color:#A0A0AA;">Against</span>
+              <span class="gv" style="font-size:11px;font-weight:700;color:#FF4444;">3.2M GAL</span>
+            </div>
+            <div class="gi" style="padding:2px 4px; background:#0D0D15; border:1px solid #1A1A24;">
+              <span class="gl" style="font-size:7px;color:#A0A0AA;">Total Votes</span>
+              <span class="gv" style="font-size:11px;font-weight:700;color:#E0E0EC;">15.6M GAL</span>
+            </div>
+            <div class="gi" style="padding:2px 4px; background:#0D0D15; border:1px solid #1A1A24;">
+              <span class="gl" style="font-size:7px;color:#A0A0AA;">Quorum Met?</span>
+              <span class="gv" style="font-size:11px;font-weight:700;color:#00C96C;">✅ Yes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROGRESS in sidebar right -->
+    <div style="grid-area: progress; background: #0C0C14;">
+      <div class="bzone">
+        <div class="rail rc"></div>
+        <div class="bcont">
+          <span class="blabel">[progress]</span>
+          <div class="b-progress">
+            <span class="ph">For: 79.5% <span style="color:#00C96C;">●</span> Against: 20.5% <span style="color:#FF4444;">●</span></span>
+            <div class="pb">
+              <div class="pf p1 anim-pulse" style="width:79.5%;background:#00C96C;"></div>
+            </div>
+            <div class="pb" style="margin-top:1px;">
+              <div class="pf p3" style="width:20.5%;background:#FF4444;"></div>
+            </div>
+            <span class="pm">Quorum threshold: 10% · Current: 79.5% ✅</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NARRATIVE at bottom -->
+    <div style="grid-area: narr; background: #0C0C14;">
+      <div class="bzone">
+        <div class="rail rl"></div>
+        <div class="bcont">
+          <span class="blabel">[narrative]</span>
+          <div class="b-narrative">
+            Galaxy Protocol's latest governance proposal aims to <span class="hl i">redistribute 15% of treasury funds</span>: 10% to LP incentives and 5% to dev grants. With <span class="hl g">79.5% in favor</span> and quorum already met, this is expected to pass within the voting window.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="ai-badge">⡂ JARVIS</span>
+</div>
+<div class="pl">GRID: header(header) + table(grid) + sidebar(progress) + bottom(narrative)</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CARD 3: WHALE MOVEMENT — HEADER + TRANSFER + CALLOUT + NARRATIVE ␐══════ -->
+<section class="section">
+<span class="tagline" style="color:#6C3BFF;font-size:10px;">⡂ CARD 3 — WHALE MOVEMENT · Grid: 3x3 · Areas: [header] [transfer] [callout] [bottom]</span>
+<div class="pg">
+<div class="pf">
+<div class="card">
+  <div class="nbar" style="--nb:3px;--nb-c:#E0A000;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#E0A000;color:#E0A000;">B</span>
+    <span class="sym">BTC</span>
+    <span class="bdg yl">● ALERT</span>
+    <span class="tm">7m ago</span>
+  </div>
+
+  <div class="grid-card" style="grid-template-areas: 'header header' 'transfer callout' 'narr narr'; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto auto;">
+    <!-- HEADER -->
+    <div style="grid-area: header; background: #0C0C14;">
+      <div class="bzone">
+        <div class="rail ro"></div>
+        <div class="bcont">
+          <span class="blabel">[header]</span>
+          <div class="b-header">
+            <span class="hi" style="border-color:#E0A000;color:#E0A000;">B</span>
+            <div class="ht">
+              <span class="tt" style="color:#E0A000;">Large Whale Movement Detected</span>
+              <span class="st">Binance cold wallet → Unknown · 2,500 BTC</span>
+            </div>
+            <div class="hb">
+              <span class="tag yl">🐋 Whale</span>
+              <span class="tag rd" style="border-color:#FF0044;color:#FF0044;">$168M</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRANSFER -->
+    <div style="grid-area: transfer; background: #0C0C14; min-height: 48px;">
+      <div class="bzone">
+        <div class="rail rc"></div>
+        <div class="bcont">
+          <span class="blabel">[transfer]</span>
+          <div class="b-transfer">
+            <div class="who">
+              <span class="addr">3fB2...9aC</span>
+              <span style="color:#888;font-size:7px;">Binance Cold Wallet</span>
+            </div>
+            <div style="font-size:10px;color:#888;">→</div>
+            <div class="who" style="text-align:right;">
+              <span class="addr">7aD1...4fE</span>
+              <span style="color:#888;font-size:7px;">Unknown</span>
+            </div>
+          </div>
+          <div style="text-align:center;margin-top:2px;">
+            <span style="color:#FF3B1D;font-size:11px;font-weight:700;">2,500 BTC</span>
+            <span style="color:#888;font-size:7px;"> · $168,000,000</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CALLOUT -->
+    <div style="grid-area: callout; background: #0C0C14;">
+      <div class="bzone">
+        <div class="rail rco"></div>
+        <div class="bcont">
+          <span class="blabel">[callout]</span>
+          <div class="b-callout" style="border-color:#E0A000;">
+            <span class="ico" style="color:#E0A000;">⚠</span>
+            <div class="ct">
+              <span class="ctt">Whale Risk Assessment</span>
+              <span class="ctd">2,500 BTC moved from exchange cold storage to unknown wallet. This pattern preceded the May 2026 sell-off.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NARRATIVE + METRICS ROW -->
+    <div style="grid-area: narr; background: #0C0C14;">
+      <div class="bzone">
+        <div class="rail rl"></div>
+        <div class="bcont">
+          <span class="blabel">[narrative]</span>
+          <div class="b-narrative">
+            A significant <span class="hl d">$168M BTC movement</span> from Binance's cold wallet to an unidentified address. This matches the pattern observed before the coordinated sell-off in May 2026. The receiving wallet shows no prior activity — likely a <span class="hl">new accumulation or OTC desk transfer</span>.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="ai-badge">⡂ JARVIS</span>
+</div>
+<div class="pl">GRID: header(header) + left(transfer) + right(callout) + bottom(narrative)</div>
+</div>
+
+<!-- ─── CARD 4: SOCIAL SENTIMENT — HEADER + QUOTE + SENTIMENT + LIST ─── -->
+<div class="pf">
+<div class="card">
+  <div class="nbar" style="--nb:2px;--nb-c:#FF44AA;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#FF44AA;color:#FF44AA;">H</span>
+    <span class="sym">HAHA</span>
+    <span class="bdg pk">● SOCIAL</span>
+    <span class="tm">18m ago</span>
+  </div>
+
+  <div class="grid-card" style="grid-template-areas: 'header header' 'quote sentiment' 'list list'; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto auto;">
+    <!-- HEADER -->
+    <div style="grid-area: header; background: #0C0C14;">
+      <div class="bzone">
+        <div class="rail rs"></div>
+        <div class="bcont">
+          <span class="blabel">[header]</span>
+          <div class="b-header">
+            <span class="hi" style="border-color:#FF44AA;color:#FF44AA;">H</span>
+            <div class="ht">
+              <span class="tt">Social Sentiment Shift — HAHA Token</span>
+              <span class="st">Bearish sentiment surging across Reddit, Twitter, Telegram</span>
+            </div>
+            <div class="hb">
+              <span class="tag pk" style="border-color:#FF44AA;color:#FF44AA;">● Sentiment</span>
+              <span class="tag rd" style="border-color:#FF0044;color:#FF0044;">92% bear</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUOTE block (NEW) — Social source embed -->
+    <div style="grid-area: quote; background: #0C0C14; min-height: 60px;">
+      <div class="bzone">
+        <div class="rail rco"></div>
+        <div class="bcont">
+          <span class="blabel">[quote]</span>
+          <div class="b-quote">
+            <div class="qa">
+              <span class="qav" style="border-color:#FF44AA;">R</span>
+              <span class="qn">u/crypto_sleuth</span>
+              <span class="qsrc">Reddit · 2h ago</span>
+            </div>
+            <div class="qt">Team rugged at 2AM EST. Liquidity removed from all pools. Say goodbye to your bags.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SENTIMENT -->
+    <div style="grid-area: sentiment; background: #0C0C14;">
+      <div class="bzone">
+        <div class="rail rm"></div>
+        <div class="bcont">
+          <span class="blabel">[sentiment]</span>
+          <div class="b-sentiment">
+            <span class="sc" style="color:#FF4444;">92% Bearish · 24 sources</span>
+            <div class="pips" style="margin-top:2px;">
+              <span class="pip neg"></span>
+              <span class="pip neg"></span>
+              <span class="pip neg"></span>
+              <span class="pip neg"></span>
+              <span class="pip neg anim-breathe"></span>
+              <span class="pip neg"></span>
+              <span class="pip neg"></span>
+              <span class="pip neg"></span>
+              <span class="pip neg"></span>
+              <span class="pip pos"></span>
+            </div>
+            <div style="display:flex;gap:4px;margin-top:2px;font-size:7px;">
+              <span style="color:#888;">Reddit: 96% bear</span>
+              <span style="color:#888;">Twitter: 88% bear</span>
+              <span style="color:#888;">Telegram: 91% bear</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIST -->
+    <div style="grid-area: list; background: #0C0C14;">
+      <div class="bzone">
+        <div class="rail rl"></div>
+        <div class="bcont">
+          <span class="blabel">[list]</span>
+          <div class="b-list">
+            <div class="li"><span class="dot rd"></span> TVL dropped 40% overnight</div>
+            <div class="li"><span class="dot rd"></span> Liquidity down 65% on main pool</div>
+            <div class="li"><span class="dot yl"></span> 3 Reddit posts reporting possible rug</div>
+            <div class="li"><span class="dot gn"></span> Team is doxxed and KYC verified</div>
+            <div class="li"><span class="dot rd"></span> 92% social sentiment bearish</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="ai-badge">⡂ JARVIS</span>
+</div>
+<div class="pl">GRID: header(header) + left(quote) + right(sentiment) + bottom(list)</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CARD 5: DAILY BRIEF — METRICS_ROW + GRID + PROGRESS + LIST ␐══════ -->
+<section class="section">
+<span class="tagline" style="color:#6C3BFF;font-size:10px;">⡂ CARD 5 — DAILY BRIEF · Grid: 2x3 · Areas: [metrics] [overview] [highlights] [risk]</span>
+<div class="pg">
+<div class="pf">
+<div class="card">
+  <div class="nbar" style="--nb:2px;--nb-c:#00C96C;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#00C96C;color:#00C96C;">📊</span>
+    <span class="sym">PORTFOLIO</span>
+    <span class="bdg gn">● INFO</span>
+    <span class="tm">42m ago</span>
+  </div>
+
+  <div class="grid-card" style="grid-template-areas: 'metrics overview' 'highlights highlights'; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto;">
+    <!-- METRICS_ROW full width -->
+    <div style="grid-area: metrics; background: #0C0C14;">
+      <div class="bzone">
+        <div class="rail rm"></div>
+        <div class="bcont">
+          <span class="blabel">[metrics-row]</span>
+          <div class="b-metrics-row">
+            <div class="mi"><span class="ml">24h Change</span><br><span class="mv" style="color:#00C96C;">+2.1%</span><br><span class="sub">vs +1.8% avg</span></div>
+            <div class="mi"><span class="ml">7d Change</span><br><span class="mv" style="color:#00C96C;">+8.4%</span></div>
+            <div class="mi"><span class="ml">Volume</span><br><span class="mv">$1.2B</span></div>
+            <div class="mi"><span class="ml">Vol/MCap</span><br><span class="mv" style="color:#3388CC;">0.052</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROGRESS (risk gauge) -->
+    <div style="grid-area: overview; background: #0C0C14;">
+      <div class="bzone">
+        <div class="rail ro"></div>
+        <div class="bcont">
+          <span class="blabel">[progress]</span>
+          <div class="b-progress">
+            <span class="ph">Risk Score <span style="color:#00C96C;">24/100</span></span>
+            <div class="pb"><div class="pf p1" style="width:24%;background:#00C96C;"></div></div>
+            <span class="pm">Low risk · Stable token behavior</span>
+          </div>
+          <div class="b-progress" style="margin-top:3px;">
+            <span class="ph">Holder Concentration <span style="color:#FF44AA;">45%</span></span>
+            <div class="pb"><div class="pf p5" style="width:45%;background:#FF44AA;"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIST -->
+    <div style="grid-area: highlights; background: #0C0C14;">
+      <div class="bzone">
+        <div class="rail rl"></div>
+        <div class="bcont">
+          <span class="blabel">[list]</span>
+          <div class="b-list">
+            <div class="li"><span class="dot gn"></span> Price stable within 2% range — no abnormal activity</div>
+            <div class="li"><span class="dot gn"></span> Volume consistent with 7d average ($1.1-1.3B)</div>
+            <div class="li"><span class="dot cy"></span> 2 new governance proposals in voting</div>
+            <div class="li"><span class="dot yl"></span> Holder concentration elevated (top 10: 45%)</div>
+            <div class="li"><span class="dot gn"></span> Social sentiment: 72% positive · 12% negative</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="ai-badge">⡂ JARVIS</span>
+</div>
+<div class="pl">GRID: left(metrics_row) + right(progress x2) + bottom(list)</div>
+</div>
+
+<!-- ─── CARD 6: DEEP SCAN REPORT — HEADER + CHART + CALLOUT + NARRATIVE + METRIC ─── -->
+<div class="pf">
+<div class="card">
+  <div class="nbar" style="--nb:4px;--nb-c:#6C3BFF;"></div>
+  <div class="chdr">
+    <span class="icon" style="border-color:#6C3BFF;color:#6C3BFF;">E</span>
+    <span class="sym">ETH</span>
+    <span class="bdg cy">● DEEP</span>
+    <span class="tm">5m ago</span>
+  </div>
+
+  <div class="grid-card" style="grid-template-areas: 'hero hero metric' 'hero hero callout' 'narr narr narr'; grid-template-columns: 1.5fr 1.5fr 1fr; grid-template-rows: auto auto auto;">
+    <!-- HEADER + CHART in hero area -->
+    <div style="grid-area: hero; background: #0C0C14; min-height: 90px;">
+      <div class="bzone">
+        <div class="rail rt"></div>
+        <div class="bcont">
+          <span class="blabel">[header] + [chart]</span>
+          <div class="b-header" style="margin-bottom:2px;">
+            <span class="hi" style="border-color:#6C3BFF;">E</span>
+            <div class="ht">
+              <span class="tt">ETH Deep Scan — Stable Pattern</span>
+              <span class="st">7-day trend · Volume consistent with baseline</span>
+            </div>
+            <div class="hb">
+              <span class="tag gn" style="border-color:#00C96C;color:#00C96C;">● Stable</span>
+            </div>
+          </div>
+          <div class="b-chart">
+            <svg width="100%" height="32" viewBox="0 0 120 32">
+              <defs>
+                <linearGradient id="ethGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#6C3BFF" stop-opacity="0.3"/>
+                  <stop offset="100%" stop-color="#6C3BFF" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <polyline points="0,18 10,16 20,14 30,12 40,15 50,10 60,8 70,11 80,6 90,9 100,5 110,4 120,3" stroke="#6C3BFF" stroke-width="1.5" fill="none"/>
+              <polygon points="0,18 10,16 20,14 30,12 40,15 50,10 60,8 70,11 80,6 90,9 100,5 110,4 120,3 120,32 0,32" fill="url(#ethGrad)"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- METRIC -->
+    <div style="grid-area: metric; background: #0C0C14;">
+      <div class="bzone">
+        <div class="rail rm"></div>
+        <div class="bcont">
+          <span class="blabel">[metric]</span>
+          <div class="b-metric">
+            <span class="mv">$3,891</span>
+            <span class="ch up" style="color:#00C96C;">+5.2%</span>
+            <span class="ml">7d change · steady growth</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CALLOUT -->
+    <div style="grid-area: callout; background: #0C0C14;">
+      <div class="bzone">
+        <div class="rail rco"></div>
+        <div class="bcont">
+          <span class="blabel">[callout]</span>
+          <div class="b-callout" style="border-color:#3388CC;">
+            <span class="ico" style="color:#3388CC;">i</span>
+            <div class="ct">
+              <span class="ctt">No Anomalies Detected</span>
+              <span class="ctd">Volume/MCap ratio normal. No whale movements. Social sentiment neutral-positive.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NARRATIVE -->
+    <div style="grid-area: narr; background: #0C0C14;">
+      <div class="bzone">
+        <div class="rail rn"></div>
+        <div class="bcont">
+          <span class="blabel">[narrative]</span>
+          <div class="b-narrative">
+            Ethereum's 7-day trend shows <span class="hl g">steady accumulation</span> with price up 5.2% and volume holding at baseline. No whale movements detected. Social sentiment is <span class="hl g">72% positive</span> with EIP discussions gaining traction. Risk score remains low at <span class="hl">24/100</span>.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="ai-badge">⡂ JARVIS</span>
+</div>
+<div class="pl">GRID: hero(header+chart) + right-top(metric) + right-bottom(callout) + bottom(narrative)</div>
+</div>
+</div>
+</section>
+
+<hr style="border:1px solid #2A2A34;margin:30px 0;">
+
+<!-- ␐══════════════════════════════════════════════════════════
+     BLOCK CATALOG REFERENCE — All 14 Blocks ␐══════ -->
+<section class="section">
+<h2>Block CataLog (Post-Merge)</h2>
+<div class="tagline" style="color:#888;font-size:10px;">14 blocks · 4 merged in · 3 new · tags → detail-page-only filter system</div>
+
+<div class="pg">
+<div class="pf" style="flex:1;max-width:100%;">
+<table style="width:100%;border-collapse:collapse;font-size:9px;">
+<tr style="background:#0D0D15;border:1px solid #2A2A34;">
+  <th style="text-align:left;padding:4px 8px;color:#E0E0EC;">#</th>
+  <th style="text-align:left;padding:4px 8px;color:#E0E0EC;">Block</th>
+  <th style="text-align:left;padding:4px 8px;color:#E0E0EC;">Status</th>
+  <th style="text-align:left;padding:4px 8px;color:#E0E0EC;">Points</th>
+  <th style="text-align:left;padding:4px 8px;color:#E0E0EC;">Best Grid Area</th>
+  <th style="text-align:left;padding:4px 8px;color:#E0E0EC;">Notes</th>
+</tr>
+<tr><td style="padding:3px 8px;">1</td><td style="padding:3px 8px;color:#6C3BFF;">header</td><td style="padding:3px 8px;color:#00C96C;">🆢 NEW</td><td style="padding:3px 8px;">15pts</td><td style="padding:3px 8px;">hero / top</td><td style="padding:3px 8px;color:#888;">Icon + title + subtitle + badges. Every card starts here.</td></tr>
+<tr style="background:#0D0D15;"><td style="padding:3px 8px;">2</td><td style="padding:3px 8px;">chart</td><td style="padding:3px 8px;color:#3388CC;">🆐 KEEP</td><td style="padding:3px 8px;">38pts</td><td style="padding:3px 8px;">hero</td><td style="padding:3px 8px;color:#888;">Line/area/bar. Always the anchor.</td></tr>
+<tr><td style="padding:3px 8px;">3</td><td style="padding:3px 8px;color:#FFB84A;">narrative</td><td style="padding:3px 8px;color:#00C96C;">🆢 NEW</td><td style="padding:3px 8px;">20pts</td><td style="padding:3px 8px;">bottom / hero</td><td style="padding:3px 8px;color:#888;">AI voice with highlight phrases. Makes cards feel alive.</td></tr>
+<tr style="background:#0D0D15;"><td style="padding:3px 8px;">4</td><td style="padding:3px 8px;">comparison</td><td style="padding:3px 8px;color:#3388CC;">🆐 KEEP</td><td style="padding:3px 8px;">20pts</td><td style="padding:3px 8px;">hero / sidebar</td><td style="padding:3px 8px;color:#888;">Before/after, token vs token.</td></tr>
+<tr><td style="padding:3px 8px;">5</td><td style="padding:3px 8px;">callout</td><td style="padding:3px 8px;color:#3388CC;">🆐 KEEP</td><td style="padding:3px 8px;">22pts</td><td style="padding:3px 8px;">sidebar / alert</td><td style="padding:3px 8px;color:#888;">Urgent alert box. Always high-vis.</td></tr>
+<tr style="background:#0D0D15;"><td style="padding:3px 8px;">6</td><td style="padding:3px 8px;">timeline</td><td style="padding:3px 8px;color:#3388CC;">🆐 KEEP</td><td style="padding:3px 8px;">28pts</td><td style="padding:3px 8px;">sidebar</td><td style="padding:3px 8px;color:#888;">Chronological events chain.</td></tr>
+<tr><td style="padding:3px 8px;">7</td><td style="padding:3px 8px;">metrics_row</td><td style="padding:3px 8px;color:#3388CC;">🆐 KEEP</td><td style="padding:3px 8px;">20pts</td><td style="padding:3px 8px;">bottom</td><td style="padding:3px 8px;color:#888;">2-4 metrics side-by-side.</td></tr>
+<tr style="background:#0D0D15;"><td style="padding:3px 8px;">8</td><td style="padding:3px 8px;">metric</td><td style="padding:3px 8px;color:#3388CC;">🆐 KEEP</td><td style="padding:3px 8px;">10pts</td><td style="padding:3px 8px;">compact/sidebar</td><td style="padding:3px 8px;color:#888;">Single number. Smallest block.</td></tr>
+<tr><td style="padding:3px 8px;">9</td><td style="padding:3px 8px;">progress</td><td style="padding:3px 8px;color:#00C96C;">⡂ MERGED</td><td style="padding:3px 8px;">18pts</td><td style="padding:3px 8px;">compact</td><td style="padding:3px 8px;color:#888;">Absorbed percentage_bar. Now has bar/segmented/radial/percentage variants.</td></tr>
+<tr style="background:#0D0D15;"><td style="padding:3px 8px;">10</td><td style="padding:3px 8px;">list</td><td style="padding:3px 8px;color:#3388CC;">🆐 KEEP</td><td style="padding:3px 8px;">22pts</td><td style="padding:3px 8px;">sidebar/bottom</td><td style="padding:3px 8px;color:#888;">Bullet/numbered/checklist/icon.</td></tr>
+<tr><td style="padding:3px 8px;">11</td><td style="padding:3px 8px;">sentiment</td><td style="padding:3px 8px;color:#3388CC;">🆐 KEEP</td><td style="padding:3px 8px;">26pts</td><td style="padding:3px 8px;">sidebar</td><td style="padding:3px 8px;color:#888;">Social sentiment gauge.</td></tr>
+<tr style="background:#0D0D15;"><td style="padding:3px 8px;">12</td><td style="padding:3px 8px;">transfer</td><td style="padding:3px 8px;color:#3388CC;">🆐 KEEP</td><td style="padding:3px 8px;">24pts</td><td style="padding:3px 8px;">sidebar</td><td style="padding:3px 8px;color:#888;">Whale transfer from→to. Only when on-chain data exists.</td></tr>
+<tr><td style="padding:3px 8px;">13</td><td style="padding:3px 8px;color:#FF44AA;">quote</td><td style="padding:3px 8px;color:#00C96C;">🆢 NEW</td><td style="padding:3px 8px;">18pts</td><td style="padding:3px 8px;">sidebar/alert</td><td style="padding:3px 8px;color:#888;">Social source embed — Reddit, Twitter, Telegram quotes.</td></tr>
+<tr style="background:#0D0D15;"><td style="padding:3px 8px;">14</td><td style="padding:3px 8px;">grid</td><td style="padding:3px 8px;color:#3388CC;">🆐 KEEP</td><td style="padding:3px 8px;">24pts</td><td style="padding:3px 8px;">full-width</td><td style="padding:3px 8px;color:#888;">Labeled data cells. Grid-inside-grid — good for tables.</td></tr>
+<tr style="background:#0A0A12;border:1px solid #2A2A34;">
+  <td style="padding:3px 8px;">—</td>
+  <td style="padding:3px 8px;color:#888;"><s>text</s></td>
+  <td style="padding:3px 8px;color:#888;">⡂ KEPT</td>
+  <td style="padding:3px 8px;">15pts</td>
+  <td style="padding:3px 8px;">bottom</td>
+  <td style="padding:3px 8px;color:#888;">Kept as-is. Absorbed code → text(variant:code).</td>
+</tr>
+<tr>
+  <td style="padding:3px 8px;">—</td>
+  <td style="padding:3px 8px;color:#888;"><s>percentage_bar</s></td>
+  <td style="padding:3px 8px;color:#FF4444;">→ progress</td>
+  <td style="padding:3px 8px;"></td>
+  <td style="padding:3px 8px;"></td>
+  <td style="padding:3px 8px;color:#888;">Merged into progress(variant: percentage).</td>
+</tr>
+<tr style="background:#0D0D15;">
+  <td style="padding:3px 8px;">—</td>
+  <td style="padding:3px 8px;color:#888;"><s>code</s></td>
+  <td style="padding:3px 8px;color:#FF4444;">→ text</td>
+  <td style="padding:3px 8px;"></td>
+  <td style="padding:3px 8px;"></td>
+  <td style="padding:3px 8px;color:#888;">Absorbed into text(variant: code). Frees up 12pts.</td>
+</tr>
+<tr>
+  <td style="padding:3px 8px;">—</td>
+  <td style="padding:3px 8px;color:#888;"><s>link</s></td>
+  <td style="padding:3px 8px;color:#FF4444;">→ callout</td>
+  <td style="padding:3px 8px;"></td>
+  <td style="padding:3px 8px;"></td>
+  <td style="padding:3px 8px;color:#888;">Merged into callout (callout + url field).</td>
+</tr>
+<tr style="background:#0D0D15;">
+  <td style="padding:3px 8px;">—</td>
+  <td style="padding:3px 8px;color:#888;"><s>tags (block)</s></td>
+  <td style="padding:3px 8px;color:#FF4444;">→ detail only</td>
+  <td style="padding:3px 8px;"></td>
+  <td style="padding:3px 8px;"></td>
+  <td style="padding:3px 8px;color:#888;">Removed from blocks. Tags = top-level field, detail-page-only filter system.</td>
+</tr>
+</table>
+</div>
+</div>
+</section>
+
+<hr style="border:1px solid #2A2A34;margin:20px 0;">
+
+<!-- ␐══════════════════════════════════════════════════════════
+     TAG FILTERING SYSTEM — Detail Page Only ␐══════ -->
+<section class="section">
+<h2>Tag System — Detail Page Filtering</h2>
+<div class="tagline" style="color:#888;font-size:10px;">⡂ Tags are top-level, hidden on feed cards, shown on detail pages. Tapping a tag filters the feed to show only cards with that tag.</div>
+
+<div style="background:#101018;border:1px solid #2A2A34;padding:12px 16px;margin:8px 0;">
+  <div style="color:#6C3BFF;font-size:11px;font-weight:700;margin-bottom:6px;">Example: Card Detail Page — Tag Display</div>
+  <div style="color:#888;font-size:9px;margin-bottom:8px;">These tags appear at the bottom of the detail page, never on the feed card:</div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;">
+    <span style="font-size:8px;padding:3px 8px;border:1px solid #3388CC;color:#3388CC;background:#0D0D15;cursor:pointer;">● governance</span>
+    <span style="font-size:8px;padding:3px 8px;border:1px solid #E0A000;color:#E0A000;background:#0D0D15;cursor:pointer;">● voting-active</span>
+    <span style="font-size:8px;padding:3px 8px;border:1px solid #FF0044;color:#FF0044;background:#0D0D15;cursor:pointer;">🔥 3d-left</span>
+    <span style="font-size:8px;padding:3px 8px;border:1px solid #00C96C;color:#00C96C;background:#0D0D15;cursor:pointer;">● treasury</span>
+  </div>
+  <div style="color:#FF44AA;font-size:8px;margin-top:6px;">Tapping any tag → filters the feed to show only cards with that tag</div>
+</div>
+
+<div style="background:#101018;border:1px solid #2A2A34;padding:12px 16px;margin:8px 0;">
+  <div style="color:#6C3BFF;font-size:11px;font-weight:700;margin-bottom:6px;">Example: Filtered Feed After Tapping "voting-active"</div>
+  <div style="color:#888;font-size:9px;margin-bottom:6px;">Showing: 14 cards tagged with "voting-active" across your portfolio</div>
+  <div style="background:#0D0D15;border:1px solid #1A1A24;padding:6px 10px;">
+    <div style="display:flex;align-items:center;gap:4px;">
+      <span style="color:#6C3BFF;font-size:9px;">GAL</span>
+      <span style="color:#FFB84A;font-size:9px;">Proposal #42: Treasury Rebalance</span>
+      <span style="font-size:6px;color:#888;">3d left · 79.5% for</span>
+      <span style="font-size:6px;padding:1px 4px;border:1px solid #3388CC;color:#3388CC;">● voting-active</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:4px;margin-top:3px;">
+      <span style="color:#E0A000;font-size:9px;">AAVE</span>
+      <span style="color:#FFB84A;font-size:9px;">LIP-24: Staking Rewards Adjust</span>
+      <span style="font-size:6px;color:#888;">7d left · 62.1% for</span>
