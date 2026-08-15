@@ -2,69 +2,42 @@
 <html>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=1300, initial-scale=1">
-<title>Cyber-Luxe — Card Redesign Mockup</title>
+<meta name="viewport" content="width=1400, initial-scale=1">
+<title>Cyber-Luxe — Card & Block Redesign Mockup</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: #08080D; font-family: 'Courier New', 'Consolas', monospace; color: #E0E0EC; padding: 24px; }
-  .page { max-width: 1200px; margin: 0 auto; }
+  .page { max-width: 1300px; margin: 0 auto; }
 
   h1 { font-size: 28px; color: #FF3B1D; margin-bottom: 2px; }
   .subtitle { color: #888; font-size: 11px; margin-bottom: 4px; }
-  .prompt { font-size: 11px; color: #6C3BFF; margin-bottom: 32px; }
+  .prompt { font-size: 11px; color: #6C3BFF; margin-bottom: 24px; }
 
   .sep { height: 1px; background: #2A2A34; margin: 24px 0; }
-  .sep-light { height: 1px; background: #1A1A22; margin: 16px 0; }
 
-  .section { margin: 40px 0; }
-  .section h2 { font-size: 18px; color: #00BFFF; margin-bottom: 4px; }
-  .section .desc { font-size: 11px; color: #888; margin-bottom: 16px; }
+  .sect { margin: 32px 0; }
+  .sect h2 { font-size: 18px; color: #00BFFF; margin-bottom: 4px; }
+  .sect .desc { font-size: 11px; color: #888; margin-bottom: 16px; }
 
-  .nav { display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap; }
+  .nav { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
   .nav a { font-size: 11px; padding: 5px 12px; border: 1px solid #3A3A44; background: #08080D; color: #AAA; text-decoration: none; }
   .nav a:hover { color: #00BFFF; border-color: #00BFFF; }
 
-  /* Feed Layout */
-  .feed { display: flex; gap: 32px; }
-  .feed-cols { flex: 1; display: flex; flex-direction: column; gap: 20px; max-width: 540px; }
+  .tag { font-size: 8px; padding: 1px 6px; background: #0D0D15; border: 1px solid #3A3A44; color: #A0A0AA; display: inline-block; }
+  .meta { font-size: 8px; color: #666; display: flex; align-items: center; gap: 6px; padding: 4px 0; }
 
-  /* Neon Top Bars — gradient, weighted by urgency */
-  .nb-critical { height: 5px; background: linear-gradient(to right, #FF0044, #FF3366); }
-  .nb-urgent { height: 3px; background: linear-gradient(to right, #FF6633, #FF9944); }
-  .nb-alert { height: 3px; background: linear-gradient(to right, #E0A000, #FFC000); }
-  .nb-watch { height: 2px; background: linear-gradient(to right, #44BBAA, #66DDCC); }
-  .nb-info { height: 2px; background: linear-gradient(to right, #3388CC, #55AAEE); }
-
-  /* Card Shared */
-  .card { background: #101018; border: 1px solid; position: relative; overflow: hidden; padding: 14px 16px; }
-  .card-critical { border-color: #FF0044; box-shadow: 0 0 12px rgba(255,0,68,0.2), 0 0 3px rgba(255,0,68,0.4); }
-  .card-urgent { border-color: #FF6633; box-shadow: 0 0 8px rgba(255,102,51,0.15), 0 0 2px rgba(255,102,51,0.3); }
-  .card-alert { border-color: #E0A000; box-shadow: 0 0 6px rgba(224,160,0,0.12); }
+  .card { background: #101018; border: 1px solid; position: relative; overflow: hidden; padding: 12px 14px; border-radius: 0; }
+  .card-critical { border-color: #FF0044; }
+  .card-urgent { border-color: #FF6633; }
+  .card-alert { border-color: #E0A000; }
   .card-watch { border-color: #44BBAA; }
   .card-info { border-color: #3388CC; }
 
-  .hdr { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-  .hdr-icon { width: 22px; height: 22px; background: #0D0D15; border: 1px solid #2A2A34; display: flex; align-items: center; justify-content: center; font-size: 10px; }
-  .hdr-info { flex: 1; }
-  .hdr-symbol { font-size: 14px; font-weight: bold; color: #E0E0EC; }
-  .hdr-time { font-size: 8px; color: #666; }
-  .hdr-spark { width: 44px; height: 16px; background: #0D0D15; border: 1px solid #2A2A34; }
-
-  .title { font-size: 15px; font-weight: bold; line-height: 1.3; margin-bottom: 6px; }
-  .summary { font-size: 11px; color: #A0A0AA; line-height: 1.4; margin-bottom: 10px; }
-
-  .tags { display: flex; gap: 4px; margin-bottom: 10px; flex-wrap: wrap; }
-  .tag { font-size: 8px; padding: 1px 6px; background: #0D0D15; border: 1px solid #3A3A44; color: #A0A0AA; }
-
-  .meta { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 8px; color: #666; }
-
-  .detail-panel { background: #101018; border: 1px solid #3388CC; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-
-  .spec-card { background: #101018; border: 1px solid #2A2A34; padding: 16px; width: 340px; }
-  .spec-card h4 { font-size: 14px; color: #00BFFF; margin-bottom: 6px; }
-  .spec-card .d { font-size: 10px; color: #888; margin-bottom: 8px; }
-  .spec-card .bef { font-size: 9px; color: #FF3B1D; }
-  .spec-card .aft { font-size: 9px; color: #00C96C; margin-top: 4px; }
+  .chdr { display: flex; align-items: center; gap: 6px; }
+  .chdr-icon { width: 20px; height: 20px; background: #0D0D15; border: 1px solid #3A3A44; display: flex; align-items: center; justify-content: center; font-size: 9px; }
+  .chdr-sym { font-size: 13px; font-weight: bold; color: #E0E0EC; }
+  .chdr-ago { font-size: 8px; color: #666; }
+  .spark { display: inline-block; width: 40px; height: 14px; background: #0D0D15; border: 1px solid #3A3A44; }
 </style>
 </head>
 <body>
@@ -72,468 +45,518 @@
 <div class="page">
 
 <h1>⡂ Cyber-Luxe</h1>
-<div class="subtitle">Direction 1 — Terminal Elevated. Keeping the soul, turning up the polish.</div>
-<div class="prompt">crypto-portfolio-mockups / cybur-luxe-mockup.html / 2026-08-14</div>
+<div class="subtitle">Direction 1 — Terminal Elevated. Gradients, glows, sparklines, weighted hierarchy.</div>
+<div class="prompt">crypto-portfolio-mockups / cybur-luxe-mockup.html / v2 / 2026-08-14</div>
 
 <div class="nav">
   <a href="#feed">Feed</a>
-  <a href="#detail">Detail</a>
-  <a href="#blocks">Block Redesigns</a>
-  <a href="#specs">Visual Specs</a>
+  <a href="#blocks">Block Types (16)</a>
+  <a href="#specs">Design Tokens</a>
 </div>
 
-<!-- ␐␐␐ FEED ␐␐␐ -->
-<div class="section" id="feed">
-<h2>⡂ Feed — Card Varieties</h2>
-<div class="desc">Five cards showing the range — critical whale, urgent crash, alert governance, watch social, info routine.</div>
+<!-- ␐␐␐ SECTION 1: FEED ␐␐␐ -->
+<div class="sect" id="feed">
+<h2>⡂ Feed Cards</h2>
+<div class="desc">Five urgency levels. Each card uses different block combos for variety.</div>
 
-<div class="feed">
+<div style="display:flex; flex-direction:column; gap:20px; max-width:440px;">
 
-<div class="feed-cols">
-
-<!-- ─── Card 1: CRITICAL ─── -->
-<div class="card card-critical nb-critical">
-  <div style="background:linear-gradient(to right,#FF0044,#FF3366); height:5px; position:absolute; top:0; left:0; right:0;"></div>
-  <div class="hdr">
-    <div class="hdr-icon" style="border-color:#FF0044; color:#FF0044;">🐋</div>
-    <div class="hdr-info"><span class="hdr-symbol">BONK <span style="font-size:10px; color:#888;">whale</span></span></div>
-    <div class="hdr-time">4m ago</div>
-    <div class="hdr-spark" style="border-color:#FF0044;">
-      <svg width="38" height="12" viewBox="0 0 38 12">
-        <polyline points="0,10 6,8 12,11 20,5 28,7 36,2" fill="none" stroke="#FF0044" stroke-width="1.2"/>
-      </svg>
+<!-- ─── CARD 1: CRITICAL — Whale ─── -->
+<div class="card card-critical" style="box-shadow:0 0 14px rgba(255,0,68,0.2),0 0 4px rgba(255,0,68,0.35);">
+  <div style="height:5px; background:linear-gradient(to right,#FF0044,#FF3366); position:absolute; top:0; left:0; right:0;"></div>
+  <div class="chdr">
+    <div class="chdr-icon" style="border-color:#FF0044; color:#FF0044;">🐋</div>
+    <div class="chdr-sym" style="flex:1;">BONK <span style="font-size:9px; color:#888;">whale</span></div>
+    <div class="chdr-ago">4m ago</div>
+    <div class="spark" style="border-color:#FF0044;">
+      <svg width="36" height="10" viewBox="0 0 36 10"><polyline points="0,8 5,7 10,9 16,5 22,6 28,2 34,1" fill="none" stroke="#FF0044" stroke-width="1"/></svg>
     </div>
   </div>
-
-  <div class="title" style="color:#FF0044;">🐋 Whale Moves 12M BONK</div>
-
-  <div class="summary">A whale wallet drained 12,000,000 BONK (≈$480K) to a fresh wallet. 40% of receiving wallet's balance. High concentration risk.</div>
-
-  <div class="tags">
-    <span class="tag" style="border-color:#FF0044; color:#FF0044;">⚡ CRITICAL</span>
+  <div style="font-size:14px; font-weight:bold; color:#FF0044; margin:6px 0 4px;">🐋 Whale Moves 12M BONK</div>
+  <div style="font-size:10px; color:#A0A0AA; line-height:1.35; margin-bottom:8px;">A whale wallet drained 12M BONK ($480K) to a fresh wallet. 40% of receiving wallet's balance. High concentration risk.</div>
+  <div style="display:flex; gap:3px; margin-bottom:8px;">
+    <span class="tag" style="border-color:#FF0044; color:#FF0044;">⚡CRITICAL</span>
     <span class="tag">whale</span>
     <span class="tag">on-chain</span>
   </div>
-
+  <!-- transfer block -->
   <div style="margin-bottom:8px;">
-    <div style="border:1px solid #FF0044; background:#0D0D14; padding:5px 10px; display:flex; align-items:center; gap:6px; border-radius:1px;">
-      <span style="font-size:9px; color:#888;">FROM</span>
-      <span style="font-size:10px; color:#A0A0AA; flex:1;">Ox7F3...A2B1</span>
-      <span style="font-size:16px; color:#666;">→</span>
-      <span style="font-size:10px; color:#A0A0AA; flex:1;">Ox3C9...F8D4</span>
-      <span style="font-size:9px; color:#FF3B1D; font-weight:bold;">12M BONK</span>
+    <div style="display:flex; align-items:center; gap:4px; border:1px solid #3A3A44; background:#0D0D14; padding:4px 8px;">
+      <div style="flex:1;">
+        <div style="font-size:7px; color:#888;">FROM</div>
+        <div style="font-size:9px; color:#A0A0AA;">Ox7F3...A2B1</div>
+      </div>
+      <div style="font-size:14px; color:#666;">→</div>
+      <div style="flex:1;">
+        <div style="font-size:7px; color:#888;">TO</div>
+        <div style="font-size:9px; color:#A0A0AA;">Ox3C9...F8D4</div>
+      </div>
+      <div style="border:1px solid #FF0044; background:#0D0D14; padding:1px 5px;">
+        <div style="font-size:8px; color:#FF3B1D; font-weight:bold;">12M</div>
+        <div style="font-size:7px; color:#FF3B1D55;">$480K</div>
+      </div>
     </div>
   </div>
-
-  <div style="display:flex; gap:12px; justify-content:center;">
+  <!-- metrics row block -->
+  <div style="display:flex; gap:8px; justify-content:center; margin-bottom:6px;">
     <div style="text-align:center;">
-      <div style="font-size:20px; font-weight:bold; color:#FF3B1D;">12.0M</div>
-      <div style="font-size:8px; color:#888;">Amount</div>
+      <div style="font-size:18px; font-weight:bold; color:#FF3B1D;">12.0M</div>
+      <div style="font-size:7px; color:#888;">Amount</div>
     </div>
-    <div style="width:1px; height:30px; background:#2A2A34;"></div>
+    <div style="width:1px; height:26px; background:#2A2A34;"></div>
     <div style="text-align:center;">
-      <div style="font-size:20px; font-weight:bold; color:#A0A0AA;">$480K</div>
-      <div style="font-size:8px; color:#888;">Value</div>
+      <div style="font-size:18px; font-weight:bold; color:#A0A0AA;">$480K</div>
+      <div style="font-size:7px; color:#888;">Value</div>
     </div>
-    <div style="width:1px; height:30px; background:#2A2A34;"></div>
+    <div style="width:1px; height:26px; background:#2A2A34;"></div>
     <div style="text-align:center;">
-      <div style="font-size:20px; font-weight:bold; color:#00C96C;">4x</div>
-      <div style="font-size:8px; color:#888;">vs avg</div>
+      <div style="font-size:18px; font-weight:bold; color:#00C96C;">4x</div>
+      <div style="font-size:7px; color:#888;">vs avg</div>
     </div>
   </div>
-
-  <div class="meta">
-    <span style="width:4px; height:4px; border-radius:50%; background:#FF0044; display:inline-block;"></span>
-    scan #1842 · 92% confidence · 14s ago
-  </div>
+  <div class="meta"><span style="width:3px; height:3px; background:#FF0044; border-radius:50%;"></span>scan #1842 · 92% conf · 14s ago</div>
 </div>
 
-<!-- ─── Card 2: URGENT ─── -->
-<div class="card card-urgent">
-  <div style="background:linear-gradient(to right,#FF6633,#FF9944); height:3px; position:absolute; top:0; left:0; right:0;"></div>
-  <div class="hdr">
-    <div class="hdr-icon" style="border-color:#FF6633; color:#FF6633;">$</div>
-    <div class="hdr-info"><span class="hdr-symbol">BONK <span style="font-size:10px; color:#888;">price</span></span></div>
-    <div class="hdr-time">12m ago</div>
-    <div class="hdr-spark" style="border-color:#FF6633;">
-      <svg width="38" height="12" viewBox="0 0 38 12">
-        <polyline points="0,2 6,3 12,5 20,8 28,10 36,10" fill="none" stroke="#FF6633" stroke-width="1.2"/>
-      </svg>
+<!-- ─── CARD 2: URGENT — Price Crash ─── -->
+<div class="card card-urgent" style="box-shadow:0 0 10px rgba(255,102,51,0.15),0 0 3px rgba(255,102,51,0.25);">
+  <div style="height:3px; background:linear-gradient(to right,#FF6633,#FF9944); position:absolute; top:0; left:0; right:0;"></div>
+  <div class="chdr">
+    <div class="chdr-icon" style="border-color:#FF6633; color:#FF6633;">$</div>
+    <div class="chdr-sym" style="flex:1;">BONK <span style="font-size:9px; color:#888;">price</span></div>
+    <div class="chdr-ago">12m ago</div>
+    <div class="spark" style="border-color:#FF6633;">
+      <svg width="36" height="10" viewBox="0 0 36 10"><polyline points="0,1 6,2 12,3 20,6 28,8 34,9" fill="none" stroke="#FF6633" stroke-width="1"/></svg>
     </div>
   </div>
-
-  <div class="title" style="color:#FF6633;">⛛ Price Down 22% in 2h</div>
-
-  <div class="summary">BONK dropped from $0.000052 to $0.000040 in 2 hours. Trading volume hit $2.1M — panic selling. Monitor closely.</div>
-
-  <div class="tags">
-    <span class="tag" style="border-color:#FF6633; color:#FF6633;">⛛ URGENT</span>
+  <div style="font-size:14px; font-weight:bold; color:#FF6633; margin:6px 0 4px;">⛛ Price Down 22% in 2h</div>
+  <div style="font-size:10px; color:#A0A0AA; line-height:1.35; margin-bottom:8px;">BONK dropped from $0.000052 to $0.000040 in 2 hours. Volume hit $2.1M — panic selling.</div>
+  <div style="display:flex; gap:3px; margin-bottom:8px;">
+    <span class="tag" style="border-color:#FF6633; color:#FF6633;">⛛URGENT</span>
     <span class="tag">price</span>
-    <span class="tag">volitility</span>
+    <span class="tag">volatility</span>
   </div>
-
-  <div style="text-align:center; margin-bottom:8px;">
+  <!-- metric block (hero) -->
+  <div style="text-align:center; margin-bottom:6px;">
     <span style="font-size:24px; font-weight:bold; color:#FF6633;">$0.000040</span>
-    <span style="font-size:16px; color:#FF3B1D; margin-left:4px;">↓ 22%</span>
+    <span style="font-size:14px; color:#FF3B1D; margin-left:4px;">↓22%</span>
   </div>
-
-  <div style="height:44px; border:1px solid #3A3A44; background:#0D0D15; display:flex; align-items:flex-end; justify-content:space-around; padding:4px 2px;">
-    <svg width="100%" height="36" viewBox="0 0 200 36">
-      <polyline points="0,34 10,30 20,32 30,26 40,22 50,24 60,28 70,18 80,14 90,16 100,20 110,8 120,4 130,6 140,10 150,2 160,2 170,4 180,8 190,12 200,14" fill="none" stroke="#FF6633" stroke-width="1.5"/>
+  <!-- chart block -->
+  <div style="border:1px solid #3A3A44; background:#0D0D15; height:38px; padding:2px 4px; margin-bottom:6px;">
+    <svg width="100%" height="32" viewBox="0 0 340 32">
+      <defs><linearGradient id="cg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF6633" stop-opacity="0.3"/><stop offset="100%" stop-color="#FF6633" stop-opacity="0"/></linearGradient></defs>
+      <polyline points="0,28 20,26 40,27 60,24 80,22 100,24 120,20 140,16 160,18 180,14 200,10 220,8 240,6 260,4 280,4 300,6 320,8 340,10" fill="none" stroke="#FF6633" stroke-width="1.2"/>
+      <polygon points="0,28 20,26 40,27 60,24 80,22 100,24 120,20 140,16 160,18 180,14 200,10 220,8 240,6 260,4 280,4 300,6 320,8 340,10 340,32 0,32" fill="url(#cg1)"/>
     </svg>
   </div>
-
-  <div style="display:flex; gap:12px; justify-content:center; margin-top:4px;">
+  <!-- metrics row -->
+  <div style="display:flex; gap:8px; justify-content:center;">
     <div style="text-align:center;">
-      <div style="font-size:16px; font-weight:bold; color:#A0A0AA;">$2.1M</div>
-      <div style="font-size:8px; color:#888;">Volume</div>
+      <div style="font-size:14px; font-weight:bold; color:#A0A0AA;">$2.1M</div>
+      <div style="font-size:7px; color:#888;">Vol</div>
     </div>
-    <div style="width:1px; height:26px; background:#2A2A34;"></div>
+    <div style="width:1px; height:22px; background:#2A2A34;"></div>
     <div style="text-align:center;">
-      <div style="font-size:16px; font-weight:bold; color:#FF3B1D;">$0.000012</div>
-      <div style="font-size:8px; color:#888;">Loss</div>
+      <div style="font-size:14px; font-weight:bold; color:#FF3B1D;">$0.000012</div>
+      <div style="font-size:7px; color:#888;">Loss</div>
     </div>
-    <div style="width:1px; height:26px; background:#2A2A34;"></div>
+    <div style="width:1px; height:22px; background:#2A2A34;"></div>
     <div style="text-align:center;">
-      <div style="font-size:16px; font-weight:bold; color:#A0A0AA;">4.2K</div>
-      <div style="font-size:8px; color:#888;">Holders</div>
+      <div style="font-size:14px; font-weight:bold; color:#A0A0AA;">4.2K</div>
+      <div style="font-size:7px; color:#888;">Holders</div>
     </div>
   </div>
-
-  <div class="meta">
-    <span style="width:4px; height:4px; background:#FF6633; display:inline-block;"></span>
-    scan #1840 · 88% confidence · 22s ago
-  </div>
+  <div class="meta"><span style="width:3px; height:3px; background:#FF6633; border-radius:50%;"></span>scan #1840 · 88% conf · 22s ago</div>
 </div>
 
-<!-- ─── Card 3: ALERT ─── -->
-<div class="card card-alert">
-  <div style="background:linear-gradient(to right,#E0A000,#FFC000); height:3px; position:absolute; top:0; left:0; right:0;"></div>
-  <div class="hdr">
-    <div class="hdr-icon" style="border-color:#E0A000; color:#E0A000;">⚖</div>
-    <div class="hdr-info"><span class="hdr-symbol">BONK <span style="font-size:10px; color:#888;">governance</span></span></div>
-    <div class="hdr-time">28m ago</div>
-    <div class="hdr-spark" style="border-color:#E0A000;">
-      <svg width="38" height="12" viewBox="0 0 38 12">
-        <polyline points="0,6 8,4 16,8 24,5 32,7 36,6" fill="none" stroke="#E0A000" stroke-width="1.2"/>
-      </svg>
+<!-- ─── CARD 3: ALERT — Governance ─── -->
+<div class="card card-alert" style="box-shadow:0 0 6px rgba(224,160,0,0.1);">
+  <div style="height:3px; background:linear-gradient(to right,#E0A000,#FFC000); position:absolute; top:0; left:0; right:0;"></div>
+  <div class="chdr">
+    <div class="chdr-icon" style="border-color:#E0A000; color:#E0A000;">⚖</div>
+    <div class="chdr-sym" style="flex:1;">BONK <span style="font-size:9px; color:#888;">gov</span></div>
+    <div class="chdr-ago">28m ago</div>
+    <div class="spark" style="border-color:#E0A000;">
+      <svg width="36" height="10" viewBox="0 0 36 10"><polyline points="0,5 6,4 14,6 22,4 30,5 34,5" fill="none" stroke="#E0A000" stroke-width="1"/></svg>
     </div>
   </div>
-
-  <div class="title" style="color:#E0A000;">⚠ Governance Attack Detected</div>
-
-  <div class="summary">Malicious proposal #842 passed — 2.1M BONK drained from treasury. Same pattern as last month's exploit.</div>
-
-  <div class="tags">
-    <span class="tag" style="border-color:#E0A000; color:#E0A000;">⚠ ALERT</span>
+  <div style="font-size:14px; font-weight:bold; color:#E0A000; margin:6px 0 4px;">⚠ Governance Attack Detected</div>
+  <div style="font-size:10px; color:#A0A0AA; line-height:1.35; margin-bottom:8px;">Malicious proposal #842 passed — 2.1M BONK drained from treasury. Same pattern as June exploit.</div>
+  <div style="display:flex; gap:3px; margin-bottom:8px;">
+    <span class="tag" style="border-color:#E0A000; color:#E0A000;">⚠ALERT</span>
     <span class="tag">governance</span>
     <span class="tag">security</span>
   </div>
-
-  <div style="border:1px solid #E0A000; background:#0D0D14; padding:5px 10px; margin-bottom:6px; font-size:11px;">
-    <span style="font-size:9px; font-weight:bold; color:#E0A000;">(⚠)</span>
-    Proposal #842 passed 67-33. Similar pattern to Jun exploit.
+  <!-- callout block -->
+  <div style="border:1px solid #E0A000; background:#0D0D14; padding:4px 8px; margin-bottom:6px; box-shadow:0 0 4px rgba(224,160,0,0.15);">
+    <div style="display:flex; align-items:center; gap:4px;">
+      <span style="font-size:10px; font-weight:bold; color:#E0A000;">(⚠)</span>
+      <span style="font-size:10px; color:#E0A000; flex:1;">Proposal #842 passed 67-33. Pattern matches Jun exploit.</span>
+    </div>
   </div>
-
-  <div style="display:flex; align-items:center; gap:8px;">
-    <span style="font-size:9px; color:#888; width:50px;">Risk</span>
-    <div style="flex:1; height:14px; border:1px solid #3A3A44; background:#0D0D15; overflow:hidden;">
+  <!-- progress block (risk meter) -->
+  <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
+    <span style="font-size:8px; color:#888; width:40px;">Risk</span>
+    <div style="flex:1; height:12px; border:1px solid #3A3A44; background:#0D0D15; overflow:hidden;">
       <div style="display:flex; height:100%;">
-        <div style="width:60%; background:#E0A000; height:100%;"></div>
-        <div style="width:25%; background:#FF6633; height:100%;"></div>
+        <div style="width:55%; background:#E0A000; height:100%;"></div>
+        <div style="width:30%; background:#FF6633; height:100%;"></div>
         <div style="width:15%; background:#FF0044; height:100%;"></div>
       </div>
     </div>
   </div>
-
-  <div style="margin-top:4px; font-size:9px; line-height:1.6;">
-    <span style="color:#FF3B1D;">␗ 2.1M BONK drained from treasury (confirmed)</span><br>
-    <span style="color:#E0A000;">␰ 67-33 vote split — unusual participation</span><br>
-    <span style="color:#A0A0AA;">␱ 3 of 5 multisig signers from same cohort</span>
+  <!-- list block -->
+  <div style="font-size:9px; line-height:1.5; margin-bottom:4px;">
+    <div><span style="color:#FF3B1D;">␗</span> 2.1M BONK drained (confirmed)</div>
+    <div><span style="color:#E0A000;">␰</span> 67-33 vote — unusual participation</div>
+    <div><span style="color:#A0A0AA;">␱</span> 3/5 multisig signers from same cohort</div>
   </div>
-
-  <div class="meta">
-    <span style="width:4px; height:4px; background:#E0A000; display:inline-block;"></span>
-    scan #1837 · 85% confidence · 1m ago
-  </div>
+  <div class="meta"><span style="width:3px; height:3px; background:#E0A000; border-radius:50%;"></span>scan #1837 · 85% conf · 1m ago</div>
 </div>
 
-<!-- ─── Card 4: WATCH ─── -->
+<!-- ─── CARD 4: WATCH — Social ─── -->
 <div class="card card-watch">
-  <div style="background:linear-gradient(to right,#44BBAA,#66DDCC); height:2px; position:absolute; top:0; left:0; right:0;"></div>
-  <div class="hdr">
-    <div class="hdr-icon" style="border-color:#44BBAA; color:#44BBAA;">💬</div>
-    <div class="hdr-info"><span class="hdr-symbol">BONK <span style="font-size:10px; color:#888;">social</span></span></div>
-    <div class="hdr-time">1h ago</div>
-    <div class="hdr-spark" style="border-color:#44BBAA;">
-      <svg width="38" height="12" viewBox="0 0 38 12">
-        <polyline points="0,8 6,6 14,7 22,4 30,5 36,3" fill="none" stroke="#44BBAA" stroke-width="1.2"/>
-      </svg>
+  <div style="height:2px; background:linear-gradient(to right,#44BBAA,#66DDCC); position:absolute; top:0; left:0; right:0;"></div>
+  <div class="chdr">
+    <div class="chdr-icon" style="border-color:#44BBAA; color:#44BBAA;">💬</div>
+    <div class="chdr-sym" style="flex:1;">BONK <span style="font-size:9px; color:#888;">social</span></div>
+    <div class="chdr-ago">1h ago</div>
+    <div class="spark" style="border-color:#44BBAA;">
+      <svg width="36" height="10" viewBox="0 0 36 10"><polyline points="0,7 6,6 14,6 22,4 30,5 34,3" fill="none" stroke="#44BBAA" stroke-width="1"/></svg>
     </div>
   </div>
-
-  <div class="title" style="color:#44BBAA;">📊 Sentiment Shifting Positive</div>
-  <div class="summary">Social chatter up 180%. Bullish signals from 42 sources. Most discussion around upcoming upgrade. FNG index at 67.</div>
-
-  <div class="tags">
+  <div style="font-size:14px; font-weight:bold; color:#44BBAA; margin:6px 0 4px;">📊 Sentiment Shifting Positive</div>
+  <div style="font-size:10px; color:#A0A0AA; line-height:1.35; margin-bottom:8px;">Social chatter up 180%. Bullish signals from 42 sources. FNG index at 67.</div>
+  <div style="display:flex; gap:3px; margin-bottom:8px;">
     <span class="tag" style="border-color:#44BBAA; color:#44BBAA;">📊</span>
     <span class="tag">social</span>
     <span class="tag">sentiment</span>
   </div>
-
-  <div style="display:flex; gap:8px; justify-content:center; margin-bottom:6px;">
+  <!-- sentiment gauge -->
+  <div style="display:flex; gap:6px; justify-content:center; margin-bottom:6px;">
     <div style="text-align:center;">
-      <div style="font-size:18px; font-weight:bold; color:#00C96C;">62%</div>
-      <div style="font-size:8px; color:#888;">bullish</div>
-    </div>
-    <div style="width:1px; height:28px; background:#2A2A34;"></div>
-    <div style="text-align:center;">
-      <div style="font-size:18px; font-weight:bold; color:#A0A0AA;">28%</div>
-      <div style="font-size:8px; color:#888;">neutral</div>
-    </div>
-    <div style="width:1px; height:28px; background:#2A2A34;"></div>
-    <div style="text-align:center;">
-      <div style="font-size:18px; font-weight:bold; color:#FF3B1D;">10%</div>
-      <div style="font-size:8px; color:#888;">bearish</div>
-    </div>
-  </div>
-
-  <div style="display:flex; gap:12px; justify-content:center;">
-    <div style="text-align:center;">
-      <div style="font-size:14px; font-weight:bold; color:#A0A0AA;">42</div>
-      <div style="font-size:8px; color:#888;">Sources</div>
+      <div style="font-size:16px; font-weight:bold; color:#00C96C;">62%</div>
+      <div style="font-size:7px; color:#888;">bullish</div>
     </div>
     <div style="width:1px; height:24px; background:#2A2A34;"></div>
     <div style="text-align:center;">
-      <div style="font-size:14px; font-weight:bold; color:#00C96C;">67</div>
-      <div style="font-size:8px; color:#888;">FNG</div>
+      <div style="font-size:16px; font-weight:bold; color:#A0A0AA;">28%</div>
+      <div style="font-size:7px; color:#888;">neutral</div>
     </div>
     <div style="width:1px; height:24px; background:#2A2A34;"></div>
     <div style="text-align:center;">
-      <div style="font-size:14px; font-weight:bold; color:#A0A0AA;">180%</div>
-      <div style="font-size:8px; color:#888;">Chatter</div>
+      <div style="font-size:16px; font-weight:bold; color:#FF3B1D;">10%</div>
+      <div style="font-size:7px; color:#888;">bearish</div>
     </div>
   </div>
-
-  <div style="border:1px solid #3A3A44; background:#0D0D14; padding:4px 10px; margin-top:6px; font-size:10px; color:#A0A0AA;">
-    "Upgrade looking solid. Devs been shipping." — @cryptoking9
+  <!-- quote block -->
+  <div style="border:1px solid #3A3A44; background:#0D0D14; padding:3px 8px; margin-bottom:6px;">
+    <div style="display:flex; gap:4px;">
+      <div style="width:2px; background:#44BBAA; border-radius:0;"></div>
+      <div style="flex:1;">
+        <div style="font-size:9px; color:#A0A0AA;">"Upgrade looking solid. Devs shipping."</div>
+        <div style="font-size:7px; color:#888; text-align:right;">— @cryptoking9</div>
+      </div>
+    </div>
   </div>
-
-  <div class="meta">
-    <span style="width:4px; height:4px; background:#44BBAA; display:inline-block;"></span>
-    scan #1835 · 72% confidence · 4m ago
+  <!-- metrics row -->
+  <div style="display:flex; gap:8px; justify-content:center;">
+    <div style="text-align:center;">
+      <div style="font-size:13px; font-weight:bold; color:#A0A0AA;">42</div>
+      <div style="font-size:7px; color:#888;">Sources</div>
+    </div>
+    <div style="width:1px; height:20px; background:#2A2A34;"></div>
+    <div style="text-align:center;">
+      <div style="font-size:13px; font-weight:bold; color:#00C96C;">67</div>
+      <div style="font-size:7px; color:#888;">FNG</div>
+    </div>
+    <div style="width:1px; height:20px; background:#2A2A34;"></div>
+    <div style="text-align:center;">
+      <div style="font-size:13px; font-weight:bold; color:#A0A0AA;">180%</div>
+      <div style="font-size:7px; color:#888;">Chatter</div>
+    </div>
   </div>
+  <div class="meta"><span style="width:3px; height:3px; background:#44BBAA; border-radius:50%;"></span>scan #1835 · 72% conf · 4m ago</div>
 </div>
 
-<!-- ─── Card 5: INFO ─── -->
+<!-- ─── CARD 5: INFO ─── -->
 <div class="card card-info">
-  <div style="background:linear-gradient(to right,#3388CC,#55AAEE); height:2px; position:absolute; top:0; left:0; right:0;"></div>
-  <div class="hdr">
-    <div class="hdr-icon" style="border-color:#3388CC; color:#3388CC;">ⓣ</div>
-    <div class="hdr-info"><span class="hdr-symbol">BONK <span style="font-size:10px; color:#888;">market</span></span></div>
-    <div class="hdr-time">2h ago</div>
-    <div class="hdr-spark" style="border-color:#3388CC;">
-      <svg width="38" height="12" viewBox="0 0 38 12">
-        <polyline points="0,6 6,5 14,7 22,6 30,5 36,6" fill="none" stroke="#3388CC" stroke-width="1.2"/>
-      </svg>
+  <div style="height:2px; background:linear-gradient(to right,#3388CC,#55AAEE); position:absolute; top:0; left:0; right:0;"></div>
+  <div class="chdr">
+    <div class="chdr-icon" style="border-color:#3388CC; color:#3388CC;">ⓣ</div>
+    <div class="chdr-sym" style="flex:1;">BONK <span style="font-size:9px; color:#888;">market</span></div>
+    <div class="chdr-ago">2h ago</div>
+    <div class="spark" style="border-color:#3388CC;">
+      <svg width="36" height="10" viewBox="0 0 36 10"><polyline points="0,5 6,5 14,6 22,5 30,5 34,5" fill="none" stroke="#3388CC" stroke-width="1"/></svg>
     </div>
   </div>
-
-  <div class="title" style="color:#3388CC;">ⓣ Market Update</div>
-  <div class="summary">BONK trading sideways at $0.000045. Volume steady at $800K. No unusual activity detected across 14 sources.</div>
-
-  <div class="tags">
+  <div style="font-size:14px; font-weight:bold; color:#3388CC; margin:6px 0 4px;">ⓣ Market Update</div>
+  <div style="font-size:10px; color:#A0A0AA; line-height:1.35; margin-bottom:8px;">BONK trading sideways at $0.000045. Volume steady at $800K. No unusual activity.</div>
+  <div style="display:flex; gap:3px; margin-bottom:8px;">
     <span class="tag" style="border-color:#3388CC; color:#3388CC;">ⓣ</span>
     <span class="tag">market</span>
     <span class="tag">routine</span>
   </div>
-
-  <div style="display:flex; gap:12px; justify-content:center;">
+  <div style="display:flex; gap:8px; justify-content:center;">
     <div style="text-align:center;">
-      <div style="font-size:16px; font-weight:bold; color:#A0A0AA;">$0.000045</div>
-      <div style="font-size:8px; color:#888;">Price</div>
+      <div style="font-size:14px; font-weight:bold; color:#A0A0AA;">$0.000045</div>
+      <div style="font-size:7px; color:#888;">Price</div>
     </div>
-    <div style="width:1px; height:26px; background:#2A2A34;"></div>
+    <div style="width:1px; height:22px; background:#2A2A34;"></div>
     <div style="text-align:center;">
-      <div style="font-size:16px; font-weight:bold; color:#A0A0AA;">$800K</div>
-      <div style="font-size:8px; color:#888;">Volume</div>
+      <div style="font-size:14px; font-weight:bold; color:#A0A0AA;">$800K</div>
+      <div style="font-size:7px; color:#888;">Vol</div>
     </div>
-    <div style="width:1px; height:26px; background:#2A2A34;"></div>
+    <div style="width:1px; height:22px; background:#2A2A34;"></div>
     <div style="text-align:center;">
-      <div style="font-size:16px; font-weight:bold; color:#00C96C;">+1.2%</div>
-      <div style="font-size:8px; color:#888;">24h</div>
+      <div style="font-size:14px; font-weight:bold; color:#A0A0AA;">+1.2%</div>
+      <div style="font-size:7px; color:#888;">24h</div>
     </div>
   </div>
+  <div class="meta"><span style="width:3px; height:3px; background:#3388CC; border-radius:50%;"></span>scan #1832 · 65% conf · 12m ago</div>
+</div>
 
-  <div class="meta">
-    <span style="width:4px; height:4px; background:#3388CC; display:inline-block;"></span>
-    scan #1832 · 65% confidence · 12m ago
+</div>
+</div>
+
+<div class="sep"></div>
+
+<!-- ␐␐␐ SECTION 2: ALL BLOCK TYPES (rendered) ␐␐␐ -->
+<div class="sect" id="blocks">
+<h2>⡂ Block Types — Visual Renditions</h2>
+<div class="desc">Every block type rendered as it would actually look in a card, not text descriptions.</div>
+
+<div style="display:flex; flex-direction:column; gap:16px; max-width:480px;">
+
+<!-- BLOCK 1: header -->
+<div style="background:#101018; border:1px solid #2A2A34; padding:10px 14px;">
+  <div style="font-size:9px; color:#888; margin-bottom:5px;">Block: <span style="color:#00BFFF;">header</span></div>
+  <div style="display:flex; align-items:center; gap:6px;">
+    <div style="width:22px; height:22px; background:#0D0D15; border:1px solid #6C3BFF; display:flex; align-items:center; justify-content:center; font-size:10px; color:#6C3BFF;">$</div>
+    <div style="flex:1;">
+      <div style="font-size:14px; font-weight:bold; color:#E0E0EC;">BONK</div>
+      <div style="font-size:8px; color:#888;">Price Alert · 4m ago</div>
+    </div>
+    <div style="border:1px solid #6C3BFF; background:#0D0D15; padding:1px 5px;">
+      <div style="font-size:8px; color:#00C96C;">+12.4%</div>
+    </div>
   </div>
 </div>
 
-</div><!-- /feed-cols -->
+<!-- BLOCK 2: text -->
+<div style="background:#101018; border:1px solid #2A2A34; padding:10px 14px;">
+  <div style="font-size:9px; color:#888; margin-bottom:5px;">Block: <span style="color:#00BFFF;">text</span></div>
+  <div style="font-size:11px; color:#A0A0AA; line-height:1.4;">
+    BONK price dropped <span style="color:#FF3B1D;">22%</span> in the last 2 hours. Trading volume spiked to <span style="color:#E0A000;">$2.1M</span>. The current price of <span style="color:#FF6633;">$0.000040</span> is the lowest in 30 days.
+  </div>
+</div>
 
-<!-- ␐␐␐ DETAIL ␐␐␐ -->
-<div style="width:480px;">
-<div class="detail-panel">
+<!-- BLOCK 3: metric -->
+<div style="background:#101018; border:1px solid #2A2A34; padding:10px 14px;">
+  <div style="font-size:9px; color:#888; margin-bottom:5px;">Block: <span style="color:#00BFFF;">metric</span> <span style="color:#888;">· trend: down</span></div>
+  <div style="text-align:center;">
+    <div style="font-size:8px; color:#888;">Current Price</div>
+    <div style="display:flex; align-items:center; gap:6px; justify-content:center;">
+      <span style="font-size:26px; font-weight:bold; color:#FF6633;">$0.000040</span>
+      <span style="font-size:16px; color:#FF3B1D;">↓22%</span>
+    </div>
+    <div style="font-size:8px; color:#888;">vs 24h ago: $0.000052</div>
+  </div>
+</div>
 
-  <div style="display:flex; align-items:center; gap:8px;">
-    <span style="font-size:22px;">🐋</span>
-    <div>
-      <div style="font-size:20px; color:#E0E0EC; font-weight:bold;">BONK · Whale Activity</div>
-      <div style="font-size:10px; color:#888;">detail view · card #1842 · scan 14s ago</div>
+<!-- BLOCK 4: metrics_row -->
+<div style="background:#101018; border:1px solid #2A2A34; padding:10px 14px;">
+  <div style="font-size:9px; color:#888; margin-bottom:5px;">Block: <span style="color:#00BFFF;">metrics_row</span> <span style="color:#888;">· 3 columns</span></div>
+  <div style="display:flex; gap:8px; justify-content:center;">
+    <div style="text-align:center; flex:1; border:1px solid #2A2A34; background:#0D0D13; padding:3px 0;">
+      <div style="font-size:18px; font-weight:bold; color:#E0E0EC;">$0.000040</div>
+      <div style="font-size:7px; color:#888;">Price</div>
+    </div>
+    <div style="width:1px; height:28px; background:#2A2A34;"></div>
+    <div style="text-align:center; flex:1; border:1px solid #2A2A34; background:#0D0D13; padding:3px 0;">
+      <div style="font-size:18px; font-weight:bold; color:#E0E0EC;">$2.1M</div>
+      <div style="font-size:7px; color:#888;">Volume</div>
+    </div>
+    <div style="width:1px; height:28px; background:#2A2A34;"></div>
+    <div style="text-align:center; flex:1; border:1px solid #2A2A34; background:#0D0D13; padding:3px 0;">
+      <div style="font-size:18px; font-weight:bold; color:#FF3B1D;">-22%</div>
+      <div style="font-size:7px; color:#888;">24h Chng</div>
     </div>
   </div>
+</div>
 
-  <div class="sep-light"></div>
-
-  <div style="display:flex; gap:12px;">
-    <div style="flex:1;">
-      <div style="font-size:10px; color:#888;">Timeline</div>
-      <div style="margin-top:4px; font-size:9px; line-height:1.8;">
-        <span style="color:#FF0044;">◊</span> 14:23 — 12M BONK moved to new wallet<br>
-        <span style="color:#E0A000;">◊</span> 14:15 — 3M BONK consolidated from 4 addr<br>
-        <span style="color:#3388CC;">◊</span> 13:58 — Wallet received 500K from exchange<br>
-        <span style="color:#3388CC;">◊</span> 13:42 — Routine transfer to cold storage
-      </div>
-    </div>
-    <div style="width:1px; background:#2A2A34;"></div>
-    <div style="flex:1;">
-      <div style="font-size:10px; color:#888;">Risk Analysis</div>
-      <div style="margin-top:4px; font-size:9px;">
-        <span style="color:#A0A0AA;">Concentration: <span style="color:#FF3B1D;">HIGH</span></span><br>
-        <span style="color:#A0A0AA;">Whale dominance: <span style="color:#FF3B1D;">62%</span></span><br>
-        <span style="color:#A0A0AA;">Fresh wallet: <span style="color:#E0A000;">72h old</span></span><br>
-        <span style="color:#A0A0AA;">Similar to: <span style="color:#3388CC;">3 prev attacks</span></span>
-      </div>
-    </div>
-  </div>
-
-  <div class="sep-light"></div>
-
-  <div style="border:1px solid #3A3A44; background:#0D0D15; padding:12px; height:120px;">
-    <div style="font-size:8px; color:#888;">BONK Price (7d) · 1h candles</div>
-    <svg width="100%" height="80" viewBox="0 0 420 80" style="margin-top:8px;">
-      <polyline points="0,60 12,55 24,58 36,50 48,45 60,48 72,52 84,40 96,35 108,38 120,42 132,30 144,25 156,28 168,32 180,20 192,18 204,22 216,15 228,10 240,12 252,8 264,5 276,7 288,3 300,4 312,6 324,2 336,4 348,8 360,12 372,10 384,15 396,18 408,22 420,20" fill="none" stroke="#FF0044" stroke-width="1.5"/>
+<!-- BLOCK 5: chart -->
+<div style="background:#101018; border:1px solid #2A2A34; padding:10px 14px;">
+  <div style="font-size:9px; color:#888; margin-bottom:5px;">Block: <span style="color:#00BFFF;">chart</span> <span style="color:#888;">· variant: line</span></div>
+  <div style="border:1px solid #3A3A44; background:#0D0D15; height:48px; padding:2px 4px;">
+    <svg width="100%" height="42" viewBox="0 0 340 42">
+      <defs><linearGradient id="cg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3388CC" stop-opacity="0.25"/><stop offset="100%" stop-color="#3388CC" stop-opacity="0"/></linearGradient></defs>
+      <polyline points="0,38 20,36 40,37 60,34 80,32 100,34 120,30 140,26 160,28 180,24 200,20 220,18 240,16 260,14 280,12 300,14 320,16 340,18" fill="none" stroke="#3388CC" stroke-width="1.3"/>
+      <polygon points="0,38 20,36 40,37 60,34 80,32 100,34 120,30 140,26 160,28 180,24 200,20 220,18 240,16 260,14 280,12 300,14 320,16 340,18 340,42 0,42" fill="url(#cg2)"/>
     </svg>
   </div>
+</div>
 
-  <div class="sep-light"></div>
-
-  <div style="display:flex; gap:16px; justify-content:center;">
-    <div style="text-align:center;">
-      <div style="font-size:18px; font-weight:bold; color:#FF3B1D;">12.0M</div>
-      <div style="font-size:9px; color:#888;">Amount</div>
-    </div>
-    <div style="text-align:center;">
-      <div style="font-size:18px; font-weight:bold; color:#A0A0AA;">$480K</div>
-      <div style="font-size:9px; color:#888;">Value</div>
-    </div>
-    <div style="text-align:center;">
-      <div style="font-size:18px; font-weight:bold; color:#00C96C;">4x</div>
-      <div style="font-size:9px; color:#888;">vs avg</div>
-    </div>
-    <div style="text-align:center;">
-      <div style="font-size:18px; font-weight:bold; color:#FF3B1D;">62%</div>
-      <div style="font-size:9px; color:#888;">Dominance</div>
+<!-- BLOCK 6: callout -->
+<div style="background:#101018; border:1px solid #2A2A34; padding:10px 14px;">
+  <div style="font-size:9px; color:#888; margin-bottom:5px;">Block: <span style="color:#00BFFF;">callout</span> <span style="color:#888;">· variant: danger</span></div>
+  <div style="border:1px solid #FF3B1D; background:#0D0D14; padding:5px 8px; box-shadow:0 0 6px rgba(255,59,29,0.15);">
+    <div style="display:flex; align-items:center; gap:5px;">
+      <span style="font-size:11px; font-weight:bold; color:#FF3B1D;">(✗)</span>
+      <span style="font-size:11px; color:#FF3B1D; flex:1;">Malicious proposal #842 passed — 2.1M BONK drained from treasury.</span>
     </div>
   </div>
+</div>
 
-  <div class="sep-light"></div>
+<!-- BLOCK 7: list -->
+<div style="background:#101018; border:1px solid #2A2A34; padding:10px 14px;">
+  <div style="font-size:9px; color:#888; margin-bottom:5px;">Block: <span style="color:#00BFFF;">list</span></div>
+  <div style="font-size:9px; line-height:1.5;">
+    <div><span style="color:#FF3B1D;">␗</span> <span style="color:#FF3B1D;">2.1M BONK drained</span> — confirmed on-chain</div>
+    <div><span style="color:#E0A000;">␰</span> <span style="color:#E0A000;">67-33 vote split</span> — unusual participation</div>
+    <div><span style="color:#A0A0AA;">␱</span> 3/5 multisig signers from same cohort</div>
+    <div><span style="color:#00C96C;">�iganos</span> 12 new addrs added to allowlist</div>
+  </div>
+</div>
 
-  <div style="display:flex; gap:4px; flex-wrap:wrap;">
+<!-- BLOCK 8: progress -->
+<div style="background:#101018; border:1px solid #2A2A34; padding:10px 14px;">
+  <div style="font-size:9px; color:#888; margin-bottom:5px;">Block: <span style="color:#00BFFF;">progress</span> <span style="color:#888;">· variant: risk meter</span></div>
+  <div style="display:flex; align-items:center; gap:6px;">
+    <span style="font-size:8px; color:#888; width:35px;">Risk</span>
+    <div style="flex:1; height:14px; border:1px solid #3A3A44; background:#0D0D15; overflow:hidden;">
+      <div style="display:flex; height:100%;">
+        <div style="width:60%; background:#E0A000; height:100%;" title="stable: 60%"></div>
+        <div style="width:25%; background:#FF6633; height:100%;" title="elevated: 25%"></div>
+        <div style="width:15%; background:#FF0044; height:100%;" title="critical: 15%"></div>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex; gap:4px; margin-top:3px; font-size:7px; color:#888;">
+    <span style="color:#E0A000;">━</span> stable 60%
+    <span style="color:#FF6633;">━</span> elevated 25%
+    <span style="color:#FF0044;">━</span> critical 15%
+  </div>
+</div>
+
+<!-- BLOCK 9: transfer -->
+<div style="background:#101018; border:1px solid #2A2A34; padding:10px 14px;">
+  <div style="font-size:9px; color:#888; margin-bottom:5px;">Block: <span style="color:#00BFFF;">transfer</span></div>
+  <div style="display:flex; align-items:center; gap:4px; border:1px solid #3A3A44; background:#0D0D14; padding:4px 8px;">
+    <div style="flex:1;">
+      <div style="font-size:7px; color:#888;">FROM</div>
+      <div style="font-size:9px; color:#A0A0AA;">Ox7F3...A2B1</div>
+    </div>
+    <div style="font-size:14px; color:#666;">→</div>
+    <div style="flex:1;">
+      <div style="font-size:7px; color:#888;">TO</div>
+      <div style="font-size:9px; color:#A0A0AA;">Ox3C9...F8D4</div>
+    </div>
+    <div style="border:1px solid #FF3B1D; background:#0D0D14; padding:1px 5px;">
+      <div style="font-size:8px; color:#FF3B1D; font-weight:bold;">12M</div>
+    </div>
+  </div>
+</div>
+
+<!-- BLOCK 10: sentiment -->
+<div style="background:#101018; border:1px solid #2A2A34; padding:10px 14px;">
+  <div style="font-size:9px; color:#888; margin-bottom:5px;">Block: <span style="color:#00BFFF;">sentiment</span></div>
+  <div style="display:flex; gap:4px; height:14px; border:1px solid #3A3A44; background:#0D0D15; overflow:hidden;">
+    <div style="width:62%; background:#00C96C; height:100%;"></div>
+    <div style="width:28%; background:#666666; height:100%;"></div>
+    <div style="width:10%; background:#FF3B1D; height:100%;"></div>
+  </div>
+  <div style="display:flex; justify-content:center; gap:8px; margin-top:3px; font-size:7px; color:#888;">
+    <span style="color:#00C96C;">⬵</span> 62% bull
+    <span style="color:#888;">⬵</span> 28% neutral
+    <span style="color:#FF3B1D;">⬵</span> 10% bear
+  </div>
+  <div style="font-size:8px; color:#888; margin-top:2px;">sources: 42 · FNG: 67</div>
+</div>
+
+<!-- BLOCK 11: quote -->
+<div style="background:#101018; border:1px solid #2A2A34; padding:10px 14px;">
+  <div style="font-size:9px; color:#888; margin-bottom:5px;">Block: <span style="color:#00BFFF;">quote</span></div>
+  <div style="border:1px solid #3A3A44; background:#0D0D14; padding:4px 8px;">
+    <div style="display:flex; gap:5px;">
+      <div style="width:2px; background:#6C3BFF; border-radius:0;"></div>
+      <div style="flex:1;">
+        <div style="font-size:10px; color:#A0A0AA;">"Upgrade looking solid. Devs shipping."</div>
+        <div style="font-size:7px; color:#888; text-align:right; margin-top:2px;">— @cryptoking9</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BLOCK 12: comparison -->
+<div style="background:#101018; border:1px solid #2A2A34; padding:10px 14px;">
+  <div style="font-size:9px; color:#888; margin-bottom:5px;">Block: <span style="color:#00BFFF;">comparison</span></div>
+  <div style="display:flex; gap:6px; justify-content:center; align-items:center;">
+    <div style="flex:1; text-align:center; border:1px solid #3A3A44; background:#0D0D14; padding:4px;">
+      <div style="font-size:7px; color:#888;">Before</div>
+      <div style="font-size:14px; font-weight:bold; color:#E0E0EC;">$0.000052</div>
+      <div style="font-size:8px; color:#A0A0AA;">24h ago</div>
+    </div>
+    <div style="font-size:14px; color:#666;">VS</div>
+    <div style="flex:1; text-align:center; border:1px solid #FF3B1D; background:#0D0D14; padding:4px;">
+      <div style="font-size:7px; color:#888;">After</div>
+      <div style="font-size:14px; font-weight:bold; color:#FF3B1D;">$0.000040</div>
+      <div style="font-size:8px; color:#FF3B1D;">-22% crash</div>
+    </div>
+  </div>
+</div>
+
+<!-- BLOCK 13: timeline -->
+<div style="background:#101018; border:1px solid #2A2A34; padding:10px 14px;">
+  <div style="font-size:9px; color:#888; margin-bottom:5px;">Block: <span style="color:#00BFFF;">timeline</span></div>
+  <div style="font-size:9px; line-height:1.6;">
+    <div><span style="color:#FF0044;">●</span> <span style="color:#FF0044;">14:23</span> 12M BONK moved to new wallet</div>
+    <div><span style="color:#E0A000;">●</span> <span style="color:#E0A000;">14:15</span> 3M BONK consolidated from 4 addrs</div>
+    <div><span style="color:#3388CC;">●</span> <span style="color:#3388CC;">13:58</span> Wallet received 500K from exchange</div>
+    <div><span style="color:#3388CC;">●</span> <span style="color:#3388CC;">13:42</span> Routine transfer to cold storage</div>
+  </div>
+</div>
+
+<!-- BLOCK 14: tags -->
+<div style="background:#101018; border:1px solid #2A2A34; padding:10px 14px;">
+  <div style="font-size:9px; color:#888; margin-bottom:5px;">Block: <span style="color:#00BFFF;">tags</span></div>
+  <div style="display:flex; gap:3px; flex-wrap:wrap;">
     <span class="tag" style="border-color:#3388CC; color:#3388CC;">etherscan</span>
-    <span class="tag" style="border-color:#3388CC; color:#3388CC;">whale tracker</span>
-    <span class="tag" style="border-color:#3388CC; color:#3388CC;">nansen</span>
-    <span class="tag" style="border-color:#3388CC; color:#3388CC;">dex screener</span>
-  </div>
-
-  <div style="font-size:8px; color:#666; margin-top:8px;">
-    card_id: 1842 · confidence: 92% · source_count: 6 · urgency: critical
+    <span class="tag" style="border-color:#FF3B1D; color:#FF3B1D;">whale</span>
+    <span class="tag" style="border-color:#6C3BFF; color:#6C3BFF;">nansen</span>
+    <span class="tag" style="border-color:#3388CC; color:#3388CC;">defillama</span>
+    <span class="tag" style="border-color:#00C96C; color:#00C96C;">coinmarketcap</span>
   </div>
 </div>
+
+<!-- BLOCK 15: grid -->
+<div style="background:#101018; border:1px solid #2A2A34; padding:10px 14px;">
+  <div style="font-size:9px; color:#888; margin-bottom:5px;">Block: <span style="color:#00BFFF;">grid</span> <span style="color:#888;">· 2 cols, 4 cells</span></div>
+  <div style="display:flex; flex-wrap:wrap; gap:4px;">
+    <div style="width:48%; border:1px solid #3A3A44; background:#0D0D14; padding:3px 5px;">
+      <div style="font-size:7px; color:#888;">Supply</div>
+      <div style="font-size:12px; font-weight:bold; color:#E0E0EC;">1.2T</div>
+    </div>
+    <div style="width:48%; border:1px solid #3A3A44; background:#0D0D14; padding:3px 5px;">
+      <div style="font-size:7px; color:#888;">Holders</div>
+      <div style="font-size:12px; font-weight:bold; color:#E0E0EC;">42.1K</div>
+    </div>
+    <div style="width:48%; border:1px solid #3A3A44; background:#0D0D14; padding:3px 5px;">
+      <div style="font-size:7px; color:#888;">Price</div>
+      <div style="font-size:12px; font-weight:bold; color:#FF3B1D;">$0.000040</div>
+    </div>
+    <div style="width:48%; border:1px solid #3A3A44; background:#0D0D14; padding:3px 5px;">
+      <div style="font-size:7px; color:#888;">Volume</div>
+      <div style="font-size:12px; font-weight:bold; color:#00C96C;">$2.1M</div>
+    </div>
+  </div>
 </div>
 
-</div><!-- /feed -->
-</div><!-- /section -->
-
-<div class="sep"></div>
-
-<!-- ␐␐␐ BLOCK REDESIGNS ␐␐␐ -->
-<div class="section" id="blocks">
-<h2>⡂ Block Redesigns — Cyber-Luxe Upgrades</h2>
-<div class="desc">Every block type gets visual upgrades. Here's what changes and why.</div>
-
-<div style="display:flex; gap:16px; flex-wrap:wrap;">
-
-<div class="spec-card">
-  <h4>Card Headers</h4>
-  <div class="d">Sparkline thumbnails + gradient neon top bars</div>
-  <div class="bef">▌ Before: Flat 2px color bar, text-only header</div>
-  <div class="aft">✓ After: Gradient neon bar (2-5px by urgency) + inline SVG sparkline</div>
-</div>
-
-<div class="spec-card">
-  <h4>Metric Blocks</h4>
-  <div class="d">Biger numbers, colored trends, visual weight</div>
-  <div class="bef">▌ Before: 16px value, small trend icon</div>
-  <div class="aft">✓ After: 22-28px bold value, inline colored trend, optional mini sparkline</div>
-</div>
-
-<div class="spec-card">
-  <h4>Metrics Row</h4>
-  <div class="d">Tiler columns with dividers</div>
-  <div class="bef">▌ Before: Blocks of text with flex spacing</div>
-  <div class="aft">✓ After: Vertical divider pipes, aligned values, subtle column bg</div>
-</div>
-
-<div class="spec-card">
-  <h4>Callout Blocks</h4>
-  <div class="d">Neon glow effect + icon + semantic color</div>
-  <div class="bef">▌ Before: 1px border with label</div>
-  <div class="aft">✓ After: Border + glow, bolder icon, 3-line cap with fade</div>
-</div>
-
-<div class="spec-card">
-  <h4>Chart Blocks</h4>
-  <div class="d">Tilinne price history with gradient fill</div>
-  <div class="bef">▌ Before: Simple SVG polyline, no fill</div>
-  <div class="aft">✓ After: Polyline + gradient area fill + axis labels</div>
-</div>
-
-<div class="spec-card">
-  <h4>List / Timeline</h4>
-  <div class="d">Color-coded bullets, gutter rails</div>
-  <div class="bef">▌ Before: Plain text list, uniform color</div>
-  <div class="aft">✓ After: Color-coded bullets (red/yellow/cyan), left gutter rail</div>
-</div>
-
-<div class="spec-card">
-  <h4>Sentiment</h4>
-  <div class="d">Gauge bars with proportional fill</div>
-  <div class="bef">▌ Before: Three numbers with labels</div>
-  <div class="aft">✓ After: Stacked gauge (green+gray+red), proportional widths</div>
-</div>
-
-<div class="spec-card">
-  <h4>Transfer</h4>
-  <div class="d">Visual from→to arrow flow</div>
-  <div class="bef">▌ Before: Plain text "From X to Y"</div>
-  <div class="aft">✓ After: Left box → right box, colored amount badge, truncation</div>
-</div>
-
-<div class="spec-card">
-  <h4>Progress / Risk</h4>
-  <div class="d">Segmented bars with danger zones</div>
-  <div class="bef">▌ Before: Simple single-value bar</div>
-  <div class="aft">✓ After: Multi-segment with color zones (safe→warning→danger)</div>
-</div>
-
-<div class="spec-card">
-  <h4>Quote</h4>
-  <div class="d">Social embed with attribution</div>
-  <div class="bef">▌ Before: Plain text quote</div>
-  <div class="aft">✓ After: Left quote rail, italic text, "— author @source"</div>
+<!-- BLOCK 16: narrative -->
+<div style="background:#101018; border:1px solid #2A2A34; padding:10px 14px;">
+  <div style="font-size:9px; color:#888; margin-bottom:5px;">Block: <span style="color:#00BFFF;">narrative</span></div>
+  <div style="font-size:11px; color:#A0A0AA; line-height:1.4;">
+    BONK is experiencing a <span style="color:#FF3B1D;">sharp decline</span> driven by <span style="color:#E0A000;">panic selling</span> after the governance attack. On-chain data shows <span style="color:#00C96C;">whale accumulation</span> at the bottom. This pattern historically precedes a <span style="color:#FF6633;">recovery bounce</span> within 6-12 hours.
+  </div>
 </div>
 
 </div>
@@ -541,86 +564,64 @@
 
 <div class="sep"></div>
 
-<!-- ␐␐␐ VISUAL SPECS ␐␐␐ -->
-<div class="section" id="specs">
-<h2>⡂ Visual Specifications</h2>
-<div class="desc">Design tokens for the Cyber-Luxe upgrade.</div>
+<!-- ␐␐␐ SECTION 3: DESIGN TOKENS ␐␐␐ -->
+<div class="sect" id="specs">
+<h2>⡂ Design Tokens</h2>
+<div class="desc">Every value in the Cyber-Luxe upgrade, quantified.</div>
 
-<div style="display:flex; gap:32px;">
+<div style="display:flex; gap:24px;">
 
-<div style="flex:1;">
+<div style="flex:1; background:#101018; border:1px solid #2A2A34; padding:16px;">
+  <h3 style="font-size:14px; color:#00BFFF; margin-bottom:8px;">Typography</h3>
+  <div style="font-size:10px; line-height:1.8;">
+    <div>Card title · <span style="font-size:14px; font-weight:bold;">14px bold</span> #E0E0EC</div>
+    <div>Metric hero · <span style="font-size:24px; font-weight:bold;">24-26px bold</span> urgency-colored</div>
+    <div>Block body · <span style="font-size:10px;">10-11px</span> #A0A0AA</div>
+    <div>Labels · <span style="font-size:8px;">8-9px</span> #888</div>
+    <div>Meta · <span style="font-size:7px;">7-8px</span> #666</div>
+  </div>
 
-<h4 style="font-size:13px; color:#00BFFF; margin-bottom:8px;">Typography</h4>
-<div style="font-size:10px; line-height:1.8;">
-  <div>Card title: <strong>15px bold</strong> · #E0E0EC</div>
-  <div>Metric value: <strong>22-28px bold</strong> · urgency-colored</div>
-  <div>Block body: <strong>10-11px</strong> · #A0A0AA</div>
-  <div>Labels/tertiary: <strong>8-9px</strong> · #888</div>
-  <div>Meta footer: <strong>7-8px</strong> · #666</div>
-</div>
-
-<h4 style="font-size:13px; color:#00BFFF; margin-top:16px; margin-bottom:8px;">Neon Glow (box-shadow)</h4>
-<div style="font-size:10px; line-height:1.6;">
-  <div>critical: <span style="color:#FF0044;">0 0 12px(0.2) + 0 0 3px(0.4)</span></div>
-  <div>urgent: <span style="color:#FF6633;">0 0 8px(0.15) + 0 0 2px(0.3)</span></div>
-  <div>alert: <span style="color:#E0A000;">0 0 6px(0.12)</span></div>
-  <div>watch/info: no glow</div>
-</div>
-
-<h4 style="font-size:13px; color:#00BFFF; margin-top:16px; margin-bottom:8px;">Gradient Top Bars</h4>
-<div style="font-size:10px; line-height:1.6;">
-  <div>critical: 5px · linear-gradient(to right, #FF0044, #FF3366)</div>
-  <div>urgent: 3px · linear-gradient(to right, #FF6633, #FF9944)</div>
-  <div>alert: 3px · linear-gradient(to right, #E0A000, #FFC000)</div>
-  <div>watch: 2px · linear-gradient(to right, #44BBAA, #66DDCC)</div>
-  <div>info: 2px · linear-gradient(to right, #3388CC, #55AAEE)</div>
-</div>
-
-</div>
-
-<div style="flex:1;">
-
-<h4 style="font-size:13px; color:#00BFFF; margin-bottom:8px;">Card Anatomy</h4>
-<div style="font-size:10px; line-height:1.8; background:#0D0D15; border:1px solid #2A2A34; padding:10px;">
-  <span style="color:#FF0044;">┌─ gradient neon top bar (2-5px) ───────────────┐</span><br>
-  │ header: [icon] SYMBOL type       sparkline │<br>
-  │ Title: Bold, urgency-colored                │<br>
-  │ Summary: 2-3 lines, secondary color         │<br>
-  │ Tags: pill chips                             │<br>
-  │ Block content (with accent rail)            │<br>
-  │ Block content                                │<br>
-  │ Meta bar: ● confidence · scan · time        │<br>
-  <span style="color:#FF0044;">└──────────────────────────────────────────└</span>
-  <div style="margin-top:6px; font-size:8px; color:#666;">
-    height: 180-320px · padding: 14/16 · rails: 3px colored strip
+  <h3 style="font-size:14px; color:#00BFFF; margin-top:16px; margin-bottom:8px;">Urgency Gradient Bars</h3>
+  <div style="font-size:10px; line-height:1.6;">
+    <div><span style="color:#FF0044;">━</span> critical: 5px · linear-gradient(#FF0044, #FF3366) + glow</div>
+    <div><span style="color:#FF6633;">━</span> urgent: 3px · linear-gradient(#FF6633, #FF9944) + glow</div>
+    <div><span style="color:#E0A000;">━</span> alert: 3px · linear-gradient(#E0A000, #FFC000) + subtle glow</div>
+    <div><span style="color:#44BBAA;">━</span> watch: 2px · linear-gradient(#44BBAA, #66DDCC)</div>
+    <div><span style="color:#3388CC;">━</span> info: 2px · linear-gradient(#3388CC, #55AAEE)</div>
   </div>
 </div>
 
-<h4 style="font-size:13px; color:#00BFFF; margin-top:16px; margin-bottom:8px;">Card Weight by Urgency</h4>
-<div style="font-size:10px; line-height:1.5;">
-  <div>critical: thicker bar(5px) + glow + bolder text colors</div>
-  <div>urgent: medium bar(3px) + subtle glow</div>
-  <div>alert: medium bar(3px) + faint glow</div>
-  <div>watch: slim bar(2px) + no glow</div>
-  <div>info: slim bar(2px) + no glow</div>
-  <div style="margin-top:6px; color:#888;">Weight scales together: bar + glow + color intensity</div>
+<div style="flex:1; background:#101018; border:1px solid #2A2A34; padding:16px;">
+  <h3 style="font-size:14px; color:#00BFFF; margin-bottom:8px;">Card Anatomy</h3>
+  <div style="font-size:9px; line-height:1.6; background:#0D0D15; border:1px solid #2A2A34; padding:8px;">
+    <span style="color:#FF0044;">┌─ gradient top bar (2-5px) �──────────┐</span><br>
+    │ [icon] Symbol type    sparkline │<br>
+    │ Title: urgency-colored, 14px    │<br>
+    │ Summary: 10px, #A0A0AA, 2-3ln   │<br>
+    │ Tags: pill chips, 8px, bordered │<br>
+    │ [3px rail] Block content        │<br>
+    │ ● Meta: 8px, #666              │<br>
+    <span style="color:#FF0044;">└───────────────────────────────────└</span>
+  </div>
+
+  <h3 style="font-size:14px; color:#00BFFF; margin-top:16px; margin-bottom:8px;">Accent Rail Colors</h3>
+  <div style="font-size:9px; line-height:1.5;">
+    <div><span style="color:#6C3BFF; background:#6C3BFF;">⠀</span> text/narrative · purple</div>
+    <div><span style="color:#00C96C; background:#00C96C;">⠀</span> metric/metrics_row · green</div>
+    <div><span style="color:#00BFFF; background:#00BFFF;">⠀</span> chart/progress · cyan</div>
+    <div><span style="color:#E0C000; background:#E0C000;">⠀</span> callout · yellow</div>
+    <div><span style="color:#FF44AA; background:#FF44AA;">⠀</span> list/sentiment · pink</div>
+    <div><span style="color:#FF3B1D; background:#FF3B1D;">⠀</span> transfer · red</div>
+  </div>
 </div>
 
-<h4 style="font-size:13px; color:#00BFFF; margin-top:16px; margin-bottom:8px;">Press / Hover States</h4>
-<div style="font-size:10px; line-height:1.5;">
-  <div>Press: card border brightens 20%</div>
-  <div>Active: glow intensifies slightly</div>
-  <div>Transition: 150ms ease</div>
-</div>
-
-</div>
 </div>
 </div>
 
 <div class="sep"></div>
 
 <div style="font-size:9px; color:#666; text-align:center; margin:24px 0;">
-  Cyber-Luxe v1 · 2026-08-14 · JARVIS · crypto-ai-portfolio mockup<br>
+  Cyber-Luxe v2 · 2026-08-14 · JARVIS · crypto-ai-portfolio design mockup<br>
   <span style="color:#3388CC;">github.com/clodge123/crypto-portfolio-mockups</span>
 </div>
 
