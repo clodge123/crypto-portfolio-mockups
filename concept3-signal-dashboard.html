@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1300, initial-scale=1">
+<title>Concept 3 — The Signal Dashboard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #08080D; color: #E0E0EC; font-family: system-ui, -apple-system, sans-serif; padding: 20px; }
+  .page { max-width: 1100px; margin: 0 auto; }
+
+  h1 { font-size: 24px; color: #6C3BFF; margin-bottom: 2px; }
+  .subtitle { color: #A0A0AA; font-size: 12px; margin-bottom: 2px; }
+  .note { color: #FF44AA; font-size: 10px; margin-bottom: 20px; }
+
+  .section { margin: 40px 0; }
+  .section h2 { font-size: 18px; color: #6C3BFF; margin-bottom: 4px; }
+  .section .tagline { color: #888; font-size: 11px; margin-bottom: 16px; }
+
+  .pf { display: inline-block; width: 390px; background: #0A0A12; border: 1px solid #2A2A34; margin-right: 20px; margin-bottom: 20px; vertical-align: top; }
+  .pl { text-align: center; color: #888; font-size: 9px; margin-top: 4px; }
+
+  .sbar { display: flex; justify-content: space-between; padding: 8px 12px; background: #0D0D15; align-items: center; }
+  .sbar .t { font-size: 11px; color: #888; }
+  .sbar .mood { font-size: 10px; padding: 2px 8px; border-radius: 12px; }
+
+  /* ─── Mood bar ─── */
+  .mood-bar { margin: 0; background: #0D0D15; padding: 6px 12px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #1A1A24; }
+  .mood-bar .label { font-size: 9px; color: #888; margin-right: 8px; }
+  .mood-bar .pips { display: flex; gap: 2px; }
+  .mood-bar .pips .p { width: 24px; height: 4px; border-radius: 2px; }
+
+  /* Scrollbar-like signal indicator */
+  .signal-rail { display: flex; height: 3px; }
+  .signal-rail .seg { flex: 1; }
+
+  /* ─── QUIET MODE CARDS (spacious, narrative-heavy) ─── */
+  .quiet-card { margin: 8px 14px; background: #101018; border: 1px solid #1A1A24; border-radius: 12px; padding: 14px; }
+  .quiet-card .hdr { display: flex; align-items: center; }
+  .quiet-card .hdr .ico { width: 24px; height: 24px; border-radius: 8px; background: #0D0D15; border: 1px solid #333; color: #888; font-size: 11px; text-align: center; }
+  .quiet-card .hdr .nm { font-size: 12px; font-weight: 600; color: #D8D8E4; margin-left: 8px; }
+  .quiet-card .hdr .tm { flex:1; text-align:right; font-size: 9px; color: #666; }
+  .quiet-card .body { margin-top: 10px; }
+  .quiet-card .body .hl { font-size: 18px; font-weight: 500; color: #E8E8F4; line-height: 1.3; }
+  .quiet-card .body .narr { font-size: 13px; color: #B8B8C8; margin-top: 4px; line-height: 1.5; }
+  .quiet-card .body .big-metric { text-align: center; margin-top: 10px; }
+  .quiet-card .body .big-metric .val { font-size: 28px; font-weight: 700; color: #FFF; }
+  .quiet-card .body .big-metric .lab { font-size: 9px; color: #888; }
+
+  /* ─── NOTABLE MODE CARDS (standard density) ─── */
+  .notable-card { margin: 6px 12px; background: #101018; border: 1px solid #2A2A34; border-radius: 10px; overflow: hidden; }
+  .notable-card .nbar { height: 3px; background: var(--nb, #3388CC); }
+  .notable-card .chdr { display: flex; align-items: center; padding: 6px 10px 2px 10px; }
+  .notable-card .chdr .icon { width: 22px; height: 22px; border-radius: 4px; background: #0D0D15; border: 1px solid #6C3BFF; text-align: center; font-size: 9px; color: #6C3BFF; }
+  .notable-card .chdr .sym { font-size: 11px; font-weight: 600; color: #D8D8E4; margin-left: 6px; }
+  .notable-card .chdr .tag { font-size: 8px; padding: 1px 6px; background: #1A1A28; color: #888; border-radius: 3px; margin-left: 6px; }
+  .notable-card .chdr .tm { flex:1; text-align:right; font-size: 8px; color: #666; }
+  .notable-card .cbody { padding: 2px 10px 8px 10px; }
+  .notable-card .cbody .hl { font-size: 14px; font-weight: 600; color: #E0E0EC; }
+  .notable-card .cbody .meta { font-size: 11px; color: #A0A0AA; margin-top: 4px; line-height: 1.4; }
+  .notable-card .cbody .mrow { display: flex; gap: 4px; margin-top: 6px; justify-content: space-around; }
+  .notable-card .cbody .mrow .mcol { flex:1; text-align:center; }
+  .notable-card .cbody .mrow .mcol .mv { font-size: 14px; font-weight:700; color:#FFF; }
+  .notable-card .cbody .mrow .mcol .ml { font-size: 8px; color:#777; }
+
+  /* ─── VOLATILE MODE CARDS (dense, metric-forward) ─── */
+  .volatile-header { margin: 4px 10px; padding: 6px 10px; background: #0D0D15; border: 1px solid #FF3B1D; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; }
+  .volatile-header .hl { font-size: 11px; color: #FFD0D0; font-weight: 700; }
+
+  .vcard { margin: 4px 10px; background: #101018; border: 1px solid #2A2A34; border-radius: 8px; padding: 8px 10px; display: flex; align-items: center; }
+  .vcard .ci { width: 20px; height: 20px; border-radius: 4px; font-size: 9px; background: #0D0D15; border: 1px solid #333; text-align: center; }
+  .vcard .cs { flex: 1; margin-left: 6px; }
+  .vcard .cs .sym { font-size: 10px; font-weight: 600; color: #C8C8D4; }
+  .vcard .cs .sub { font-size: 8px; color: #888; }
+  .vcard .pr { text-align: right; font-size: 13px; font-weight: 700; color: #FFF; margin: 0 6px; }
+  .vcard .ch { text-align: right; font-size: 10px; }
+  .vcard .ch.up { color: #00C96C; }
+  .vcard .ch.dn { color: #FF3B1D; }
+  .vcard .vol { width: 50px; text-align: right; font-size: 8px; color: #888; }
+
+  /* Volume bar visual */
+  .vbar { width: 40px; height: 4px; border-radius: 2px; }
+
+  /* ─── Alert banner ─── */
+  .alert-banner { margin: 0; background: linear-gradient(90deg, #FF3B1D, #FF0044); padding: 6px 12px; display: flex; align-items: center; }
+  .alert-banner .ico { font-size: 11px; color: #FFF; margin-right: 6px; }
+  .alert-banner .msg { font-size: 10px; color: #FFF; font-weight: 600; flex: 1; }
+  .alert-banner .tm { font-size: 8px; color: rgba(255,255,255,0.7); }
+
+  /* Mood indicator */
+  .mood-quiet { background: #44BBAA; color: #0A1A1A; }
+  .mood-notable { background: #3388CC; color: #0A1A1A; }
+  .mood-volatile { background: #FF6633; color: #FFF; }
+
+  /* Nav bar */
+  .nbar { height: 40px; background: #0D0D15; border-top: 1px solid #1A1A24; display: flex; justify-content: space-around; align-items: center; }
+  .nbar .ni { font-size: 9px; color: #666; text-align: center; }
+  .nbar .ni.active { color: #6C3BFF; }
+  .nbar .ni .ico { font-size: 16px; display: block; }
+
+  .legend { margin-top: 20px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .legend .l { display: inline-block; padding: 3px 10px; font-size: 10px; border-radius: 4px; background: #1A1A28; }
+  .legend .l .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+</style>
+</head><body>
+
+<div class="page">
+
+<h1>📶 Concept 3 — The Signal Dashboard</h1>
+<div class="subtitle">The feed changes its visual rhythm based on market conditions. Mood-driven density.</div>
+<div class="note">Quiet → spacious narrative. Notable → standard cards. Volatile → compact metric-forward.</div>
+
+<!-- ══ SCREEN 1: QUIET MODE ══ -->
+<div class="section">
+  <h2>📻 Screen 1 — Quiet Mode</h2>
+  <div class="tagline">Low market activity → generous spacing, narrative-first, one big metric per card</div>
+
+  <div class="pf">
+    <div class="sbar"><span class="t">8:02 AM</span><span class="mood mood-quiet">● Quiet</span></div>
+
+    <!-- Mood indicator bar -->
+    <div class="mood-bar">
+      <span class="label">Signal</span>
+      <div class="pips">
+        <div class="p" style="background:#44BBAA;opacity:1"></div>
+        <div class="p" style="background:#1A1A24;opacity:0.3"></div>
+        <div class="p" style="background:#1A1A24;opacity:0.3"></div>
+        <div class="p" style="background:#1A1A24;opacity:0.3"></div>
+      </div>
+      <span style="flex:1"></span>
+    </div>
+
+    <!-- Quiet card 1: Morning digest -->
+    <div class="quiet-card">
+      <div class="hdr">
+        <div class="ico" style="background:#44BBAA;border-color:#44BBAA;color:#0A1A1A">�</div>
+        <span class="nm">Portfolio</span>
+        <span class="tm">Updated 8m ago</span>
+      </div>
+      <div class="body">
+        <div class="hl">Everything's steady. Your portfolio held firm overnight.</div>
+        <div class="narr">All 12 tracked coins within normal volatility bands. ETH staking rewards added 0.14 ETH. No governance proposals require your attention today. Your next notable event is AIP-42 voting opening in ~18 hours.</div>
+        <div class="big-metric">
+          <span class="val">+0.3%</span>
+          <span class="lab">Portfolio Change (24h)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiet card 2: Single update -->
+    <div class="quiet-card">
+      <div class="hdr">
+        <div class="ico">📰</div>
+        <span class="nm">BTC</span>
+        <span class="tm">14h ago</span>
+      </div>
+      <div class="body">
+        <div class="hl">Bitcoin mining difficulty adjusted +1.2%</div>
+        <div class="narr">Within normal parameters. Hashrate stable at 398 EH/s. No impact on holdings. Next adjustment window in ~13 days.</div>
+        <div class="big-metric">
+          <span class="val">398 EH/s</span>
+          <span class="lab">Network Hashrate</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiet card 3: Staking -->
+    <div class="quiet-card">
+      <div class="hdr">
+        <div class="ico" style="background:#00C96C;border-color:#00C96C;color:#FFF">�</div>
+        <span class="nm">ETH</span>
+        <span class="tm">2h ago</span>
+      </div>
+      <div class="body">
+        <div class="hl">Staking rewards accumulated +0.14 ETH</div>
+        <div class="narr">Another reward cycle completed. Your 32 ETH staked through Lido continues performing at baseline APR of 3.2%.</div>
+        <div class="big-metric">
+          <span class="val" style="color:#00C96C">+0.14 ETH</span>
+          <span class="lab">Accumulated Rewards</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="nbar">
+      <div class="ni active"><span class="ico">📶</span>Feed</div>
+      <div class="ni"><span class="ico">📋</span>Portfolio</div>
+      <div class="ni"><span class="ico">🔔</span>Alerts</div>
+      <div class="ni"><span class="ico">👤</span>Profile</div>
+    </div>
+  </div>
+  <div class="pl">Quiet mode — spacious + narrative + 1 hero metric each</div>
+
+  <!-- ══ SCREEN 2: NOTABLE MODE ══ -->
+  <div class="pf">
+    <div class="sbar"><span class="t">9:41 AM</span><span class="mood mood-notable">● Notable</span></div>
+
+    <div class="mood-bar">
+      <span class="label">Signal</span>
+      <div class="pips">
+        <div class="p" style="background:#44BBAA;opacity:0.5"></div>
+        <div class="p" style="background:#3388CC;opacity:1"></div>
+        <div class="p" style="background:#1A1A24;opacity:0.3"></div>
+        <div class="p" style="background:#1A1A24;opacity:0.3"></div>
+      </div>
+      <span style="flex:1"></span>
+    </div>
+
+    <!-- Notable card 1 -->
+    <div class="notable-card">
+      <div class="nbar" style="background:#FF44AA"></div>
+      <div class="chdr">
+        <div class="icon">🐳</div><span class="sym">LINK</span><span class="tag" style="color:#FF44AA">Whale</span><span class="tm">12m ago</span>
+      </div>
+      <div class="cbody">
+        <div class="hl">$4.2M LINK whale surfaced — 18-month dormant wallet activated</div>
+        <div class="meta">284,312 LINK consolidated from 3 addresses into Binance cold wallet. Largest single movement on LINK this quarter.</div>
+        <div class="mrow">
+          <div class="mcol"><span class="mv">$4.2M</span><span class="ml">Volume</span></div>
+          <div class="mcol"><span class="mv">3</span><span class="ml">TX</span></div>
+          <div class="mcol"><span class="mv">18mo</span><span class="ml">Dormant</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notable card 2 -->
+    <div class="notable-card">
+      <div class="nbar" style="background:#6C3BFF"></div>
+      <div class="chdr">
+        <div class="icon">�</div><span class="sym">UNI</span><span class="tag" style="color:#6C3BFF">Governance</span><span class="tm">2h ago</span>
+      </div>
+      <div class="cbody">
+        <div class="hl">AIP-42 treasury rebalance headed to vote</div>
+        <div class="meta">12% of USDC treasury → ETH/wstETH. 72% for, 18% against. Voting closes in 3 days.</div>
+        <div class="mrow">
+          <div class="mcol"><span class="mv">72%</span><span class="ml">For</span></div>
+          <div class="mcol"><span class="mv">18%</span><span class="ml">Against</span></div>
+          <div class="mcol"><span class="mv">3d</span><span class="ml">Remaining</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notable card 3 -->
+    <div class="notable-card">
+      <div class="nbar" style="background:#3388CC"></div>
+      <div class="chdr">
+        <div class="icon">📰</div><span class="sym">SOL</span><span class="tag" style="color:#3388CC">News</span><span class="tm">4h ago</span>
+      </div>
+      <div class="cbody">
+        <div class="hl">Solana validators greenlight Firedancer upgrade for Q4</div>
+        <div class="meta">82% validator readiness. 40% TPS improvement expected. Upgrade window opens next week.</div>
+      </div>
+    </div>
+
+    <div class="nbar">
+      <div class="ni active"><span class="ico">📶</span>Feed</div>
+      <div class="ni"><span class="ico">📋</span>Portfolio</div>
+      <div class="ni"><span class="ico">🔔</span>Alerts</div>
+      <div class="ni"><span class="ico">👤</span>Profile</div>
+    </div>
+  </div>
+  <div class="pl">Notable mode — standard density, 3 data points per card</div>
+
+  <!-- ══ SCREEN 3: VOLATILE MODE ══ -->
+  <div class="pf">
+    <div class="sbar"><span class="t">2:15 PM</span><span class="mood mood-volatile">● Volatile</span></div>
+
+    <div class="mood-bar" style="background:#1A0A10">
+      <span class="label">Signal</span>
+      <div class="pips">
+        <div class="p" style="background:#44BBAA;opacity:0.5"></div>
+        <div class="p" style="background:#3388CC;opacity:0.5"></div>
+        <div class="p" style="background:#FF6633;opacity:1"></div>
+        <div class="p" style="background:#FF0044;opacity:1"></div>
+      </div>
+      <span style="flex:1"></span>
+    </div>
+
+    <!-- Alert banner -->
+    <div class="alert-banner">
+      <span class="ico">⚠</span>
+      <span class="msg">Market downturn: 5 of 6 coins in the red. Portfolio -6.4% in 1h</span>
+      <span class="tm">8m ago</span>
+    </div>
+
+    <!-- Volatile compact coin list (dense) -->
+    <div class="vcard" style="border-left: 3px solid #FF3B1D">
+      <div class="ci" style="color:#FF3B1D">!</div>
+      <div class="cs">
+        <span class="sym" style="color:#FF3B1D">ETH</span>
+        <span class="sub">Uniswap V3 drain</span>
+      </div>
+      <div class="pr" style="color:#FF3B1D">$2,982</div>
+      <div class="ch dn">-9.1%</div>
+      <div class="vbar" style="background:#FF3B1D;width:35px"></div>
+    </div>
+
+    <div class="vcard">
+      <div class="ci">₿</div>
+      <div class="cs"><span class="sym">BTC</span><span class="sub">Binance</span></div>
+      <div class="pr">$64,102</div>
+      <div class="ch dn">-5.8%</div>
+      <div class="vbar" style="background:#FF6633;width:28px"></div>
+    </div>
+
+    <div class="vcard">
+      <div class="ci">◎</div>
+      <div class="cs"><span class="sym">LINK</span><span class="sub">Cold wallet</span></div>
+      <div class="pr">$19.84</div>
+      <div class="ch dn">-3.1%</div>
+      <div class="vbar" style="background:#E0A000;width:20px"></div>
+    </div>
+
+    <div class="vcard">
+      <div class="ci">�</div>
+      <div class="cs"><span class="sym">SOL</span><span class="sub">Staked</span></div>
+      <div class="pr">$138</div>
+      <div class="ch dn">-2.2%</div>
+      <div class="vbar" style="background:#E0A000;width:16px"></div>
+    </div>
+
+    <div class="vcard" style="border-left: 3px solid #00C96C">
+      <div class="ci" style="color:#00C96C">�</div>
+      <div class="cs"><span class="sym" style="color:#00C96C">SHIB</span><span class="sub">Volume spike</span></div>
+      <div class="pr" style="color:#00C96C">$0.00182</div>
+      <div class="ch up">+12.4%</div>
+      <div class="vbar" style="background:#00C96C;width:40px"></div>
+    </div>
+
+    <!-- Urgent card -->
+    <div class="notable-card" style="border: 1.5px solid #FF3B1D">
+      <div class="nbar" style="background:#FF0044"></div>
+      <div class="chdr">
+        <div class="icon" style="background:#FF1A1A;border-color:#FF0044">!</div>
+        <span class="sym">ETH</span>
+        <span class="tag" style="color:#FF3B1D;background:rgba(255,59,29,0.2)">Safety</span>
+        <span class="tm">22m ago</span>
+      </div>
+      <div class="cbody">
+        <div class="hl">42K ETH drained from Uniswap V3 — pattern matches LP withdrawal</div>
+        <div class="meta">3 rapid outflows in 4 minutes. Pool depth dropped 18%. Risk level: High. $125M total volume moved.</div>
+      </div>
+    </div>
+
+    <div class="nbar">
+      <div class="ni active"><span class="ico">📶</span>Feed</div>
+      <div class="ni"><span class="ico">📋</span>Portfolio</div>
+      <div class="ni"><span class="ico">🔔</span>Alerts</div>
+      <div class="ni"><span class="ico">👤</span>Profile</div>
+    </div>
+  </div>
+  <div class="pl">Volatile mode — compact coin rows + alert banner + dense data</div>
+
+  <div class="legend">
+    <div class="l"><span class="dot" style="background:#44BBAA"></span>Quiet — Spacious narrative cards</div>
+    <div class="l"><span class="dot" style="background:#3388CC"></span>Notable — Standard mixed cards</div>
+    <div class="l"><span class="dot" style="background:#FF6633"></span>Volatile — Compact dense rows</div>
+    <div class="l"><span class="dot" style="background:#FF0044"></span>Critical — Alert banner + urgent</div>
+  </div>
+</div>
+
+</div></body></html>

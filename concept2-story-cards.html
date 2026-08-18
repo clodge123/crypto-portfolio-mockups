@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1300, initial-scale=1">
+<title>Concept 2 — The Story Card (Narrative-First)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0A0A12; color: #E8E8F4; font-family: system-ui, -apple-system, sans-serif; padding: 20px; }
+  .page { max-width: 1100px; margin: 0 auto; }
+
+  h1 { font-size: 24px; color: #6C3BFF; margin-bottom: 2px; }
+  .subtitle { color: #A0A0AA; font-size: 12px; margin-bottom: 2px; }
+  .note { color: #FF44AA; font-size: 10px; margin-bottom: 20px; }
+
+  .section { margin: 40px 0; }
+  .section h2 { font-size: 18px; color: #6C3BFF; margin-bottom: 4px; }
+  .section .tagline { color: #888; font-size: 11px; margin-bottom: 16px; }
+
+  .pf { display: inline-block; width: 390px; background: #0D0D15; border: 1px solid #2A2A34; margin-right: 20px; margin-bottom: 20px; vertical-align: top; }
+  .pl { text-align: center; color: #888; font-size: 9px; margin-top: 4px; }
+
+  .sbar { display: flex; justify-content: space-between; padding: 8px 12px; background: #0D0D15; align-items: center; }
+  .sbar .t { font-size: 12px; color: #888; font-weight: 600; letter-spacing: 0.3px; }
+  .sbar .r { font-size: 9px; color: #6C3BFF; font-weight: 500; }
+  .sbar .r::before { content: '◊ '; }
+
+  /* ─── Spotlight Card (full-bled, image-backed) ─── */
+  .spotlight { margin: 8px 12px; border-radius: 14px; overflow: hidden; background: linear-gradient(180deg, #1A0A28, #0D0D15); border: 1px solid #6C3BFF; }
+  .spotlight .gradient { height: 180px; display: flex; flex-direction: column; justify-content: flex-end; padding: 12px 14px; }
+  .spotlight .badge { display: inline-block; font-size: 9px; padding: 2px 10px; background: rgba(108,59,255,0.2); color: #8844FF; border-radius: 20px; margin-bottom: 6px; }
+  .spotlight .hl { font-size: 20px; font-weight: 700; color: #F0ECFC; line-height: 1.2; }
+  .spotlight .hl .em { color: #FF44AA; }
+  .spotlight .sub { font-size: 12px; color: #C8C4D0; margin-top: 4px; line-height: 1.3; }
+  .spotlight .meta-strip { display: flex; gap: 8px; font-size: 9px; color: #888; padding: 4px 14px; background: rgba(13,13,21,0.5); }
+  .spotlight .meta-strip .coin { color: #C8C8D4; font-weight: 600; }
+  .spotlight .meta-strip .urgency { color: #FF6633; }
+
+  /* ─── Story Card ─── */
+  .story-card { margin: 6px 12px; background: #111120; border: 1px solid #222234; border-radius: 12px; overflow: hidden; }
+
+  .story-card .chdr { display: flex; align-items: center; padding: 8px 12px 4px 12px; }
+  .story-card .chdr .icon { width: 20px; height: 20px; border-radius: 50%; background: #181830; color: #888; font-size: 10px; text-align: center; }
+  .story-card .chdr .coin { font-size: 11px; font-weight: 600; color: #D8D8E4; margin-left: 6px; }
+  .story-card .chdr .dot { width: 4px; height: 4px; background: #444; border-radius: 50%; margin: 0 6px; }
+  .story-card .chdr .cat { font-size: 9px; color: #9988CC; }
+  .story-card .chdr .tm { flex: 1; text-align: right; font-size: 9px; color: #666; }
+
+  .story-card .cbody { padding: 2px 12px 10px 12px; }
+
+  /* Pull quote style headline */
+  .story-card .pq { font-size: 16px; font-weight: 500; color: #E0E0F0; line-height: 1.3; font-family: system-ui, sans-serif; }
+  .story-card .pq::before { content: '"'; font-size: 28px; color: #6C3BFF; }
+  .story-card .pq .highlight { color: #00C96C; }
+  .story-card .pq .warn { color: #E0A000; }
+
+  .story-card .narr { font-size: 12px; color: #B8B8C8; margin-top: 6px; line-height: 1.5; }
+
+  /* Data strip at bottom */
+  .story-card .dstrip { display: flex; gap: 4px; margin-top: 8px; padding: 4px 0; justify-content: space-around; }
+  .story-card .dstrip .dcol { flex: 1; text-align: center; }
+  .story-card .dstrip .dcol .dv { font-size: 13px; font-weight: 700; color: #FFF; }
+  .story-card .dstrip .dcol .dl { font-size: 8px; color: #777; }
+
+  /* Expand indicator */
+  .story-card .exp { text-align: center; font-size: 8px; color: #666; padding: 2px; }
+  .story-card .exp::before { content: '⏵ '; }
+
+  /* ─── Mini Card ─── */
+  .mini-row { margin: 4px 12px; display: flex; gap: 6px; }
+  .mini-card { flex: 1; background: #111120; border: 1px solid #222234; border-radius: 8px; padding: 8px 10px; }
+  .mini-card .sym { font-size: 10px; color: #C0C0D0; font-weight: 600; }
+  .mini-card .pr { font-size: 15px; color: #FFF; font-weight: 700; margin-top: 2px; }
+  .mini-card .ch { font-size: 9px; color: #00C96C; }
+  .mini-card .meta { font-size: 8px; color: #666; margin-top: 2px; }
+
+  /* Nav bar */
+  .nbar { height: 40px; background: #0D0D15; border-top: 1px solid #222234; display: flex; justify-content: space-around; align-items: center; }
+  .nbar .ni { font-size: 9px; color: #666; text-align: center; }
+  .nbar .ni.active { color: #6C3BFF; }
+  .nbar .ni .ico { font-size: 16px; display: block; }
+
+  .legend { margin-top: 20px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .legend .l { display: inline-block; padding: 3px 10px; font-size: 10px; border-radius: 4px; background: #1A1A28; }
+</style>
+</head><body>
+
+<div class="page">
+
+<h1>🪢 Concept 2 — The Story Card (Narrative-First)</h1>
+<div class="subtitle">Every card sells you a story. Rich typography, pull quotes, visual tiers.</div>
+<div class="note">3 visual tiers: Spotlight → Story → Mini. AI writes headlines; app picks the frame.</div>
+
+<!-- ══ SCREEN 1: Mixed Story Feed �═ -->
+<div class="section">
+  <h2>📖 Screen 1 — Mixed Feed</h2>
+  <div class="tagline">Spotlight whale event + 2 story cards + mini cards in a single scroll</div>
+
+  <div class="pf">
+    <div class="sbar"><span class="t">Tue, Aug 17</span><span class="r">Story Feed</span></div>
+
+    <!-- SPOTLIGHT: Whale move -->
+    <div class="spotlight">
+      <div class="gradient">
+        <div class="badge">🐳 Whale Alert</div>
+        <div class="hl">A <span class="em">$4.2M</span> LINK whale surfaced after 18 months of silence</div>
+        <div class="sub">Cold wallet consolidated 284,312 LINK across 3 transactions. Largest single wallet movement on LINK this quarter.</div>
+      </div>
+      <div class="meta-strip">
+        <span class="coin">� LINK</span>
+        <span>18 months dormant</span>
+        <span class="urgency">Urgent</span>
+        <span>12m ago</span>
+      </div>
+    </div>
+
+    <!-- STORY CARD: Governance -->
+    <div class="story-card">
+      <div class="chdr">
+        <div class="icon">�</div>
+        <span class="coin">UNI</span>
+        <span class="dot"></span>
+        <span class="cat">Governance</span>
+        <span class="tm">2h ago</span>
+      </div>
+      <div class="cbody">
+        <div class="pq">Treasury rebalance proposal <span class="highlight">AIP-42</span> heads to vote</div>
+        <div class="narr">Proposal to diversify 12% of the USDC treasury into ETH/wstETH. If passed, ~$8.2M moves to the new allocation. Voting window closes in 3 days with 72% of votes already cast in favor.</div>
+        <div class="dstrip">
+          <div class="dcol"><span class="dv">72%</span><span class="dl">For</span></div>
+          <div class="dcol"><span class="dv">18%</span><span class="dl">Against</span></div>
+          <div class="dcol"><span class="dv">3d</span><span class="dl">Remaining</span></div>
+        </div>
+        <div class="exp">Tap to vote</div>
+      </div>
+    </div>
+
+    <!-- STORY CARD: Safety -->
+    <div class="story-card">
+      <div class="chdr">
+        <div class="icon">�</div>
+        <span class="coin">ETH</span>
+        <span class="dot"></span>
+        <span class="cat" style="color:#FF6633">Safety</span>
+        <span class="tm">22m ago</span>
+      </div>
+      <div class="cbody">
+        <div class="pq"><span class="warn">42,000 ETH</span> drained from Uniswap V3 pool in rapid succession</div>
+        <div class="narr">Three large outflows from the ETH/wstETH liquidity pool in under 4 minutes. Pattern matches a potential LP withdrawal event. Pool depth dropped 18%.</div>
+        <div class="dstrip">
+          <div class="dcol"><span class="dv">$125M</span><span class="dl">Volume Moved</span></div>
+          <div class="dcol"><span class="dv">3</span><span class="dl">TX in 4m</span></div>
+          <div class="dcol"><span class="dv" style="color:#FF6633">High</span><span class="dl">Risk Level</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mini cards (2-up) -->
+    <div class="mini-row">
+      <div class="mini-card">
+        <span class="sym">BTC</span>
+        <span class="pr">$68,432</span>
+        <span class="ch">+2.1%</span>
+        <div class="meta">24h vol: $28B</div>
+      </div>
+      <div class="mini-card">
+        <span class="sym">ETH</span>
+        <span class="pr">$3,281</span>
+        <span class="ch">+0.8%</span>
+        <div class="meta">24h vol: $14B</div>
+      </div>
+    </div>
+
+    <!-- STORY CARD: News -->
+    <div class="story-card">
+      <div class="chdr">
+        <div class="icon">📰</div>
+        <span class="coin">SOL</span>
+        <span class="dot"></span>
+        <span class="cat" style="color:#3388CC">News</span>
+        <span class="tm">4h ago</span>
+      </div>
+      <div class="cbody">
+        <div class="pq">Solana validators greenlight the Firedancer upgrade</div>
+        <div class="narr">82% of network validators have signaled readiness for the Firedancer performance upgrade. Expected to deliver 40% TPS improvement. Upgrade window opens next week.</div>
+      </div>
+    </div>
+
+    <div class="nbar">
+      <div class="ni active"><span class="ico">📖</span>Feed</div>
+      <div class="ni"><span class="ico">📋</span>Portfolio</div>
+      <div class="ni"><span class="ico">🔔</span>Alerts</div>
+      <div class="ni"><span class="ico">👤</span>Profile</div>
+    </div>
+  </div>
+  <div class="pl">Mixed feed — spotlight hero + story cards + mini cards</div>
+
+  <!-- ══ SCREEN 2: Volatile / Urgent Mode ══ -->
+  <div class="pf">
+    <div class="sbar"><span class="t">2:15 PM</span><span class="r" style="color:#FF3B1D">◆ Market Alert</span></div>
+
+    <div class="spotlight" style="border-color:#FF3B1D;background:linear-gradient(180deg,#1A0A10,#0D0D15)">
+      <div class="gradient" style="min-height:200px">
+        <div class="badge" style="background:rgba(255,59,29,0.2);color:#FF3B1D">⚠ Critical</div>
+        <div class="hl" style="color:#FFD8D8">Broad market downturn — 5 of 6 coins in the red</div>
+        <div class="sub">Combined portfolio down -6.4% in the last hour. ETH leading losses at -9.1%. SHIB is the only green at +12.4%.</div>
+      </div>
+      <div class="meta-strip" style="background:rgba(255,59,29,0.08)">
+        <span class="coin" style="color:#FF3B1D">⚠ Portfolio Alert</span>
+        <span style="color:#FF0044">-6.4% in 1h</span>
+        <span>Push notification sent</span>
+      </div>
+    </div>
+
+    <div class="story-card" style="border-color:#FF3B1D">
+      <div class="chdr">
+        <div class="icon" style="background:#FF1A1A">⚠</div>
+        <span class="coin">ETH</span>
+        <span class="dot"></span>
+        <span class="cat" style="color:#FF3B1D">Safety</span>
+        <span class="tm">8m ago</span>
+      </div>
+      <div class="cbody">
+        <div class="pq" style="color:#FFD0D0"><span class="warn">Unusual DEX outflow</span> — 42K ETH moved in 3 txs</div>
+        <div class="narr">Three rapid outflows from Uniswap v3 ETH/wstETH in 4 minutes. Pattern analysis suggests potential LP withdrawal event. Pool depth dropped 18%.</div>
+        <div class="dstrip">
+          <div class="dcol"><span class="dv">$125M</span><span class="dl">Volume</span></div>
+          <div class="dcol"><span class="dv" style="color:#FF6633">HIGH</span><span class="dl">Risk</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mini-row">
+      <div class="mini-card" style="border-color:#FF3B1D">
+        <span class="sym" style="color:#FF3B1D">ETH</span>
+        <span class="pr" style="color:#FF3B1D">$2,982</span>
+        <span class="ch" style="color:#FF3B1D">-9.1%</span>
+        <div class="meta">24h vol: $14B</div>
+      </div>
+      <div class="mini-card">
+        <span class="sym">SHIB</span>
+        <span class="pr">$0.00182</span>
+        <span class="ch" style="color:#00C96C">+12.4%</span>
+        <div class="meta">Vol spike</div>
+      </div>
+    </div>
+
+    <div class="nbar">
+      <div class="ni active"><span class="ico">📖</span>Feed</div>
+      <div class="ni"><span class="ico">📋</span>Portfolio</div>
+      <div class="ni"><span class="ico">🔔</span>Alerts</div>
+      <div class="ni"><span class="ico">👤</span>Profile</div>
+    </div>
+  </div>
+  <div class="pl">Volatile — urgent spotlight + danger cards</div>
+
+  <!-- ══ SCREEN 3: Quiet / Morning Digest �═ -->
+  <div class="pf">
+    <div class="sbar"><span class="t">8:02 AM</span><span class="r" style="color:#44BBAA">�◆ Good Morning</span></div>
+
+    <!-- Morning digest spotlight -->
+    <div class="spotlight" style="border-color:#44BBAA;background:linear-gradient(180deg,#0A1820,#0D0D15)">
+      <div class="gradient" style="min-height:140px">
+        <div class="badge" style="background:rgba(68,187,170,0.2);color:#44BBAA">� Quiet night</div>
+        <div class="hl" style="color:#D8F0EC">All quiet. Your portfolio held steady overnight</div>
+        <div class="sub">No significant movements. ETH staking rewards accumulated +0.14 ETH. AIP-42 voting opens in 18 hours.</div>
+      </div>
+      <div class="meta-strip">
+        <span class="coin">Portfolio</span>
+        <span>+0.3% overall</span>
+        <span>8h of silence</span>
+      </div>
+    </div>
+
+    <!-- Story: update -->
+    <div class="story-card">
+      <div class="chdr">
+        <div class="icon">�</div>
+        <span class="coin">BTC</span>
+        <span class="dot"></span>
+        <span class="cat" style="color:#3388CC">Network</span>
+        <span class="tm">14h ago</span>
+      </div>
+      <div class="cbody">
+        <div class="pq">Bitcoin mining difficulty adjusted +1.2% overnight</div>
+        <div class="narr">Within normal adjustment range. No impact on holdings. Next difficulty adjustment expected in ~13 days. Hashrate remains stable at 398 EH/s.</div>
+      </div>
+    </div>
+
+    <!-- Mini row: portfolio snapshot -->
+    <div class="mini-row">
+      <div class="mini-card">
+        <span class="sym">BTC</span>
+        <span class="pr">$68,810</span>
+        <span class="ch" style="color:#00C96C">+0.3%</span>
+      </div>
+      <div class="mini-card">
+        <span class="sym">ETH</span>
+        <span class="pr">$3,302</span>
+        <span class="ch" style="color:#00C96C">+0.1%</span>
+      </div>
+      <div class="mini-card">
+        <span class="sym">SOL</span>
+        <span class="pr">$148</span>
+        <span class="ch" style="color:#00C96C">+0.2%</span>
+      </div>
+    </div>
+
+    <div class="nbar">
+      <div class="ni active"><span class="ico">📖</span>Feed</div>
+      <div class="ni"><span class="ico">📋</span>Portfolio</div>
+      <div class="ni"><span class="ico">🔔</span>Alerts</div>
+      <div class="ni"><span class="ico">👤</span>Profile</div>
+    </div>
+  </div>
+  <div class="pl">Quiet night — morning digest + portfolio snapshot</div>
+
+  <div class="legend">
+    <div class="l" style="border:1px solid #6C3BFF;color:#8844FF">Spotlight — Full-bled heroes</div>
+    <div class="l" style="border:1px solid #222234">Story — Narrative cards</div>
+    <div class="l" style="border:1px solid #1A1A24">Mini — Compact snapshot</div>
+  </div>
+</div>
+
+</div></body></html>
