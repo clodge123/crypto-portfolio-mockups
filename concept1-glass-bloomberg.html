@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1300, initial-scale=1">
+<title>Concept 1g — Bloomberg Reboot (Glass Frost)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: linear-gradient(135deg, #0A0E1A 0%, #0D1424 30%, #14182E 60%, #1A1C30 100%);
+    color: #E8E8F4;
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    padding: 20px;
+  }
+  /* Subtle floating particles effect */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background:
+      radial-gradient(ellipse 600px 400px at 10% 20%, rgba(108,59,255,0.06) 0%, transparent 100%),
+      radial-gradient(ellipse 500px 300px at 80% 60%, rgba(0,201,108,0.04) 0%, transparent 100%),
+      radial-gradient(ellipse 400px 500px at 50% 80%, rgba(51,136,204,0.04) 0%, transparent 100%);
+    z-index: -1;
+  }
+
+  .page { max-width: 1100px; margin: 0 auto; }
+
+  h1 { font-size: 24px; color: #6C3BFF; margin-bottom: 2px; }
+  .subtitle { color: #A0A0AA; font-size: 12px; margin-bottom: 2px; }
+  .note { color: #FF44AA; font-size: 10px; margin-bottom: 20px; }
+
+  .section { margin: 40px 0; }
+  .section h2 { font-size: 18px; color: #6C3BFF; margin-bottom: 4px; }
+  .section .tagline { color: #888; font-size: 11px; margin-bottom: 16px; }
+
+  /* ─── GLASS PHONE FRAME ─── */
+  .pf {
+    display: inline-block; width: 390px;
+    background: rgba(12,16,26,0.4);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 24px;
+    margin-right: 20px; margin-bottom: 20px;
+    vertical-align: top;
+    padding: 0;
+    position: relative;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    backdrop-filter: blur(2px);
+  }
+  .pl { text-align: center; color: #888; font-size: 9px; margin-top: 6px; }
+
+  /* ─── STATUS BAR ─── */
+  .sbar {
+    display: flex; justify-content: space-between;
+    padding: 8px 14px;
+    background: rgba(16,20,32,0.6);
+    border-radius: 12px 12px 0 0;
+    align-items: center;
+  }
+  .sbar .t { font-size: 11px; color: #888; font-weight: 500; }
+  .sbar .r { font-size: 9px; color: #00C96C; }
+  .sbar .r::before { content: ''; }
+  .sbar .dot { display: inline-block; width: 6px; height: 6px; background: #00C96C; border-radius: 50%; margin-right: 5px; box-shadow: 0 0 6px rgba(0,201,108,0.4); }
+
+  /* ─── TOP TABS ─── */
+  .top-tabs {
+    display: flex; gap: 0; padding: 0;
+    background: rgba(16,20,32,0.5);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .top-tabs .tab {
+    padding: 8px 14px; font-size: 10px; color: #777;
+    cursor: pointer;
+    position: relative;
+  }
+  .top-tabs .tab.active {
+    color: #6C3BFF;
+  }
+  .top-tabs .tab.active::after {
+    content: '';
+    position: absolute; bottom: 0; left: 20%; width: 60%; height: 2px;
+    background: #6C3BFF; border-radius: 1px;
+  }
+  .top-tabs .tab.alert { color: #FF6633; }
+
+  /* ─── PRICE STRIP (glass pills) ─── */
+  .pstrip {
+    display: flex; gap: 4px; padding: 6px 10px;
+    background: rgba(16,20,32,0.4);
+  }
+  .pcoin {
+    display: inline-block; padding: 4px 10px;
+    background: rgba(18,24,36,0.5); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px; min-width: 74px; text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .pcoin .sym { font-size: 9px; color: #C8C8D4; font-weight: 600; }
+  .pcoin .pr { font-size: 11px; color: #FFF; font-weight: 700; }
+  .pcoin .ch { font-size: 8px; }
+  .pcoin .ch.up { color: #00C96C; }
+  .pcoin .ch.dn { color: #FF3B1D; }
+
+  /* ─── GLASS CARDS ─── */
+  .card {
+    margin: 6px 10px;
+    background: rgba(18,24,38,0.55);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    backdrop-filter: blur(8px);
+  }
+
+  /* Glow top bar */
+  .ctop { height: 3px; border-radius: 14px 14px 0 0; }
+  .ctop.ct-price { background: #00C96C; box-shadow: 0 0 8px rgba(0,201,108,0.3); }
+  .ctop.ct-news { background: #3388CC; box-shadow: 0 0 8px rgba(51,136,204,0.3); }
+  .ctop.ct-governance { background: #6C3BFF; box-shadow: 0 0 8px rgba(108,59,255,0.3); }
+  .ctop.ct-safety { background: #FF3B1D; box-shadow: 0 0 8px rgba(255,59,29,0.3); }
+  .ctop.ct-whale { background: #FF44AA; box-shadow: 0 0 8px rgba(255,68,170,0.3); }
+  .ctop.ct-social { background: #E0C000; box-shadow: 0 0 8px rgba(224,192,0,0.3); }
+  .ctop.ct-report { background: #44BBAA; box-shadow: 0 0 8px rgba(68,187,170,0.3); }
+  .ctop.ct-defi { background: #00BFFF; box-shadow: 0 0 8px rgba(0,191,255,0.3); }
+  .ctop.ct-narrative { background: #8844FF; box-shadow: 0 0 8px rgba(136,68,255,0.3); }
+
+  .chdr { display: flex; align-items: center; padding: 8px 12px 2px 12px; }
+  .chdr .icon {
+    width: 24px; height: 24px; border-radius: 8px;
+    background: rgba(108,59,255,0.15); border: 1px solid rgba(108,59,255,0.3);
+    text-align: center; font-size: 10px; color: #6C3BFF; line-height: 24px;
+    box-shadow: 0 0 8px rgba(108,59,255,0.1);
+  }
+  .chdr .sym { font-size: 11px; font-weight: 700; color: #E0E0EC; margin-left: 8px; }
+  .chdr .tag {
+    font-size: 9px; padding: 2px 9px;
+    background: rgba(42,58,72,0.4); border: 1px solid rgba(255,255,255,0.1);
+    color: #B0B0BC; border-radius: 6px; margin-left: 8px;
+  }
+  .chdr .tm { flex: 1; text-align: right; font-size: 9px; color: rgba(255,255,255,0.35); }
+
+  .cbody { padding: 2px 12px 10px 12px; }
+  .hl { font-size: 14px; font-weight: 700; color: #E8E8F4; line-height: 1.3; }
+  .hl .accent { color: #00C96C; }
+  .hl .accent-p { color: #6C3BFF; }
+
+  .meta { font-size: 10px; color: rgba(168,168,180,0.9); margin-top: 4px; line-height: 1.5; }
+
+  .mrow { display: flex; gap: 4px; margin-top: 8px; justify-content: space-around; }
+  .mcol { flex: 1; text-align: center; }
+  .mcol .mv { font-size: 15px; font-weight: 700; color: #FFF; }
+  .mcol .ml { font-size: 8px; color: rgba(136,136,136,0.7); }
+
+  .chart-mini {
+    height: 28px; margin-top: 6px;
+    background: rgba(16,20,32,0.3); border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 6px; display: flex; align-items: center;
+  }
+  .chart-mini .bar { display: flex; align-items: flex-end; gap: 2px; width: 100%; padding: 2px 6px; }
+  .chart-mini .bar .b { display: inline-block; width: 6px; border-radius: 2px; }
+
+  /* ─── HERO ALERT (glass with glow) ─── */
+  .hero-card {
+    margin: 6px 10px;
+    background: rgba(26,16,32,0.5);
+    border: 1.5px solid #FF3B1D; border-radius: 14px;
+    box-shadow: 0 0 20px rgba(255,59,29,0.15), 0 4px 16px rgba(0,0,0,0.2);
+    overflow: hidden;
+    backdrop-filter: blur(6px);
+  }
+  .hero-card .chdr { display: flex; align-items: center; padding: 8px 12px; }
+  .hero-card .cbody { padding: 4px 12px 12px 12px; }
+  .hero-card .hl { font-size: 16px; color: #FFD8D8; font-weight: 700; }
+  .hero-card .meta { color: rgba(200,200,212,0.9); }
+  .hero-card .badge {
+    display: inline-block; font-size: 9px; padding: 2px 10px;
+    background: rgba(255,68,51,0.15); border: 1px solid rgba(255,68,51,0.3);
+    color: #FF6633; border-radius: 8px; margin-top: 6px;
+  }
+
+  /* ─── COMPACT 2-UP ─── */
+  .compact-row { margin: 4px 10px; display: flex; gap: 8px; }
+  .compact-card {
+    flex: 1;
+    background: rgba(18,24,38,0.5); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px; padding: 8px 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+    backdrop-filter: blur(4px);
+  }
+  .compact-card .sym { font-size: 10px; color: #C8C8D4; font-weight: 600; }
+  .compact-card .pr { font-size: 13px; color: #FFF; font-weight: 700; }
+  .compact-card .ch { font-size: 9px; }
+  .compact-card .chart-mini { height: 16px; margin-top: 3px; background: rgba(16,20,32,0.2); border: 1px solid rgba(255,255,255,0.04); border-radius: 4px; display: flex; align-items: center; }
+  .compact-card .chart-mini .bar { display: flex; align-items: flex-end; gap: 1px; padding: 1px 4px; }
+  .compact-card .chart-mini .bar .b { width: 5px; border-radius: 1px; }
+
+  /* ─── SUMMARY BAR (glass pill) ─── */
+  .summary-bar {
+    margin: 4px 10px; padding: 5px 12px;
+    background: rgba(16,22,36,0.45); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .summary-bar .lbl { font-size: 9px; color: rgba(136,136,136,0.7); }
+  .summary-bar .val { font-size: 11px; color: #FFF; font-weight: 700; }
+  .summary-bar .val.pos { color: #00C96C; }
+  .summary-bar .val.neg { color: #FF3B1D; }
+
+  /* ─── TAB BAR (glass) ─── */
+  .nbar {
+    height: 44px;
+    background: rgba(14,18,30,0.5);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    border-radius: 0 0 24px 24px;
+    display: flex; justify-content: space-around; align-items: center;
+  }
+  .nbar .ni { font-size: 9px; color: rgba(102,102,102,0.7); text-align: center; }
+  .nbar .ni.active { color: #6C3BFF; }
+  .nbar .ni .ico { font-size: 16px; display: block; }
+
+  .legend { margin-top: 20px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .legend .l { display: inline-block; padding: 4px 12px; font-size: 10px; border-radius: 20px; background: rgba(28,36,52,0.4); border: 1px solid rgba(255,255,255,0.06); }
+  .legend .l .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+</style>
+</head><body>
+
+<div class="page">
+
+<h1>📊 Concept 1 — Glass Frost Version</h1>
+<div class="subtitle">Same Bloomberg layout, re-skinned with frosted glass, blur, glow, rounded corners, deep-space background</div>
+<div class="note">6 screens matching the extended Bloomberg concept — glass aesthetic</div>
+
+<!-- ══ SCREEN 1: Normal Day ══ -->
+<div class="section">
+  <h2>📊 Screen 1 — Normal Trading Day</h2>
+  <div class="tagline">Glass pills for price strip + frosted card surfaces + glow accents</div>
+
+  <div class="pf">
+    <div class="sbar">
+      <span class="t">10:23 AM</span>
+      <span><span class="dot"></span><span class="r">Live</span></span>
+    </div>
+    <div class="top-tabs">
+      <div class="tab active">Feed</div>
+      <div class="tab">Portfolio</div>
+      <div class="tab">Alerts</div>
+      <div class="tab">Search</div>
+    </div>
+
+    <div class="pstrip">
+      <div class="pcoin"><span class="sym">BTC</span><span class="pr">$68,432</span><span class="ch up">+2.1%</span></div>
+      <div class="pcoin"><span class="sym">ETH</span><span class="pr">$3,281</span><span class="ch up">+0.8%</span></div>
+      <div class="pcoin"><span class="sym">SOL</span><span class="pr">$147</span><span class="ch dn">-1.3%</span></div>
+      <div class="pcoin"><span class="sym">LINK</span><span class="pr">$18.42</span><span class="ch up">+5.2%</span></div>
+      <div class="pcoin"><span class="sym">UNI</span><span class="pr">$9.87</span><span class="ch dn">-0.4%</span></div>
+      <div class="pcoin"><span class="sym">AAVE</span><span class="pr">$92</span><span class="ch up">+3.7%</span></div>
+    </div>
+
+    <div class="summary-bar">
+      <span class="lbl">Portfolio 24h</span>
+      <span class="val pos">+1.8%</span>
+      <span class="lbl">Top mover</span>
+      <span class="val pos">LINK +5.2%</span>
+      <span class="lbl">Worst</span>
+      <span class="val neg">SOL -1.3%</span>
+    </div>
+
+    <!-- CARD 1: Whale -->
+    <div class="card">
+      <div class="ctop ct-whale"></div>
+      <div class="chdr">
+        <div class="icon" style="color:#FF44AA;border-color:rgba(255,68,170,0.3);background:rgba(255,68,170,0.12)">🐳</div>
+        <span class="sym">LINK</span><span class="tag" style="color:#FF44AA;border:1px solid rgba(255,68,170,0.3);background:rgba(255,68,170,0.12)">Whale</span>
+        <span class="tm">12m</span>
+      </div>
+      <div class="cbody">
+        <div class="hl"><span class="accent">$4.2M</span> LINK moved to Binance cold wallet</div>
+        <div class="meta">284,312 LINK ($4.2M) from 3 addresses. Largest whale movement in 30 days. Wallet had been dormant 18 months.</div>
+        <div class="chart-mini"><div class="bar">
+          <div class="b" style="height:8px;background:#FF44AA;border-radius:2px"></div>
+          <div class="b" style="height:14px;background:#FF44AA;border-radius:2px"></div>
+          <div class="b" style="height:22px;background:#FF44AA;border-radius:2px"></div>
+          <div class="b" style="height:26px;background:#FF44AA;border-radius:2px"></div>
+          <div class="b" style="height:18px;background:#FF44AA;border-radius:2px"></div>
+          <div class="b" style="height:10px;background:#FF44AA;border-radius:2px"></div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- CARD 2: Governance -->
+    <div class="card">
+      <div class="ctop ct-governance"></div>
+      <div class="chdr">
+        <div class="icon" style="color:#6C3BFF;border-color:rgba(108,59,255,0.3);background:rgba(108,59,255,0.12)">🗳</div>
+        <span class="sym">UNI</span><span class="tag" style="color:#6C3BFF;border:1px solid rgba(108,59,255,0.3);background:rgba(108,59,255,0.12)">Governance</span>
+        <span class="tm">2h</span>
+      </div>
+      <div class="cbody">
+        <div class="hl">AIP-42: Treasury rebalance <span class="accent-p">heads to vote</span></div>
+        <div class="meta">Diversify 12% USDC treasury → ETH/wstETH. 72% for, 18% against. Closes in 3d.</div>
+        <div class="mrow">
+          <div class="mcol"><span class="mv">72%</span><span class="ml">For</span></div>
+          <div class="mcol"><span class="mv">18%</span><span class="ml">Against</span></div>
+          <div class="mcol"><span class="mv">3d</span><span class="ml">Remaining</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 3: News -->
+    <div class="card">
+      <div class="ctop ct-news"></div>
+      <div class="chdr">
+        <div class="icon" style="color:#3388CC;border-color:rgba(51,136,204,0.3);background:rgba(51,136,204,0.12)">📰</div>
+        <span class="sym">SOL</span><span class="tag" style="color:#3388CC;border:1px solid rgba(51,136,204,0.3);background:rgba(51,136,204,0.12)">News</span>
+        <span class="tm">4h</span>
+      </div>
+      <div class="cbody">
+        <div class="hl">Firedancer upgrade greenlit by 82% of Solana validators</div>
+        <div class="meta">40% TPS improvement expected. Upgrade window opens next week.</div>
+      </div>
+    </div>
+
+    <!-- CARD 4: Price -->
+    <div class="card">
+      <div class="ctop ct-price"></div>
+      <div class="chdr">
+        <div class="icon" style="color:#00C96C;border-color:rgba(0,201,108,0.3);background:rgba(0,201,108,0.12)">₿</div>
+        <span class="sym">BTC</span><span class="tag" style="color:#00C96C;border:1px solid rgba(0,201,108,0.3);background:rgba(0,201,108,0.12)">Price</span>
+        <span class="tm">45m</span>
+      </div>
+      <div class="cbody">
+        <div class="hl">Bitcoin broke <span class="accent">$68K</span> — highest in 3 weeks</div>
+        <div class="meta">Driven by $1.2B ETF inflows in last 4 hours. 24h volume at $28.4B.</div>
+        <div class="mrow">
+          <div class="mcol"><span class="mv">$68.4K</span><span class="ml">Price</span></div>
+          <div class="mcol"><span class="mv">$28.4B</span><span class="ml">Volume</span></div>
+          <div class="mcol"><span class="mv" style="color:#00C96C">+2.1%</span><span class="ml">24h</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 5: Brief -->
+    <div class="card">
+      <div class="ctop ct-narrative"></div>
+      <div class="chdr">
+        <div class="icon" style="color:#8844FF;border-color:rgba(136,68,255,0.3);background:rgba(136,68,255,0.12)">📄</div>
+        <span class="sym">Portfolio</span><span class="tag" style="color:#8844FF;border:1px solid rgba(136,68,255,0.3);background:rgba(136,68,255,0.12)">Brief</span>
+        <span class="tm">6h</span>
+      </div>
+      <div class="cbody">
+        <div class="hl">Overnight digest — 3 items need your attention</div>
+        <div class="meta">• AIP-42 voting opens in 3 days<br>• ETH staking rewards +0.14 ETH accumulated<br>• LINK whale movement — monitor for sell pressure</div>
+      </div>
+    </div>
+
+    <div class="nbar">
+      <div class="ni active"><span class="ico">📊</span>Feed</div>
+      <div class="ni"><span class="ico">📋</span>Portfolio</div>
+      <div class="ni"><span class="ico">🔔</span>Alerts</div>
+      <div class="ni"><span class="ico">👤</span>Profile</div>
+    </div>
+  </div>
+  <div class="pl">Normal — glass cards with frosted backdrop + glow</div>
+
+  <!-- ══ SCREEN 2: Alert Mode ══ -->
+  <div class="pf">
+    <div class="sbar">
+      <span class="t">2:15 PM</span>
+      <span><span class="dot" style="background:#FF6633;box-shadow:0 0 6px rgba(255,102,51,0.4)"></span><span class="r" style="color:#FF6633">Alert</span></span>
+    </div>
+    <div class="top-tabs">
+      <div class="tab active" style="color:#FF6633">Feed</div>
+      <div class="tab">Portfolio</div>
+      <div class="tab alert">3 Alerts</div>
+      <div class="tab">Search</div>
+    </div>
+
+    <div class="pstrip">
+      <div class="pcoin"><span class="sym">BTC</span><span class="pr">$64,102</span><span class="ch dn">-5.8%</span></div>
+      <div class="pcoin"><span class="sym">ETH</span><span class="pr">$2,982</span><span class="ch dn">-9.1%</span></div>
+      <div class="pcoin"><span class="sym">SOL</span><span class="pr">$138</span><span class="ch dn">-2.2%</span></div>
+      <div class="pcoin"><span class="sym">LINK</span><span class="pr">$19.84</span><span class="ch dn">-3.1%</span></div>
+      <div class="pcoin"><span class="sym">SHIB</span><span class="pr">$0.00182</span><span class="ch up">+12.4%</span></div>
+    </div>
+
+    <div class="summary-bar" style="border-color:rgba(255,59,29,0.3)">
+      <span class="lbl">Portfolio 1h</span>
+      <span class="val neg">-6.4%</span>
+      <span class="lbl">Most impacted</span>
+      <span class="val neg">ETH -9.1%</span>
+      <span class="lbl">Only green</span>
+      <span class="val pos">SHIB +12.4%</span>
+    </div>
+
+    <div class="hero-card">
+      <div class="chdr">
+        <div class="icon" style="color:#FF0044;border-color:rgba(255,0,68,0.4);background:rgba(255,0,68,0.15)">!</div>
+        <span class="sym">Market-wide</span><span class="tag" style="color:#FF3B1D;border:1px solid rgba(255,59,29,0.3);background:rgba(255,59,29,0.15)">CRITICAL</span>
+        <span class="tm">8m</span>
+      </div>
+      <div class="cbody">
+        <div class="hl">⚠ Broad sell-off: 5 of 6 holdings in the red</div>
+        <div class="meta">Combined portfolio -6.4% in 1 hour. ETH leading losses at -9.1%. Possible market-wide event.</div>
+        <div class="badge">🔔 Push notification sent · 8m ago</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ctop ct-safety"></div>
+      <div class="chdr">
+        <div class="icon" style="color:#FF3B1D;border-color:rgba(255,59,29,0.3);background:rgba(255,59,29,0.12)">⚠</div>
+        <span class="sym">ETH</span><span class="tag" style="color:#FF3B1D;border:1px solid rgba(255,59,29,0.3);background:rgba(255,59,29,0.12)">Safety</span>
+        <span class="tm">22m</span>
+      </div>
+      <div class="cbody">
+        <div class="hl">42K ETH drained from Uniswap V3 — <span class="accent" style="color:#FF3B1D">LP withdrawal pattern</span></div>
+        <div class="meta">3 rapid outflows in 4 minutes. Pool depth dropped 18%. $125M moved.</div>
+        <div class="mrow">
+          <div class="mcol"><span class="mv">$125M</span><span class="ml">Volume</span></div>
+          <div class="mcol"><span class="mv">3</span><span class="ml">TX in 4m</span></div>
+          <div class="mcol"><span class="mv" style="color:#FF3B1D">HIGH</span><span class="ml">Risk</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="compact-row">
+      <div class="compact-card" style="border:1px solid rgba(255,59,29,0.2)">
+        <span class="sym" style="color:#FF6633">SOL</span>
+        <span class="pr" style="color:#FF6633">$138</span>
+        <span class="ch" style="color:#FF3B1D">-2.2%</span>
+        <div class="chart-mini"><div class="bar">
+          <div class="b" style="height:6px;background:#FF6633"></div>
+          <div class="b" style="height:8px;background:#FF6633"></div>
+          <div class="b" style="height:4px;background:#FF6633"></div>
+        </div></div>
+      </div>
+      <div class="compact-card" style="border:1px solid rgba(0,201,108,0.2)">
+        <span class="sym" style="color:#00C96C">SHIB</span>
+        <span class="pr" style="color:#00C96C">$0.00182</span>
+        <span class="ch" style="color:#00C96C">+12.4%</span>
+        <div class="chart-mini"><div class="bar">
+          <div class="b" style="height:4px;background:#00C96C"></div>
+          <div class="b" style="height:8px;background:#00C96C"></div>
+          <div class="b" style="height:14px;background:#00C96C"></div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="nbar">
+      <div class="ni active"><span class="ico">📊</span>Feed</div>
+      <div class="ni"><span class="ico">📋</span>Portfolio</div>
+      <div class="ni"><span class="ico">🔔</span>Alerts</div>
+      <div class="ni"><span class="ico">👤</span>Profile</div>
+    </div>
+  </div>
+  <div class="pl">Alert — hero glow card + safety + compact losers/greeners</div>
+
+  <!-- ══ SCREEN 3: Portfolio �═ -->
+  <div class="pf">
+    <div class="sbar">
+      <span class="t">10:23 AM</span>
+      <span><span class="dot" style="background:#6C3BFF;box-shadow:0 0 6px rgba(108,59,255,0.3)"></span><span class="r" style="color:#6C3BFF">Portfolio</span></span>
+    </div>
+    <div class="top-tabs">
+      <div class="tab">Feed</div>
+      <div class="tab active">Portfolio</div>
+      <div class="tab">Alerts</div>
+      <div class="tab">Search</div>
+    </div>
+
+    <div class="card" style="border:1px solid rgba(0,201,108,0.2)">
+      <div class="ctop ct-price"></div>
+      <div class="cbody" style="padding:10px 12px">
+        <div class="hl" style="font-size:20px">$142,830 <span class="accent">+1.8%</span></div>
+        <div class="meta">Total portfolio value · 12 coins tracked · 4 chains</div>
+        <div class="mrow">
+          <div class="mcol"><span class="mv">68%</span><span class="ml">BTC</span></div>
+          <div class="mcol"><span class="mv">18%</span><span class="ml">ETH</span></div>
+          <div class="mcol"><span class="mv">8%</span><span class="ml">DeFi</span></div>
+          <div class="mcol"><span class="mv">6%</span><span class="ml">Alts</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="compact-row">
+      <div class="compact-card">
+        <span class="sym">BTC</span><span class="pr">$68,432</span>
+        <span class="ch" style="color:#00C96C">+2.1%</span>
+        <div style="font-size:7px;color:rgba(102,102,102,0.6)">0.85 BTC · $58,167</div>
+      </div>
+      <div class="compact-card">
+        <span class="sym">ETH</span><span class="pr">$3,281</span>
+        <span class="ch" style="color:#00C96C">+0.8%</span>
+        <div style="font-size:7px;color:rgba(102,102,102,0.6)">8.2 ETH · $26,904</div>
+      </div>
+    </div>
+    <div class="compact-row">
+      <div class="compact-card">
+        <span class="sym">SOL</span><span class="pr">$147</span>
+        <span class="ch" style="color:#FF3B1D">-1.3%</span>
+        <div style="font-size:7px;color:rgba(102,102,102,0.6)">42 SOL · $6,174</div>
+      </div>
+      <div class="compact-card">
+        <span class="sym">LINK</span><span class="pr">$18.42</span>
+        <span class="ch" style="color:#00C96C">+5.2%</span>
+        <div style="font-size:7px;color:rgba(102,102,102,0.6)">211 LINK · $3,887</div>
+      </div>
+    </div>
+    <div class="compact-row">
+      <div class="compact-card">
+        <span class="sym">UNI</span><span class="pr">$9.87</span>
+        <span class="ch" style="color:#888">-0.4%</span>
+        <div style="font-size:7px;color:rgba(102,102,102,0.6)">480 UNI · $4,738</div>
+      </div>
+      <div class="compact-card">
+        <span class="sym">AAVE</span><span class="pr">$92</span>
+        <span class="ch" style="color:#00C96C">+3.7%</span>
+        <div style="font-size:7px;color:rgba(102,102,102,0.6)">18 AAVE · $1,656</div>
+      </div>
+    </div>
+
+    <div class="nbar">
+      <div class="ni"><span class="ico">📊</span>Feed</div>
+      <div class="ni active"><span class="ico">📋</span>Portfolio</div>
+      <div class="ni"><span class="ico">🔔</span>Alerts</div>
+      <div class="ni"><span class="ico">👤</span>Profile</div>
+    </div>
+  </div>
+  <div class="pl">Portfolio — glass total + frosted holding pill rows</div>
+</div>
+
+<!-- ══ SCREEN 4-6 ␐═ -->
+<div class="section">
+  <h2>📊 Screens 4-6: Detail, Quiet Morning, Alerts</h2>
+  <div class="tagline">Remaining screens in glass frost style</div>
+
+  <!-- SCREEN 4: Detail -->
+  <div class="pf">
+    <div class="sbar">
+      <span class="t">Detail View</span>
+      <span><span class="dot" style="background:#6C3BFF"></span><span class="r" style="color:#6C3BFF">Back to Feed</span></span>
+    </div>
+
+    <div class="card" style="border:1px solid rgba(108,59,255,0.2);margin:6px 6px">
+      <div class="ctop ct-governance"></div>
+      <div class="chdr">
+        <div class="icon" style="color:#6C3BFF;border-color:rgba(108,59,255,0.3);background:rgba(108,59,255,0.12)">🗳</div>
+        <span class="sym">UNI · Governance</span><span class="tm">2h ago</span>
+      </div>
+      <div class="cbody">
+        <div class="hl" style="font-size:18px">AIP-42: Diversify 12% of treasury into ETH/wstETH</div>
+        <div class="meta" style="font-size:12px;line-height:1.6;margin-top:8px">
+          <b>Proposal:</b> Move 12% of the 68.4M USDC treasury into ETH and wstETH positions to reduce USDC concentration risk.<br><br>
+          <b>Current votes:</b> 72% For (48.2M UNI), 18% Against (12.1M UNI), 10% Abstain (6.7M UNI)<br><br>
+          <b>Voting window:</b> Closes in 2d 14h (Aug 20, 14:00 UTC)<br><br>
+          <b>Your position:</b> 480 UNI eligible. Your vote: <span style="color:#6C3BFF">Not yet cast</span>
+        </div>
+        <div class="chart-mini" style="height:40px;margin-top:8px">
+          <div class="bar" style="gap:4px">
+            <div class="b" style="height:32px;background:#00C96C;border-radius:3px" title="For: 72%"></div>
+            <div class="b" style="height:14px;background:#FF6633;border-radius:3px" title="Against: 18%"></div>
+            <div class="b" style="height:8px;background:#888;border-radius:3px" title="Abstain: 10%"></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px;padding:4px 0">
+          <div style="flex:1;padding:7px;background:rgba(0,201,108,0.15);border:1px solid rgba(0,201,108,0.3);border-radius:10px;text-align:center;font-size:10px;color:#00C96C;font-weight:600">✓ Vote For</div>
+          <div style="flex:1;padding:7px;background:rgba(255,102,51,0.1);border:1px solid rgba(255,102,51,0.25);border-radius:10px;text-align:center;font-size:10px;color:#FF6633">Vote Against</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:8px;color:rgba(200,200,200,0.3);text-align:center;padding:2px 10px">─ Related activity ─</div>
+    <div class="card" style="margin:2px 10px">
+      <div class="ctop ct-whale" style="height:2px"></div>
+      <div class="cbody" style="padding:4px 10px">
+        <div style="font-size:10px;color:rgba(200,200,212,0.8)">Large UNI holder moved 12,000 UNI to Coinbase — may be preparing to vote</div>
+      </div>
+    </div>
+
+    <div class="nbar">
+      <div class="ni active"><span class="ico">📊</span>Feed</div>
+      <div class="ni"><span class="ico">📋</span>Portfolio</div>
+      <div class="ni"><span class="ico">🔔</span>Alerts</div>
+      <div class="ni"><span class="ico">👤</span>Profile</div>
+    </div>
+  </div>
+  <div class="pl">Detail — expanded glass card with full proposal + vote buttons</div>
+
+  <!-- SCREEN 5: Quiet Morning -->
+  <div class="pf">
+    <div class="sbar">
+      <span class="t">8:02 AM</span>
+      <span><span class="dot" style="background:#44BBAA;box-shadow:0 0 6px rgba(68,187,170,0.3)"></span><span class="r" style="color:#44BBAA">Steady</span></span>
+    </div>
+    <div class="top-tabs">
+      <div class="tab active">Feed</div>
+      <div class="tab">Portfolio</div>
+      <div class="tab">Alerts</div>
+      <div class="tab">Search</div>
+    </div>
+
+    <div class="pstrip">
+      <div class="pcoin"><span class="sym">BTC</span><span class="pr">$68,810</span><span class="ch up">+0.3%</span></div>
+      <div class="pcoin"><span class="sym">ETH</span><span class="pr">$3,302</span><span class="ch up">+0.1%</span></div>
+      <div class="pcoin"><span class="sym">SOL</span><span class="pr">$148</span><span class="ch up">+0.2%</span></div>
+      <div class="pcoin"><span class="sym">LINK</span><span class="pr">$18.41</span><span class="ch up">+0.3%</span></div>
+    </div>
+
+    <div class="card" style="border:1px solid rgba(68,187,170,0.15)">
+      <div class="ctop" style="background:#44BBAA;box-shadow:0 0 8px rgba(68,187,170,0.3)"></div>
+      <div class="cbody" style="padding:10px 12px">
+        <div class="hl" style="font-size:16px">☀️ Good morning — your portfolio is stable</div>
+        <div class="meta" style="font-size:12px;margin-top:6px;line-height:1.5">
+          All 12 coins within normal volatility bands. No significant movements overnight.<br><br>
+          <b>Today's highlights:</b><br>
+          • ETH staking: +0.14 ETH accumulated<br>
+          • AIP-42 voting opens in ~18h — 480 UNI eligible<br>
+          • No urgent alerts. Last: 14h ago (BTC difficulty adj.)
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ctop" style="background:#3388CC;box-shadow:0 0 8px rgba(51,136,204,0.2)"></div>
+      <div class="chdr">
+        <div class="icon" style="color:#3388CC;border-color:rgba(51,136,204,0.3);background:rgba(51,136,204,0.12)">📰</div>
+        <span class="sym">BTC</span><span class="tag" style="color:#3388CC;border:1px solid rgba(51,136,204,0.3);background:rgba(51,136,204,0.12)">Network</span>
+        <span class="tm">14h</span>
+      </div>
+      <div class="cbody">
+        <div class="hl">Mining difficulty adjusted +1.2% — within normal range</div>
+        <div class="meta">Hashrate stable at 398 EH/s. Next adjustment in ~13 days.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ctop ct-price"></div>
+      <div class="chdr">
+        <div class="icon" style="color:#00C96C;border-color:rgba(0,201,108,0.3);background:rgba(0,201,108,0.12)">⛃</div>
+        <span class="sym">ETH</span><span class="tag" style="color:#00C96C;border:1px solid rgba(0,201,108,0.3);background:rgba(0,201,108,0.12)">Staking</span>
+        <span class="tm">2h</span>
+      </div>
+      <div class="cbody">
+        <div class="hl">Staking rewards: +0.14 ETH accumulated overnight</div>
+        <div class="meta">32 ETH staked via Lido. APR: 3.2%. Next cycle in ~4h.</div>
+      </div>
+    </div>
+
+    <div class="nbar">
+      <div class="ni active"><span class="ico">📊</span>Feed</div>
+      <div class="ni"><span class="ico">📋</span>Portfolio</div>
+      <div class="ni"><span class="ico">🔔</span>Alerts</div>
+      <div class="ni"><span class="ico">👤</span>Profile</div>
+    </div>
+  </div>
+  <div class="pl">Quiet — glass morning brief + teal glow + updates</div>
+
+  <!-- SCREEN 6: Alerts -->
+  <div class="pf">
+    <div class="sbar">
+      <span class="t">Alerts Center</span>
+      <span><span class="dot" style="background:#FF6633;box-shadow:0 0 6px rgba(255,102,51,0.4)"></span><span class="r" style="color:#FF6633">3 Active</span></span>
+    </div>
+    <div class="top-tabs">
+      <div class="tab">Feed</div>
+      <div class="tab">Portfolio</div>
+      <div class="tab active">Alerts</div>
+      <div class="tab">Search</div>
+    </div>
+
+    <div class="hero-card" style="margin:4px 10px">
+      <div class="cbody" style="padding:8px 12px">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+          <span style="background:#FF0044;width:6px;height:6px;border-radius:50%;box-shadow:0 0 8px rgba(255,0,68,0.4)"></span>
+          <span style="font-size:10px;color:#FF6633;font-weight:600">URGENT</span>
+          <span style="flex:1"></span>
+          <span style="font-size:8px;color:rgba(136,136,136,0.5)">8m ago</span>
+        </div>
+        <div class="hl" style="font-size:13px">Portfolio -6.4%: Broad market sell-off</div>
+        <div class="meta" style="font-size:10px">ETH -9.1%, BTC -5.8%, SOL -2.2%.</div>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid rgba(255,59,29,0.3);margin:2px 10px">
+      <div class="cbody" style="padding:6px 10px">
+        <div style="display:flex;gap:6px">
+          <span style="background:#FF6633;width:5px;height:5px;border-radius:50%"></span>
+          <span style="font-size:10px;color:#FF6633">HIGH</span>
+          <span style="flex:1"></span>
+          <span style="font-size:8px;color:rgba(136,136,136,0.5)">22m</span>
+        </div>
+        <div style="font-size:11px;color:#E0E0EC;margin-top:2px">42K ETH drained from Uniswap V3 — LP withdrawal</div>
+        <div style="font-size:9px;color:rgba(136,136,136,0.6);margin-top:2px">ETH · Safety · $125M · 3 txs in 4m</div>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid rgba(255,68,170,0.3);margin:2px 10px">
+      <div class="cbody" style="padding:6px 10px">
+        <div style="display:flex;gap:6px">
+          <span style="background:#FF44AA;width:5px;height:5px;border-radius:50%"></span>
+          <span style="font-size:10px;color:#FF44AA">WHALE</span>
+          <span style="flex:1"></span>
+          <span style="font-size:8px;color:rgba(136,136,136,0.5)">12m</span>
+        </div>
+        <div style="font-size:11px;color:#E0E0EC;margin-top:2px">$4.2M LINK moved to Binance cold wallet</div>
+        <div style="font-size:9px;color:rgba(136,136,136,0.6);margin-top:2px">LINK · 284K tokens · 18mo dormant</div>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid rgba(108,59,255,0.3);margin:2px 10px;opacity:0.5">
+      <div class="cbody" style="padding:6px 10px">
+        <div style="display:flex;gap:6px">
+          <span style="background:#6C3BFF;width:5px;height:5px;border-radius:50%"></span>
+          <span style="font-size:10px;color:#6C3BFF">GOV</span>
+          <span style="flex:1"></span>
+          <span style="font-size:8px;color:rgba(136,136,136,0.5)">2h</span>
+        </div>
+        <div style="font-size:11px;color:#E0E0EC;margin-top:2px">AIP-42: Treasury rebalance proposal</div>
+        <div style="font-size:9px;color:rgba(136,136,136,0.6);margin-top:2px">UNI · Governance · 3d remaining</div>
+      </div>
+    </div>
+
+    <div style="font-size:9px;color:rgba(200,200,200,0.3);text-align:center;padding:4px 10px;margin-top:2px">─ 2 older alerts archived ─</div>
+
+    <div class="nbar">
+      <div class="ni"><span class="ico">📊</span>Feed</div>
+      <div class="ni"><span class="ico">📋</span>Portfolio</div>
+      <div class="ni active"><span class="ico">🔔</span>Alerts</div>
+      <div class="ni"><span class="ico">👤</span>Profile</div>
+    </div>
+  </div>
+  <div class="pl">Alerts — glass priority list with glow urgency dots</div>
+</div>
+
+<div class="legend">
+  <div class="l"><span class="dot" style="background:#00C96C"></span>Price</div>
+  <div class="l"><span class="dot" style="background:#3388CC"></span>News</div>
+  <div class="l"><span class="dot" style="background:#6C3BFF"></span>Governance</div>
+  <div class="l"><span class="dot" style="background:#FF44AA"></span>Whale</div>
+  <div class="l"><span class="dot" style="background:#FF3B1D"></span>Safety</div>
+  <div class="l"><span class="dot" style="background:#E0C000"></span>Social</div>
+  <div class="l"><span class="dot" style="background:#44BBAA"></span>Report</div>
+  <div class="l"><span class="dot" style="background:#00BFFF"></span>DeFi</div>
+  <div class="l"><span class="dot" style="background:#8844FF"></span>Narrative</div>
+</div>
+
+</div></body></html>
