@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1300, initial-scale=1">
+<title>Night-Sky Constellation — All Card Types (Square Corners)</title>
+<style>
+  /* ============================================================
+     NIGHT-SKY CONSTELLATION — EXPANDED
+     Square corners everywhere. Every card type. Urgency via star
+     signature + card frame, not rounded-glass cheetah.
+     ============================================================ */
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: radial-gradient(ellipse 900px 620px at 22% 18%, rgba(42,52,96,.4) 0%, transparent 66%),
+                radial-gradient(ellipse 720px 500px at 82% 72%, rgba(74,44,128,.28) 0%, transparent 66%),
+                linear-gradient(180deg, #07090F 0%, #0A0D16 55%, #0C0F1A 100%);
+    color:#E9EAF2; font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    min-height:100vh; padding:20px;
+  }
+  .page{ max-width:1260px; margin:0 auto; }
+  h1{ font-size:26px; letter-spacing:1px; color:#E9EAF2; text-shadow:0 0 18px rgba(160,170,255,.28); }
+  .subtitle{ color:rgba(195,200,220,.72); font-size:13px; margin-top:4px; }
+  .note{ color:#A99BFF; font-size:11px; margin-top:4px; text-shadow:0 0 14px rgba(150,125,255,.3); }
+
+  .section{ margin:46px 0; }
+  .section h2{ font-size:20px; color:#DADEEF; }
+  .section .tagline{ color:rgba(195,200,220,.55); font-size:12px; margin:6px 0 18px; }
+
+  /* ── PHONE FRAME (square) ── */
+  .pf{ display:inline-block; width:400px; margin:0 22px 30px 0;
+       background:rgba(6,8,14,.55); border-radius:0; padding:0;
+       box-shadow:0 0 0 3px rgba(255,255,255,.06) inset, 0 14px 40px rgba(0,0,0,.5); }
+  .pl{ text-align:center; color:rgba(195,200,220,.6); font-size:10px; margin-top:10px; }
+
+  .sbar{ display:flex; justify-content:space-between; padding:12px 16px; align-items:center; }
+  .sbar .t{ font-size:12px; color:rgba(195,200,220,.82); font-weight:600; }
+  .sbar .tm{ font-size:10px; color:rgba(150,155,180,.5); }
+  .sbar .dot{ width:8px;height:8px;background:#9BE39B;box-shadow:0 0 12px #9BE39B; }
+
+  /* ── SQUARE CONSTELLATION HERO ── */
+  .const{ position:relative; height:140px;
+          background: radial-gradient(ellipse 230px 130px at 42% 45%, rgba(34,36,78,.55) 0%, transparent 100%); }
+  .st{ position:absolute; width:9px;height:9px;border-radius:50%; }
+  .st.s1{ background:#FFD24A;box-shadow:0 0 14px #FFD24A;left:34%;top:24%;animation:tw 2.8s infinite; }
+  .st.s2{ background:#49D6FF;box-shadow:0 0 14px #49D6FF;left:58%;top:18%;animation:tw 3.4s infinite; }
+  .st.s3{ background:#FF6FA8;box-shadow:0 0 14px #FF6FA8;left:72%;top:46%;animation:tw 3.1s infinite; }
+  .st.s4{ background:#7BFF9E;box-shadow:0 0 14px #7BFF9E;left:46%;top:60%;animation:tw 2.6s infinite; }
+  .st.s5{ background:#C7A2FF;box-shadow:0 0 14px #C7A2FF;left:24%;top:52%;animation:tw 3.7s infinite; }
+  .st.s6{ background:#FFD24A;box-shadow:0 0 14px #FFD24A;left:62%;top:72%;animation:tw 2.9s infinite; }
+  @keyframes tw{0%,100%{opacity:1}50%{opacity:.35}}
+  .alertring{ position:absolute;left:46%;top:60%;width:20px;height:20px;border:1.5px solid #FF6FA8;
+              animation:ring 2.2s infinite; }
+  @keyframes ring{0%{transform:scale(.6);opacity:.9}100%{transform:scale(2.2);opacity:0}}
+  .clabel{ position:absolute;font-size:9px;color:rgba(205,210,230,.78); }
+  .clabel.a{left:30%;top:12%;}.clabel.b{left:55%;top:5%;}.clabel.c{left:69%;top:34%;}
+  .clabel.d{left:43%;top:56%;}.clabel.e{left:13%;top:44%;}.clabel.f{left:59%;top:67%;}
+
+  /* ── FILTER CHIPS (square) ── */
+  .chips{ display:flex;gap:6px;padding:8px 14px;flex-wrap:wrap; }
+  .chip{ padding:5px 14px;font-size:10px;color:rgba(185,190,210,.65);border:1px solid rgba(255,255,255,.13);
+         background:rgba(14,16,26,.5); }
+  .chip.sel{ background:rgba(90,120,255,.18);border-color:rgba(130,150,255,.5);color:#C9CFFF; }
+
+  /* ── CARDS: all in square frames ── */
+  .card{ margin:10px 14px; background:rgba(16,19,30,.58); border:1px solid rgba(255,255,255,.11);
+         padding:12px 14px; position:relative; border-radius:0; box-shadow:0 6px 22px rgba(0,0,0,.35); }
+  .card .glowbar{ height:3px; margin-bottom:10px; }
+  .card.c-price .glowbar{ background:#7BFF9E;box-shadow:0 0 10px #7BFF9E; }
+  .card.c-whale .glowbar{ background:#FF6FA8;box-shadow:0 0 10px #FF6FA8; }
+  .card.c-news  .glowbar{ background:#49D6FF;box-shadow:0 0 10px #49D6FF; }
+  .card.c-gov   .glowbar{ background:#C7A2FF;box-shadow:0 0 10px #C7A2FF; }
+  .card.c-safety .glowbar{ background:#FF6A5E;box-shadow:0 0 10px #FF6A5E; }
+  .card.c-social .glowbar{ background:#FFB84A;box-shadow:0 0 10px #FFB84A; }
+  .card.c-report .glowbar{ background:#5EEEB8;box-shadow:0 0 10px #5EEEB8; }
+
+  .chdr{ display:flex;align-items:center; }
+  .icon{ width:24px;height:24px; background:rgba(80,90,130,.35);text-align:center;
+         font-size:11px;color:rgba(214,219,239,.82);line-height:24px;border:1px solid rgba(255,255,255,.15); }
+  .sym{ font-size:12px;font-weight:700;color:rgba(242,244,252,.96);margin-left:8px; }
+  .tag{ font-size:9px;padding:2px 9px;background:rgba(255,255,255,.07);color:rgba(214,219,239,.76);
+        margin-left:8px; }
+  .tm{ flex:1;text-align:right;font-size:9px;color:rgba(160,165,190,.55); }
+  .title{ font-size:15px;font-weight:600;color:#F5F6FB;margin-top:8px;line-height:1.3; }
+  .body{ font-size:12px;color:rgba(208,213,232,.8);margin-top:6px;line-height:1.5; }
+  .big{ font-size:26px;font-weight:800;color:#F6F7FB; }
+  .chg{ font-size:12px;font-weight:700; }
+  .chg.up{ color:#7BFF9E; }.chg.dn{ color:#FF7A6E; }
+  .mini{ display:flex;align-items:center;gap:10px;margin-top:8px; }
+  .mini .spark{ width:92px;height:34px;position:relative; }
+  .mini .spark b{ position:absolute;bottom:4px;height:1px;background:#7BFF9E;box-shadow:0 0 6px #7BFF9E; }
+  .mini .spark b:nth-child(1){left:0;width:14%;}.mini .spark b:nth-child(2){left:16%;width:16%;}
+  .mini .spark b:nth-child(3){left:34%;width:20%;}.mini .spark b:nth-child(4){left:58%;width:24%;}
+  .mini .spark b:nth-child(5){left:86%;width:12%;}
+  .met{ display:flex;flex-wrap:wrap;gap:8px;margin-top:10px; }
+  .met .m{ flex:1;padding:8px;background:rgba(10,12,20,.42);border:1px solid rgba(255,255,255,.09); }
+  .met .m .k{ font-size:8px;color:rgba(175,180,205,.55); }
+  .met .m .v{ font-size:12px;font-weight:700;color:#EEF1F9; }
+  .foot{ display:flex;justify-content:space-between;margin-top:10px;font-size:9px;color:rgba(160,165,190,.5); }
+  .foot a{ color:#A6D9FF; }
+
+  /* vote bars (governance) */
+  .vbar{ margin-top:10px; }
+  .vbar .row{ display:flex;align-items:center;gap:8px;margin-top:6px; }
+  .vbar .row .lab{ font-size:9px;color:rgba(200,205,225,.7);width:46px; }
+  .vbar .row .bar{ flex:1;height:8px;background:rgba(20,25,40,.3);border:1px solid rgba(255,255,255,.08); }
+  .vbar .row .bar i{ height:8px;background:#C7A2FF;box-shadow:0 0 8px #A98AFF; }
+  .vbar .row .val{ font-size:9px;color:rgba(200,205,225,.7);width:34px;text-align:right; }
+
+  .divider{ height:1px;background:rgba(255,255,255,.06);margin:12px 14px; }
+
+  /* ── SHARE PAGE (square) ── */
+  .share{ width:520px; background:linear-gradient(180deg,#0B0E18 0%,#0D1020 100%);
+          border:1px solid rgba(255,255,255,.13); padding:24px;margin-bottom:30px;
+          box-shadow:0 0 0 3px rgba(255,255,255,.05) inset,0 16px 44px rgba(0,0,0,.5); }
+  .share .top{ display:flex;align-items:center;gap:8px; }
+  .share .brand{ font-size:13px;font-weight:800;color:#DADDF2;letter-spacing:.5px; }
+  .share .brand span{ color:#9CE3A0; }
+  .share .live{ font-size:9px;padding:3px 10px;background:rgba(120,200,130,.15);
+                color:#8FE695;border:1px solid rgba(120,200,130,.35); }
+  .share .big-t{ font-size:22px;font-weight:800;color:#F6F7FB;margin-top:14px;line-height:1.25; }
+  .share .sub-t{ font-size:14px;color:rgba(205,210,230,.78);margin-top:6px;line-height:1.5; }
+  .share .sig{ display:flex;gap:12px;margin-top:16px; }
+  .share .sig .c{ flex:1;background:rgba(14,16,26,.4);border:1px solid rgba(255,255,255,.09);
+                  padding:10px 12px; }
+  .share .sig .c .k{ font-size:8px;color:rgba(175,180,205,.55); }
+  .share .sig .c .v{ font-size:13px;font-weight:700;color:#F0F3F9; }
+  .share .cta{ display:block;margin-top:18px;text-align:center;padding:12px;
+               background:linear-gradient(135deg,rgba(90,110,255,.25),rgba(110,200,150,.2));
+               border:1px solid rgba(120,160,255,.4);color:#D0E4FF;font-size:13px;font-weight:700;
+               box-shadow:0 0 18px rgba(90,110,255,.25); }
+</style>
+</head><body>
+<div class="page">
+  <h1>🧠 CONCEPT 4B — Night-Sky Constellation (Full Set, Square Corners)</h1>
+  <div class="subtitle">All card types in the star-map theme. Square frames everywhere — shaved glass, kept the glow signature.</div>
+  <div class="note">✦ SQUARE corners build · every feed card type · share page</div>
+
+  <div class="section">
+    <h2>Feed — 8 Card Typ(Right sets)</h2>
+    <div class="tagline">price · whale · governance · news · rug/safety · social · report digest · narrative</div>
+    <div class="pf">
+      <div class="sbar"><span class="t">✦ Portfolio Sky</span><span class="tm">Wed · 8:42 PM</span></div>
+      <div class="const">
+        <div class="st s1"></div><div class="clabel a">SOL</div>
+        <div class="st s2"></div><div class="clabel b">ETH</div>
+        <div class="st s3"></div><div class="clabel c">PEPE</div>
+        <div class="st s4"></div><div class="clabel d">JON</div>
+        <div class="alertring"></div>
+        <div class="st s5"></div><div class="clabel e">DEGEN</div>
+        <div class="st s6"></div><div class="clabel f">PENG</div>
+      </div>
+      <div class="chips"><div class="chip sel">All</div><div class="chip">Alerts</div><div class="chip">Price</div><div class="chip">Whales</div></div>
+
+      <!-- 1. WHALE (alert mode) -->
+      <div class="card c-whale">
+        <div class="glowbar"></div>
+        <div class="chdr"><div class="icon">🃏</div><div class="sym">JON</div><div class="tag">WHALE MOVE · ALERT</div><div class="tm">2m</div></div>
+        <div class="title">Whale swept $4.2M SOL — under 8 min</div>
+        <div class="body">Buy cluster of 11 wallets on DexScreener. 38% of volume since the move. Likely coordinated accumulation; flagged ALERT.</div>
+        <div class="met"><div class="m"><div class="k">VOL</div><div class="v">$4.2M</div></div><div class="m"><div class="k">WALLETS</div><div class="v">11</div></div><div class="m"><div class="k">RISK</div><div class="v">ALERT</div></div></div>
+        <div class="foot"><span>· <a>open on-chain</a></span><span><a>share ✦</a></span></div>
+      </div>
+
+      <!-- 2. PRICE -->
+      <div class="card c-price">
+        <div class="glowbar"></div>
+        <div class="chdr"><div class="icon">◆</div><div class="sym">SOL</div><div class="tag">PRICE</div><div class="tm">11m</div></div>
+        <div class="big">$184.20</div>
+        <div class="chg up">▲ +6.4% <span style="font-size:9px;color:rgba(165,170,195,.5)">24h</span></div>
+        <div class="mini"><div class="spark"><b></b><b></b><b></b><b></b><b></b></div>
+          <div><div style="font-size:9px;color:rgba(175,180,205,.55)">Local max ·<br>momentum up</div></div></div>
+        <div class="foot"><span>· <a>history</a></span><span><a>share ✦</a></span></div>
+      </div>
+
+      <!-- 3. GOVERNANCE with vote bars -->
+      <div class="card c-gov">
+        <div class="glowbar"></div>
+        <div class="chdr"><div class="icon">🏛</div><div class="sym">PEPE</div><div class="tag">GOVERNANCE</div><div class="tm">1h</div></div>
+        <div class="title">Proposal #14 — treasury rebalance</div>
+        <div class="body">Vause nears quorum at 61% for / 22% against. Closes in 34h.</div>
+        <div class="vbar">
+          <div class="row"><span class="lab">For</span><span class="bar"><i style="width:61%"></i></span><span class="val">61%</span></div>
+          <div class="row"><span class="lab">Against</span><span class="bar"><i style="width:22%;background:#FF7A6E"></i></span><span class="val">22%</span></div>
+        </div>
+        <div class="foot"><span>· <a>vause</a></span><span><a>share ✦</a></span></div>
+      </div>
+
+      <!-- 4. NEWS -->
+      <div class="card c-news">
+        <div class="glowbar"></div>
+        <div class="chdr"><div class="icon">📰</div><div class="sym">ETH</div><div class="tag">NEWS</div><div class="tm">26m</div></div>
+        <div class="title">EIP-7XXX hits review milestone</div>
+        <div class="body">Core devs merged reference impl; 3 auditors assigned. Momentum up; no risk flags.</div>
+        <div class="foot"><span>· <a>read source</a></span><span><a>share ✦</a></span></div>
+      </div>
+
+      <!-- 5. RUG / SAFETY (critical) -->
+      <div class="card c-safety">
+        <div class="glowbar"></div>
+        <div class="chdr"><div class="icon">⚠</div><div class="sym">DEGEN</div><div class="tag">SAFETY · CRITCAL</div><div class="tm">8m</div></div>
+        <div class="title">Liquidity pulled — possible rug pull</div>
+        <div class="body">Pool LP removed 74% in a single tx. Telegram mods deleted pinned thread. Treat as critically unsafe until verified.</div>
+        <div class="met"><div class="m"><div class="k">LP</div><div class="v">-74%</div></div><div class="m"><div class="k">VOL</div><div class="v">-$1.9M</div></div><div class="m"><div class="k">STATE</div><div class="v">CRITCAL</div></div></div>
+        <div class="foot"><span>· <a>verify on-chain</a></span><span><a>share ✦</a></span></div>
+      </div>
+
+      <!-- 6. SOCIAL SENTIMENT -->
+      <div class="card c-social">
+        <div class="glowbar"></div>
+        <div class="chdr"><div class="icon">𝔙</div><div class="sym">PENG</div><div class="tag">SOCIAL</div><div class="tm">1h</div></div>
+        <div class="title">Mood flipping to bullish on X/TG</div>
+        <div class="body">Mention volume up 3.8x in 90m; sentiment +22. Listing rumors from 2 credible handles; treat as rumor.</div>
+        <div class="foot"><span>· <a>source</a></span><span><a>share ✦</a></span></div>
+      </div>
+
+      <!-- 7. REPORT DIGEST -->
+      <div class="card c-report">
+        <div class="glowbar"></div>
+        <div class="chdr"><div class="icon">🗂</div><div class="sym">DAILY</div><div class="tag">REPORT</div><div class="tm">6h</div></div>
+        <div class="title">Wednesday digest — 2 alerts, 1 watch, 4 quiet</div>
+        <div class="body">JON alert cleared. SOL momentum up. DEGEN flagged unsafe. Full brief inside.</div>
+        <div class="foot"><span>· <a>full brief</a></span><span><a>share ✦</a></span></div>
+      </div>
+    </div>
+    <div class="pl">📱 8 card types · star signature · square frames</div>
+  </div>
+
+  <div class="section">
+    <h2>Square Share Page (the viral card)</h2>
+    <div class="tagline">what a stranger sees on X — personal constellation, square, still gorgeous</div>
+    <div class="share">
+      <div class="top"><span class="brand">✦ PORTFOLIO SKY</span><span class="live">● LIVE</span></div>
+      <div class="big-t">JON just moved — $4.2M whale sweep on Solana</div>
+      <div class="sub-t">Crypto AI Portfolio detected 11 wallets behind the move in the last 8 minutes. Watchlist: SOL · ETH · PEPE · JON · DEGEN · PENG · WIF.</div>
+      <div class="sig">
+        <div class="c"><div class="k">VOLUME</div><div class="v">$4.2M</div></div>
+        <div class="c"><div class="k">WALLETS</div><div class="v">11</div></div>
+        <div class="c"><div class="k">URGENCY</div><div class="v">ALERT</div></div>
+      </div>
+      <div class="cta">✦ Create your own portfolio sky — free</div>
+    </div>
+    <div class="pl">share card — desktop</div>
+  </div>
+
+</div>
+</body></html>

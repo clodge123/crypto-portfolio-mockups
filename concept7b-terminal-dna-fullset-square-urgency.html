@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1300, initial-scale=1">
+<title>Terminal DNA — Expanded + Urgency Color Modes (Square)</title>
+<style>
+  /* ============================================================
+     TERMINAL DNA — EXPANDED
+     Square corners. Different urgency => accent CHANGES color
+     (not always green). Scan-line sweep. LED readouts.
+     ============================================================ */
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: radial-gradient(ellipse 700px 520px at 78% 22%, rgba(26,120,110,.18) 0%, transparent 68%),
+                linear-gradient(180deg, #0B0D10 0%, #0D1014 60%, #0F1218 100%);
+    color:#DDECE6; font-family: system-ui, -apple-system, sans-serif;
+    min-height:100vh; padding:20px;
+  }
+  .page{ max-width:1260px; margin:0 auto; }
+  h1{ font-size:25px; letter-spacing:1px; font-family:system-ui, sans-serif; }
+  .subtitle{ color:rgba(200,208,220,.72); font-size:13px; margin-top:4px; }
+  .note{ color:#5AD48E; font-size:11px; margin-top:4px; }
+
+  .section{ margin:46px 0; }
+  .section h2{ font-size:20px; }
+  .section .tagline{ color:rgba(195,205,216,.55); font-size:12px; margin:6px 0 18px; }
+
+  .pf{ display:inline-block; width:410px; margin:0 22px 30px 0;
+       background:rgba(10,13,17,.72); border-radius:0; padding:0; position:relative;
+       box-shadow:0 0 0 2px rgba(120,220,160,.10) inset, 0 16px 40px rgba(0,0,0,.4); }
+  .pl{ text-align:center; color:rgba(197,207,218,.6); font-size:10px; margin-top:10px; }
+
+  .sbar{ display:flex; justify-content:space-between; padding:13px 16px; align-items:center;
+         background:rgba(8,10,14,.5); }
+  .sbar .t{ font-size:11px; font-family:monospace; color:#C9E2D2; }
+  .sbar .stat{ font-size:9px; font-family:monospace; color:#5AD48E; }
+
+  /* scanning line */
+  .scan{ position:absolute; left:0; right:0; height:2px; z-index:5;
+         background:linear-gradient(90deg,transparent,#ACCFFS,transparent);
+         box-shadow:0 0 12px #ACCFFS; animation:pline 5.5s infinite; }
+  @keyframes pline{ 0%{top:0;opacity:.55}
+                    85%{top:calc(100% - 2px);opacity:.25}
+                    100%{top:calc(100% - 2px);opacity:0} }
+
+  .divider{ height:1px;background:rgba(100,220,160,.18);margin:6px 46px; }
+
+  /* ── URGENCY-COLORED CARDS ──
+     The point: accent is NOT always green. Urgency shifts it:
+     info=gray/gold? watch=amber, alert=orange, urgent/critical=red */
+  .card{ margin:9px 12px; background:rgba(12,15,19,.5); border:1px solid rgba(170,190,200,.14);
+         padding:10px 12px; } /* left accent set per-urgency */
+  .card::before{ content:''; position:absolute; left:-2px; top:8px; bottom:8px; width:2px; }
+
+  /* urgency accents */
+  .card.u-info{    border-color:rgba(170,190,200,.10); }
+  .card.u-info::before{ background:#9FB4C8; box-shadow:0 0 6px #9FB4C8; }
+  .card.u-info .gr{ color:#9FB4C8; } .card.u-info .grt{ border-color:rgba(158,178,196,.16); }
+
+  .card.u-watch{ border-color:rgba(255,190,90,.30); }
+  .card.u-watch::before{ background:#FFBE5A; box-shadow:0 0 8px #FFBE5A; }
+  .card.u-watch .gr{ color:#FFBE5A; } .card.u-watch .grt{ border-color:rgba(255,190,90,.26); }
+
+  .card.u-alert{ border-color:rgba(255,150,70,.4); }
+  .card.u-alert::before{ background:#FF8F46; box-shadow:0 0 8px #FF8F46; }
+  .card.u-alert .gr{ color:#FF8F46; } .card.u-alert .grt{ border-color:rgba(255,150,70,.34); }
+
+  .card.u-critical{ border-color:rgba(255,80,70,.5); }
+  .card.u-critical::before{ background:#FF5046; box-shadow:0 0 10px #FF5046; }
+  .card.u-critical .gr{ color:#FF5046; } .card.u-critical .grt{ border-color:rgba(255,80,70,.4); }
+
+  /* and green still exists for positive/connected */
+  .card.u-ok{ border-color:rgba(90,200,150,.2); }
+  .card.u-ok::before{ background:#5AD48E; box-shadow:0 0 8px #4FD48A; }
+  .card.u-ok .gr{ color:#5AD48E; } .card.u-ok .grt{ border-color:rgba(90,200,150,.18); }
+
+  .chdr{ display:flex;align-items:center; }
+  .icon{ width:20px;height:20px; background:rgba(30,80,60,.25); text-align:center; font-size:10px;
+         line-height:20px; border:1px solid rgba(170,190,200,.18); }
+  .sym{ font-size:11px; font-family:monospace; font-weight:700; margin-left:8px; }
+  .tag{ font-size:8px; padding:1px 8px; background:rgba(20,40,32,.5); margin-left:8px; font-family:monospace; }
+  .tm{ flex:1; text-align:right; font-size:8px; color:rgba(165,180,190,.5); font-family:monospace; }
+
+  .title{ font-size:13px; font-weight:600; margin-top:7px; line-height:1.3; color:#E7F0EA; }
+  .body{ font-size:11px; color:rgba(198,212,222,.78); margin-top:5px; line-height:1.5; }
+  .big{ font-size:23px; font-weight:800; font-family:monospace; color:#EEF6F0; }
+  .chg{ font-size:11px; font-weight:700; font-family:monospace; }
+
+  .led{ display:flex; gap:6px; margin-top:8px; font-family:monospace; font-size:9px; }
+  .led .l{ background:rgba(16,24,20,.35); border:1px solid rgba(170,190,200,.15); padding:3px 8px; }
+  .led .l .k{ color:rgba(165,180,195,.6); }
+  .led .l .v{ color:currentColor; }
+
+  .foot{ display:flex; justify-content:space-between; margin-top:8px; font-size:8px;
+         color:rgba(165,180,190,.5); font-family:monospace; }
+  .foot a{ color:#7FB3E0; }
+
+  /* urgency legend */
+  .legend{ margin:14px 12px; font-family:monospace; font-size:10px; }
+  .legend .row{ display:flex; align-items:center; gap:8px; margin-top:6px; }
+  .legend .sw{ width:12px; height:3px; }
+  .legend .sw.sw-info{ background:#9FB4C8; box-shadow:0 0 6px #9FB4C8; }
+  .legend .sw.sw-ok{ background:#5AD48E; box-shadow:0 0 6px #4FD48A; }
+  .legend .sw.sw-watch{ background:#FFBE5A; box-shadow:0 0 6px #FFBE5A; }
+  .legend .sw.sw-alert{ background:#FF8F46; box-shadow:0 0 6px #FF8F46; }
+  .legend .sw.sw-critical{ background:#FF5046; box-shadow:0 0 6px #FF5046; }
+  .legend .row .lab{ color:rgba(200,210,220,.75); }
+
+  /* share (square) */
+  .share{ width:530px; background:rgba(9,12,16,.75); border:1px solid rgba(170,190,200,.18);
+          padding:24px;margin-bottom:30px; box-shadow:0 14px 40px rgba(0,0,0,.35); }
+  .share .top{ display:flex; align-items:center; gap:8px; font-family:monospace; }
+  .share .brand{ font-size:11px; font-weight:700; color:#C0E9D4; }
+  .share .live{ font-size:9px; padding:2px 9px; background:rgba(60,120,100,.18); color:#5AD48E;
+                border:1px solid rgba(90,200,150,.3); }
+  .share .big{ font-size:21px; font-weight:800; margin-top:14px; line-height:1.25; color:#ECF4EE; }
+  .share .sub{ font-size:13px; color:rgba(198,212,222,.8); margin-top:8px; line-height:1.6; }
+  .share .sig{ display:flex; gap:10px; margin-top:15px; font-family:monospace; }
+  .share .sig .c{ flex:1; background:rgba(16,26,20,.4); border:1px solid rgba(170,190,200,.18); padding:8px 10px; }
+  .share .sig .c .k{ font-size:8px; color:rgba(165,180,195,.6); }
+  .share .sig .c .v{ font-size:13px; font-weight:700; color:#7FE6A0; }
+  .share .cta{ display:block; margin-top:16px; text-align:center; padding:12px;
+               background:rgba(22,44,34,.35); border:1px solid rgba(90,200,150,.4);
+               color:#8DF2B0; font-size:13px; font-weight:700; }
+</style>
+</head><body>
+<div class="page">
+  <h1>�CONCEPT 7B — Terminal DNA (Square + Urgency Color Modes)</h1>
+  <div class="subtitle">Same humanized terminal, but urgency now drives an accent COLOR — not always green. Square corners throughout.</div>
+  <div class="note">governance: green stays for ok/connected; info gray · watch amber · alert orange · critical red</div>
+
+  <div class="section">
+    <h2>Feed — urgency shifts the accent</h2>
+    <div class="tagline">scan line sweeps · left accent bar flips color with urgency · LED readouts</div>
+    <div class="pf">
+      <div class="scan"></div>
+      <div class="sbar"><span class="t">portfolio://live</span><span class="stat">● connected</span></div>
+
+      <!-- URGENCY LEGEND -->
+      <div class="legend">
+        <div class="row"><span class="sw sw-info"></span><span class="lab">info · quiet</span></div>
+        <div class="row"><span class="sw sw-ok"></span><span class="lab">ok · positive/healthy</span></div>
+        <div class="row"><span class="sw sw-watch"></span><span class="lab">watch · worth a look</span></div>
+        <div class="row"><span class="sw sw-alert"></span><span class="lab">alert · act on it</span></div>
+        <div class="row"><span class="sw sw-critical"></span><span class="lab">critical · unsafe/rug</span></div>
+      </div>
+
+      <!-- CRITICAL (red) -->
+      <div class="card u-critical">
+        <div class="chdr"><div class="icon">⚠</div><div class="sym">DEGEN</div><div class="tag grt">critical</div><div class="tm">0:00:08</div></div>
+        <div class="title">Liquidity pulled — possible rug pull</div>
+        <div class="body">LP removed 74% in a single tx; pinned thread deleted.</div>
+        <div class="led"><span class="l gr"><span class="k">lp</span> <span class="v gr">-74%</span></span>
+                        <span class="l gr"><span class="k">vol</span> <span class="v gr">-$1.9M</span></span>
+                        <span class="l gr"><span class="k">state</span> <span class="v gr">critical</span></span></div>
+        <div class="foot"><span>· <a>verify</a></span><span><a>share</a></span></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- ALERT (orange) -->
+      <div class="card u-alert">
+        <div class="chdr"><div class="icon">🃏</div><div class="sym">JON</div><div class="tag grt">alert</div><div class="tm">0:00:02</div></div>
+        <div class="title">$4.2M sweep · 11-wallet cluster</div>
+        <div class="body">Coordinated accumulation; no exits yet — flagged alert.</div>
+        <div class="led"><span class="l gr"><span class="k">vol</span> <span class="v gr">$4.2M</span></span>
+                        <span class="l gr"><span class="k">wl</span> <span class="v gr">11</span></span></div>
+        <div class="foot"><span>· <a>chain</a></span><span><a>share</a></span></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- WATCH (amber) -->
+      <div class="card u-watch">
+        <div class="chdr"><div class="icon">🏛</div><div class="sym">PEPE</div><div class="tag grt">watch</div><div class="tm">1:00:12</div></div>
+        <div class="title">Prop #14 — treasury rebalance nears quorum</div>
+        <div class="led"><span class="l gr"><span class="k">for</span> <span class="v gr">61%</span></span>
+                        <span class="l gr"><span class="k">vs</span> <span class="v gr">22%</span></span>
+                        <span class="l gr"><span class="k">eta</span> <span class="v gr">34h</span></span></div>
+        <div class="foot"><span>· vause</span><span><a>share</a></span></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- OK (green — positive/healthy) -->
+      <div class="card u-ok">
+        <div class="chdr"><div class="icon">◆</div><div class="sym">SOL</div><div class="tag grt">ok</div><div class="tm">0:00:11</div></div>
+        <div class="big">$184.20</div>
+        <div class="chg gr">▲ +6.4% <span style="font-size:8px;color:rgba(165,180,190,.5)">24h</span></div>
+        <div class="foot"><span>local max</span><span><a>share</a></span></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- INFO (gray) -->
+      <div class="card u-info">
+        <div class="chdr"><div class="icon">📰</div><div class="sym">ETH</div><div class="tag grt">info</div><div class="tm">0:00:26</div></div>
+        <div class="title">EIP-7XXX → review milestone</div>
+        <div class="foot"><span>· <a>read</a></span><span><a>share</a></span></div>
+      </div>
+
+    </div>
+    <div class="pl">📱 5 urgency modes · accent flips color · square</div>
+  </div>
+
+  <div class="section">
+    <h2>Critical Share Page</h2>
+    <div class="tagline">the shareable reflects the urgency — red reads as emergency</div>
+    <div class="share" style="border-color:rgba(255,80,70,.45);">
+      <div class="top"><span class="brand" style="color:#FF7A6E;">portfolio//live</span><span class="live" style="color:#FF5046;background:rgba(120,60,50,.2);border-color:rgba(255,80,70,.4);">● 0:00:08</span></div>
+      <div class="big" style="color:#FFC0B8;">DEGEN — liquidity pulled, possible rug pull</div>
+      <div class="sub">LP removed 74% in a single transaction; pinned thread deleted. Verify before touching. Watchlist: SOL · ETH · PEPE · JON · DEGEN · PENG · WIF.</div>
+      <div class="sig">
+        <div class="c"><div class="k">LP</div><div class="v" style="color:#FF6A5E;">-74%</div></div>
+        <div class="c"><div class="k">vol</div><div class="v" style="color:#FF6A5E;">-$1.9M</div></div>
+        <div class="c"><div class="k">urgency</div><div class="v" style="color:#FF6A5E;">critical</div></div>
+      </div>
+      <div class="cta" style="border-color:rgba(255,80,70,.5);color:#FFB0A6;background:rgba(120,40,34,.3);">Create your own — free</div>
+    </div>
+    <div class="pl">share card — critical state (note the red) </div>
+  </div>
+
+</div>
+</body></html>
