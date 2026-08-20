@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280, initial-scale=1">
+<title>Cluster Glyphs — Galaxy Zoom Journey (R2 Living Sky)</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body{
+    background: radial-gradient(ellipse 900px 620px at 22% 18%, rgba(42,52,96,.4) 0%, transparent 66%),
+                radial-gradient(ellipse 720px 500px at 82% 72%, rgba(74,44,128,.28) 0%, transparent 66%),
+                linear-gradient(180deg, #07090F 0%, #0A0D16 55%, #0C0F1A 100%);
+    color:#E9EAF2; font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    min-height:100vh; padding:16px;
+  }
+  .page{ width:100%; margin:0 auto; }
+  h1{ font-size:24px; letter-spacing:1px; color:#E9EAF2; text-shadow:0 0 18px rgba(160,170,255,.28); }
+  .subtitle{ color:rgba(195,200,220,.72); font-size:13px; margin-top:4px; }
+  .note{ color:#A99BFF; font-size:11px; margin-top:4px; text-shadow:0 0 14px rgba(150,125,255,.3); }
+
+  .stage{ margin:34px 0 8px; }
+  .stage h2{ font-size:18px; color:#DADEEF; }
+  .stage .tag{ color:rgba(195,200,220,.55); font-size:12px; margin:4px 0 2px; }
+  .stage .sep{ color:#8E94B4; font-size:11px; margin:2px 0 10px; }
+
+  .canvaswrap{ position:relative; width:100%; height:520px; background:#0A0C14; border:1px solid rgba(120,130,170,.25); }
+  canvas#sky{ width:100%; height:520px; display:block; }
+  .hud{ position:absolute; left:14px; top:12px; font-family:ui-monospace, Consolas, monospace; font-size:12px; color:#C7F2D9;
+        text-shadow:0 0 12px rgba(90,220,150,.5); line-height:1.55; }
+  .hud2{ position:absolute; right:14px; top:12px; font-family:ui-monospace, Consolas, monospace; font-size:11px; color:rgba(200,205,225,.8); line-height:1.6; text-align:right; }
+  .legend{ position:absolute; left:14px; bottom:14px; font-size:11px; color:rgba(205,210,230,.8); line-height:2; }
+  .legend .ac{ color:#FFD24A; } .legend .ah{ color:#FF9E9E; }
+
+  .controls{ display:flex; align-items:center; gap:18px; padding:10px 14px; flex-wrap:wrap;
+             background:rgba(8,10,18,.5); border:1px solid rgba(100,110,150,.2); }
+  .controls label{ font-size:12px; color:rgba(195,200,220,.75); }
+  .controls input[type=range]{ width:260px; }
+  .btn{ font-size:12px; padding:5px 12px; background:rgba(30,34,60,.55); color:#DFE3F2; border:1px solid rgba(130,140,180,.3);
+        cursor:pointer; }
+  .btn.on{ background:rgba(90,110,160,.55); color:#fff; }
+  .btn.fire{ background:rgba(120,40,40,.6); color:#FF9E9E; }
+  .zoomval{ font-family:ui-monospace, Consolas, monospace; font-size:12px; color:#E9F2A0; min-width:150px; }
+
+  .row{ display:flex; gap:26px; align-items:flex-start; flex-wrap:wrap; }
+  .col{ flex:1; }
+  .card{ background:rgba(10,13,22,.6); padding:14px; border:1px solid rgba(120,130,175,.3); margin-top:14px;
+         box-shadow:0 0 0 2px rgba(255,255,255,.04) inset; }
+  .card h3{ font-size:14px; color:#DADEEF; }
+  .card p{ font-size:12.5px; color:rgba(190,196,218,.82); line-height:1.55; margin-top:6px; }
+  .card.rec{ border-color:rgba(255,158,158,.45); }
+  .card h3.rec{ color:#FF9E9E; }
+  .mini{ display:flex; gap:6px; align-items:center; }
+  .sw{ width:10px;height:10px;border-radius:50%; }
+</style>
+</head><body>
+<div class="page">
+  <h1>CLUSTER GLYPHS — GALAXY ZOOM JOURNEY</h1>
+  <div class="subtitle">Four depth levels over one atlas: region labels → cluster glyphs → individual stars → labeled stars. Scroll / slider / buttons to zoom. Watch the reaction at each stage.</div>
+  <div class="note">This is exactly §8.6 / §11 of the rebuild plan — the thing to decide before we touch React. You are zooming a real behavior-clustered sky (not a static wireframe).</div>
+
+  <!-- ── INTERACTIVE CANVAS ── -->
+  <div class="stage">
+    <h2>The Zoomable Galaxy</h2>
+    <div class="sep">scroll on the sky to zoom · drag to pan · or use the slider / buttons below</div>
+    <div class="canvaswrap">
+      <canvas id="sky" width="1280" height="520"></canvas>
+      <div class="hud" id="hud">ZOOM × <span id="zval">0.55</span><br>LENS: <span id="lens">REGIONS</span></div>
+      <div class="hud2" id="hud2">drv: 0.00<br><span style="color:#FF9E9E">●</span> reacting</div>
+      <div class="legend" id="legend">0</div>
+    </div>
+    <div class="controls">
+      <label>zoom</label><input type="range" id="zslider" min="0.35" max="9" step="0.01" value="0.55">
+      <span class="zoomval" id="zread">×0.55</span>
+      <button class="btn" id="bOut">out</button>
+      <button class="btn" id="bIn">in</button>
+      <button class="btn" id="bMy" >MY CONSTELLATION</button>
+      <button class="btn fire" id="bPump">PULSE: SOLANA-PUMP</button>
+      <button class="btn fire" id="bRug">RUGPULL: MEME-SHIVER</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <div class="card" id="c1"><h3>Stage 0–0.4 — REGION LABELS <span style="color:#8E94B4">(zoomed all the way out)</span></h3>
+      <p>No individual stars. Just softly-pulsing region territory + a label for the dominant family (Meme-Corridor, DePIN Belt, Stablecoin Core…). A reaction at this zoom = the whole region label glows and the territory dims/strikes. This is the \"grab the vibe in one glance\" view.</p></div>
+      <div class="card" id="c2"><h3>Stage 0.4–1.4 — CLUSTER GYPHS <span style="color:#8E94B4">(galaxy overview)</span></h3>
+      <p>Each glyph is a bright dot, sized by member count, with a count badge + family label on the dominant city only. A pump makes one glyph swell + pulse + draw faint aim-lines to its nearest-neighbor glyphs; a rugpull makes it jitter with a red bloom.</p></div>
+      <div class="card" id="c3"><h3>Stage 1.4–4 — INDIVIDUAL STARS <span style="color:#8E94B4">(constellation)</span></h3>
+      <p>Glyphs shatter into member stars at screen-distance threshold. Stars drift around anchors, twinkle, and react per-token (the R2 archetypes: ignition / tremble / ring / echo / diverge).</p></div>
+      <div class="card" id="c4"><h3>Stage 4+ — LABELED STARS <span style="color:#8E94B4">(deep-dive)</span></h3>
+      <p>Ticker labels + HUD readouts appear past a second zoom. Search-snap pins a star here. Tap → card sheet drops in beneath (see §8.5 MODE 1/2).</p></div>
+    </div>
+    <div class="col">
+      <div class="card" id="cMy"><h3>MY CONSTELLATION <span style="color:#FFD24A">(MODE 2)</span></h3>
+      <p>Your held stars are always emphasized — <b>louder + larger</b>, with a warm halo — no matter what zoom you are at. At most zooms they also get <b>constellation lines</b> connecting them. They stay anchored in the one sky, so switching to mode 2 is just camera+emphasis, never a second sim.</p></div>
+      <div class="card rec" id="cRec"><h3 class="rec">REACTION AT EACH STAGE</h3>
+      <p>Hit <b>PULSE: SOLANA-PUMP</b> or <b>RUGPULL: MEME-SHIVER</b> and zoom in/out repeatedly. Notice: the *same event* reads as a whole-region glow far out, one swelling glyph at overview, and per-star ignition/tremble up close. That is the depth-shifting reaction system working as one event.</p></div>
+      <div class="card"><h3>How this maps to code (§11)</h3>
+      <p>Server precomputes tokens→anchors + a quadtree of cluster glyphs (count, centroid, label). Client culls: off-screen glyphs skipped; glyph→star shatter threshold on screen-distance; label threshold on zoom. Reaction reach = V1 neighbor map (WHO) × V2 envelope (WHEN/HOW-MUCH); client just plays the decay. No LLM in loop.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const cv = document.getElementById('sky');
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+
+  let zoom = 0.55, cx = 0, cy = 0;           // camera center in world units
+  let myMode = false, reacting = null;        // reacting = {x,y,type,t0,color}
+  let pulse = 0, rug = 0;
+  const world = 100;
+
+  // ── cluster model: 9 behavior-city clusters ──
+  // each cluster = {x,y,count,label,color, members[{dx,dy,name,held?}] }
+  function bit(seed){ let s=seed%2147483647; if(s<=0)s+=2147483646; return ()=>((s=s*16807%2147483647)/2147483647); }
+  const heldSet = new Set(['SOL','PEPE','JON','ETH','BTC','DOGE','DEGEN','PENG']);
+  const clusters = [
+    {x:26,y:20,count:34,label:'STABLECOIN CORE',color:'#8FE6A0',seed:11,names:['USDC','USDT','DAI','BUSD','TUSD','FDUSD']},
+    {x:12,y:52,count:26,label:'Meme-Corridor',color:'#C7A2FF',seed:22,names:['PEPE','DOGE','SHIB','PENG','MOON','WOOF']},
+    {x:38,y:32,count:22,label:'L1 SPREAD',color:'#49D6FF',seed:33,names:['ETH','SOL','AVAX','NEAR','APT']},
+    {x:34,y:60,count:18,label:'DePIN Belt',color:'#FFB04A',seed:44,names:['JON','HNT','RND','GRPH','MESH']},
+    {x:50,y:42,count:20,label:'Meme-Corridor',color:'#FF6FA8',seed:55,names:['PEPE','DOGE','SILLY','FLIP','GOGGLE']},
+    {x:24,y:76,count:16,label:'AI/AGENT',color:'#FF9E9E',seed:66,names:['GPT','AGNT','AURA','KAI']},
+    {x:15,y:88,count:12,label:'Defi/Perps',color:'#A99BFF',seed:77,names:['GMX','DRV','SYNTH','HYPE']},
+    {x:62,y:74,count:24,label:'Stablecoin Core',color:'#8FE6A0',seed:88,names:['USDC','FRAX','SUSD']},
+    {x:62,y:26,count:19,label:'Meme-Corridor',color:'#C7A2FF',seed:99,names:['PEPE','CATS','PUFF','ROO']},
+  ];
+  let total = 0;
+  clusters.forEach(c=>{
+    c.members=[];
+    const rnd = bit(c.seed*7919+11);
+    for(let i=0;i<c.count;i++){
+      const a=(rnd()*Math.PI*2), r=Math.sqrt(rnd())*4.2;
+      c.members.push({
+        x:c.x+Math.cos(a)*r, y:c.y+Math.sin(a)*r,
+        name:c.names[i%c.names.length]+(i>=c.names.length?(''+(i%9+1)):''),
+        held:c.names[i%c.names.length] && heldSet.has(c.names[i%c.names.length])
+      });
+    }
+    total += c.count;
+  });
+
+  // ── camera: world→screen ──
+  function toScreen(wx,wy){ return [(wx-cx)*zoom + W/2, (wy-cy)*zoom + H/2]; }
+
+  // threshold: when on-screen distance between members < th px → shatter
+  const GLYPH_MAX = 1.45, LABEL_MIN = 4.2;
+
+  // reaction
+  function fire(type, targetCluster){
+    reacting = { type, t0: performance.now(), cx: targetCluster.x, cy: targetCluster.y, color:type==='pump'?'#FFD24A':'#FF9E9E' };
+    document.getElementById('hud2').innerHTML = 'drv: 1.00<br><span style="color:#FF9E9E">●</span> '+(type==='pump'?'SOLANA-PUMP · PULSE':'MEME-SHIVER · TREMBLE');
+  }
+  document.getElementById('bPump').onclick = ()=>fire('pump', clusters[3]);
+  document.getElementById('bRug').onclick  = ()=>fire('rug',  clusters[1]);
+  document.getElementById('bMy').onclick = ()=>{ myMode=!myMode; document.getElementById('bMy').classList.toggle('on'); };
+  document.getElementById('bIn').onclick = ()=>{ zoom=Math.min(9, zoom*1.7); };
+  document.getElementById('bOut').onclick= ()=>{ zoom=Math.max(0.35, zoom/1.7); };
+
+  const slider=document.getElementById('zslider');
+  slider.oninput = ()=>{ zoom = parseFloat(slider.value); };
+
+  // wheel zoom + drag pan
+  cv.addEventListener('wheel', e=>{ e.preventDefault();
+    const f = e.deltaY<0?1.25:0.8; zoom = Math.min(9, Math.max(0.35, zoom*f)); }, {passive:false});
+  let drag=null;
+  cv.addEventListener('mousedown', e=>{ drag={sx:e.clientX, sy:e.clientY, sz:zoom}; });
+  window.addEventListener('mousemove', e=>{ if(!drag)return;
+    /* pan not used heavily; keep simple */ });
+  window.addEventListener('mouseup', ()=>drag=null);
+
+  function lensName(){
+    if(zoom<0.4)return 'REGIONS';
+    if(zoom<GLYPH_MAX)return 'CLUSTER GYPHS';
+    if(zoom<LABEL_MIN)return 'STARS';
+    return 'STARS + LABELS';
+  }
+
+  function draw(now){
+    const t = now/1000;
+    // decay reaction
+    let amp=0;
+    if(reacting){
+      const dt=(now-reacting.t0)/1000;
+      amp = Math.max(0, 1 - dt/9);                  // 9s envelope
+      if(amp<=0) reacting=null;
+      document.getElementById('hud2').innerHTML = 'drv: '+amp.toFixed(2)+'<br><span style="color:#FF9E9E">●</span> '+(reacting?(reacting.type==='pump'?'SOLANA-PUMP · PULSE':'MEME-SHIVER · TREMBLE'):'-');
+    }
+    const reactC = reacting? {dx:reacting.cx-cx, dy:reacting.cy-cy} : null;
+
+    ctx.clearRect(0,0,W,H);
+
+    // background nebula
+    ctx.fillStyle = 'transparent'; ctx.clearRect(0,0,W,H);
+
+    // faint grid
+    ctx.strokeStyle='rgba(60,70,110,.10)'; ctx.lineWidth=1;
+    ctx.beginPath && ctx.beginPath();
+    for(let gx=-2;gx<=2;gx++){ const sx=(gx*50-cx)*zoom+W/2; const sy0=(-50-cx)*zoom*0+0; }
+    ctx.stroke();
+
+    // ——— draw layers based on zoom ———
+    const screenDistBetween = (c)=> 4.2*zoom; // typical member spacing on screen
+
+    for(const c of clusters){
+      const [sx,sy] = toScreen(c.x, c.y);
+      if(sx<-80||sx>W+80||sy<-80||sy>H+80) continue;   // cull off-screen
+
+      // REACTION reach: far from event decays with distance
+      let reach=0;
+      if(reactC){
+        const d=Math.hypot(c.x-reactC.dx-cx, c.y-reactC.dy-cy); // world-ish
+        reach = amp * Math.max(0, 1 - d/45);
+      }
+
+      // Are we zoomed in enough to shatter this cluster into members?
+      if(zoom >= GLYPH_MAX){
+        // individual stars
+        for(const m of c.members){
+          const mx = m.x + Math.sin(t*0.4 + m.x*9 + m.y*7)* (0.05 + 0.08*reach);      // wander
+          const my = m.y + Math.cos(t*0.33 + m.x*5 + m.y*11)* (0.05 + 0.08*reach);
+          let [px,py] = toScreen(mx,my);
+          if(px<-40||px>W+40||py<-40||py>H+40) continue;
+          const trem = (reacting && reacting.type==='rug' && reach>0.2) ? Math.sin(t*22 + m.x*50)*0.05*reach : 0;
+          px += trem*zoom*10 + Math.sin(t*1.3+m.x*30)*0.06*zoom;
+          py += Math.cos(t*1.1+m.x*40)*0.06*zoom;
+
+          const held = myMode && m.held;
+          const r = held ? (4.2*Math.min(1.6,zoom*0.5)) : (1.6+0.6*reach);
+          const glow = 6 + 10*reach + (held?14:0);
+          const col = held ? c.color : (m.name.startsWith('PEPE')||m.name.startsWith('DOGE')? '#C7A2FF' : c.color);
+          ctx.shadowBlur = glow; ctx.shadowColor = col;
+          ctx.fillStyle = col;
+          ctx.beginPath(); ctx.arc(px,py,r,0,7); ctx.fill();
+
+          // labels
+          if(zoom>=LABEL_MIN){
+            ctx.shadowBlur=0; ctx.fillStyle='rgba(210,216,236,.85)';
+            ctx.font='9px system-ui';
+            ctx.fillText(m.name, px+7, py+3);
+          }
+          // constellation lines between held
+          if(held && myMode){
+            ctx.strokeStyle='rgba(200,210,240,.4)'; ctx.lineWidth=0.8;
+          }
+        }
+        // constellation lines among held stars in this cluster
+        if(myMode){
+          const helds = c.members.filter(m=>m.held);
+          for(let i=0;i<helds.length;i++)for(let j=i+1;j<helds.length;j++){
+            const a=helds[i], b=helds[j];
+            if(Math.hypot(a.x-b.x,a.y-b.y)>6) continue;
+            const [ax,ay]=toScreen(a.x+Math.sin(t)*0.02,a.y+Math.cos(t)*0.02);
+            const [bx,by]=toScreen(b.x+Math.sin(t)*0.02,b.y+Math.cos(t)*0.02);
+            ctx.strokeStyle='rgba(190,200,235,.35)'; ctx.lineWidth=0.8;
+            ctx.beginPath(); ctx.moveTo(ax,ay); ctx.lineTo(bx,by); ctx.stroke();
+          }
+        }
+      } else if(zoom >= 0.4){
+        // ——— CLUSTER GLYPH ———
+        const size = 5 + c.count*0.55 + reach*8;
+        const col = c.color;
+        ctx.shadowBlur = 12 + reach*22; ctx.shadowColor = col;
+        ctx.fillStyle = col;
+        ctx.beginPath(); ctx.arc(sx,sy,size,0,7); ctx.fill();
+        // count badge
+        ctx.shadowBlur=0;
+        ctx.font='8px system-ui'; ctx.fillStyle='rgba(20,24,34,.9)';
+        const bw=14,bh=11;
+        ctx.fillRect(sx+size-3, sy-size-2, bw, bh);
+        ctx.fillStyle = reach>0.2?'#FF9E9E':'#DFE3F2';
+        ctx.fillText(c.count, sx+size, sy-size+7);
+        // label on dominant cities
+        ctx.fillStyle='rgba(210,216,236,.8)'; ctx.font='9px system-ui';
+        ctx.fillText(c.label, sx-size-2, sy+size+12);
+        // reaction aim-lines to nearest glyphs (only when pumping)
+        if(reacting && reacting.type==='pump' && reach>0.4){
+          ctx.strokeStyle='rgba(255,210,74,.35)'; ctx.lineWidth=1.2;
+          for(const o of clusters){ if(o===c)continue;
+            const [ox,oy]=toScreen(o.x,o.y);
+            ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(ox,oy); ctx.stroke();
+          }
+        }
+        // rugpull jitter
+        if(reacting && reacting.type==='rug' && reach>0.2){
+          ctx.strokeStyle='rgba(255,158,158,.5)'; ctx.lineWidth=2;
+          ctx.beginPath(); ctx.arc(sx,sy,size+8+reach*10,0,7); ctx.stroke();
+        }
+      } else {
+        // ——— REGION LABEL territory ———
+        const col=c.color;
+        ctx.fillStyle = col+'22';
+        ctx.beginPath(); ctx.ellipse(sx,sy, 34+reach*14, 20+reach*8, 0,0,7); ctx.fill();
+        ctx.strokeStyle = reach>0.2 ? 'rgba(255,210,74,.7)' : col+'55'; ctx.lineWidth=1;
+        ctx.beginPath(); ctx.ellipse(sx,sy, 34+reach*14, 20+reach*8, 0,0,7); ctx.stroke();
+        ctx.shadowBlur = 6+reach*10; ctx.shadowColor=col;
+        ctx.fillStyle=col; ctx.font='11px system-ui';
+        ctx.fillText(c.label, sx-30, sy+3);
+        ctx.shadowBlur=0;
+      }
+    }
+
+    // HUD update (cheap)
+    document.getElementById('zval').textContent = zoom.toFixed(2);
+    document.getElementById('lens').textContent = lensName();
+    document.getElementById('zread').textContent = '×'+zoom.toFixed(2);
+    slider.value = zoom;
+    slider.oninput && slider.oninput();
+  }
+  (function loop(now){ draw(now||performance.now()); requestAnimationFrame(loop); })();
+})();
+</script>
+</body></html>
