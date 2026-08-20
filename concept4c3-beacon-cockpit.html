@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C-C · Beacon Cockpit — Holdings as Living Beacons</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body{ height:100%; }
+  body{ background:#07090F; color:#E8EAF0; overflow:hidden;
+        font-family:system-ui,-apple-system,sans-serif; }
+  .topbar{ position:fixed; top:0; left:0; right:0; height:54px; z-index:50;
+           background:rgba(9,12,20,0.86); display:flex; align-items:center; padding:0 18px; }
+  .brand{ font-size:15px; font-weight:800; letter-spacing:.5px; }
+  .brand span{ color:#FFB04A; }
+  .search{ position:relative; margin-left:18px; }
+  .search input{ width:260px; padding:9px 12px; background:rgba(14,18,30,0.55);
+                 border:1px solid rgba(255,190,120,0.35); color:#E8EAF0; font-size:13px; border-radius:0; }
+  .sugg{ position:absolute; left:0; right:0; top:40px; background:rgba(10,14,24,0.96);
+         border:1px solid rgba(255,190,120,0.3); z-index:60; }
+  .sugg .r{ padding:9px 12px; font-size:12px; }
+  .sugg .r:hover{ background:rgba(30,42,72,0.4); }
+  .right{ margin-left:auto; display:flex; gap:8px; align-items:center;
+          color:rgba(180,190,215,0.7); font-size:11px; }
+  .right .led{ width:9px; height:9px; border-radius:50%; background:#9CE3A0; box-shadow:0 0 10px #9CE3A0; }
+  .sky{ position:fixed; top:54px; left:0; right:0; bottom:0; z-index:1;
+        background: radial-gradient(ellipse 900px 620px at 30% 30%, rgba(60,40,90,0.24) 0%, transparent 62%),
+                    linear-gradient(180deg,#07090F,#0A0D16 60%,#0C0F1A); }
+  .cam{ position:absolute; inset:0; transform-origin:0 0; }
+  .star{ position:absolute; width:12px; height:12px; border-radius:50%; transition:transform .06s linear; }
+  .star.beacon{ width:22px; height:22px; box-shadow:0 0 20px currentColor;
+                animation:beaconPulse 2s infinite; border:2px solid currentColor; }
+  @keyframes beaconPulse{ 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.7;transform:scale(1.15)} }
+  .lbl{ position:absolute; font-size:10px; color:rgba(214,220,240,0.92); text-shadow:0 0 8px rgba(200,180,250,0.3); }
+  .lbl.beacon{ font-weight:800; color:#fff; }
+  .ring{ position:absolute; border:2px solid currentColor; border-radius:50%; pointer-events:none; }
+  @keyframes ringG{ from{transform:scale(.4);opacity:.9} to{transform:scale(2.8);opacity:0} }
+  /* beacon dock bottom */
+  .dock{ position:fixed; left:0; right:0; bottom:0; height:64px; z-index:40; display:flex;
+         align-items:center; justify-content:center; gap:10px;
+         background:linear-gradient(180deg, rgba(10,13,20,0.75), rgba(7,9,14,0.9)); }
+  .dock .bc{ display:flex; align-items:center; gap:8px; padding:7px 16px;
+             background:rgba(16,20,30,0.5); border:1px solid rgba(255,255,255,0.12); cursor:pointer; }
+  .dock .bc:hover{ border-color:currentColor; background:rgba(24,32,50,0.6); }
+  .dock .bc .d{ width:11px; height:11px; border-radius:50%; background:currentColor; box-shadow:0 0 10px currentColor; }
+  .dock .bc .n{ font-size:13px; font-weight:700; color:#fff; }
+  .dock .bc .st{ font-size:10px; color:rgba(200,210,230,0.75); }
+  .dock .bc.hot .st{ color:#FFB04A; }
+  /* left summary rail */
+  .rail{ position:fixed; left:16px; bottom:80px; z-index:30; width:220px;
+         background:rgba(10,13,20,0.78); border:1px solid rgba(255,255,255,0.12); }
+  .rail .h{ padding:9px 12px; font-size:10px; letter-spacing:1px; color:rgba(195,205,225,0.8); }
+  .rail .line{ display:flex; font-size:11px; padding:7px 12px; align-items:center; justify-content:space-between; }
+  .rail .line .name{ color:#fff; font-weight:600; }
+  .rail .line .v{ color:rgba(190,200,225,0.75); }
+  .rail .line .w{ color:#FFB04A; }
+  @keyframes blinker{ 0%,100%{opacity:1}50%{opacity:.35} }
+  .blink{ animation:blinker 1.4s infinite; }
+  .hud{ position:fixed; bottom:0; right:14px; z-index:30; font-size:10px;
+        color:rgba(180,190,215,0.65); background:rgba(10,13,20,0.6); padding:8px 12px;
+        border:1px solid rgba(255,255,255,0.1); }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <span class="brand">✦ <span>MOOD SKY</span> · cockpit</span>
+  <div class="search">
+    <input id="q" placeholder="Search coins…" autocomplete="off">
+    <div class="sugg" id="sugg"></div>
+  </div>
+  <div class="right"><span class="led"></span> live · 3 beacons · 24 stars</div>
+</div>
+
+<div class="sky" id="sky"><div class="cam" id="cam"></div></div>
+
+<div class="rail">
+  <div class="h">◓ CONSTELLATION UPDATES</div>
+  <div class="line"><span class="name">SOL</span><span class="w">warming +$2.1K</span></div>
+  <div class="line"><span class="name">PEPE</span><span class="v">quiet</span></div>
+  <div class="line"><span class="name">JON</span><span class="blink w">● alert — whale sweep</span></div>
+  <div class="line" style="color:rgba(170,180,205,0.6);font-size:10px;">✎ click beacon → fly to its star</div>
+</div>
+
+<div class="dock" id="dock">
+  <div class="bc" data-sym="SOL"><span class="d" style="color:#FFD24A"></span><span class="n">SOL</span><span class="st">warming</span></div>
+  <div class="bc" data-sym="PEPE"><span class="d" style="color:#C7A2FF"></span><span class="n">PEPE</span><span class="st">quiet</span></div>
+  <div class="bc hot" data-sym="JON"><span class="d" style="color:#FF6FA8"></span><span class="n">JON</span><span class="st">● alert</span></div>
+</div>
+<div class="hud" id="hud">scroll / drag to travel the sky · tap beacon to fly</div>
+
+<script>
+const sky=document.getElementById('sky'),cam=document.getElementById('cam');
+const SEED=[
+  {s:'SOL',c:'#FFD24A',hot:.9,held:1},{s:'PEPE',c:'#C7A2FF',hot:.65,held:1},
+  {s:'JON',c:'#FF6FA8',hot:.8,held:1},{s:'ETH',c:'#49D6FF',hot:.5},
+  {s:'BTC',c:'#FFB04A',hot:.6},{s:'DOGE',c:'#8FE6A0',hot:.5},
+  {s:'WIF',c:'#C7A2FF',hot:.55},{s:'DEGEN',c:'#8FE6A0',hot:.7},
+  {s:'PENG',c:'#FF9E9E',hot:.75},{s:'MOG',c:'#49D6FF',hot:.4},
+  {s:'TUBE',c:'#8FE6A0',hot:.5},{s:'SAVA',c:'#FF9E9E',hot:.45},
+  {s:'LILY',c:'#49D6FF',hot:.35},{s:'COOL',c:'#C7A2FF',hot:.5},
+  {s:'MINT',c:'#8FE6A0',hot:.5},{s:'GULF',c:'#FF9E9E',hot:.55},
+  {s:'RANA',c:'#FFD24A',hot:.4},{s:'KEEK',c:'#49D6FF',hot:.45},
+  {s:'BEAM',c:'#8FE6A0',hot:.4},{s:'OMAT',c:'#C7A2FF',hot:.5},
+  {s:'JORD',c:'#FF6FA8',hot:.6},{s:'MOON',c:'#FFD24A',hot:.5},
+  {s:'LUXE',c:'#49D6FF',hot:.5},{s:'GOAT',c:'#8FE6A0',hot:.6},
+];
+const CLUST=[{x:260,y:260},{x:720,y:220},{x:300,y:760},{x:760,y:700},{x:500,y:460}];
+const stars=SEED.map((sd,i)=>{const cl=CLUST[i%CLUST.length];
+  return {s:sd.s,c:sd.c,hot:sd.hot,held:sd.held||0,
+    x:cl.x+Math.random()*160-80,y:cl.y+Math.random()*160-80,vx:0,vy:0,
+    r:(sd.held?10:7)*(0.8+sd.hot*0.5),el:null,lbl:null};});
+let focus=null; let camX=500,camY=500,zoom=0.9,tcamX=camX,tcamY=camY,tzoom=zoom;
+function mkStar(st){
+  const el=document.createElement('div'); el.className='star'+(st.held?' beacon':'');
+  el.style.background=st.c; el.style.setProperty('color',st.c); cam.appendChild(el); st.el=el;
+  const lb=document.createElement('div'); lb.className='lbl'+(st.held?' beacon':'');
+  lb.textContent=st.s; lb.style.setProperty('color',st.c); cam.appendChild(lb); st.lbl=lb;
+}
+function select(st){
+  focus=st; tcamX=st.x; tcamY=st.y; tzoom=Math.max(tzoom,2.4);
+  const r=document.createElement('div'); r.className='ring';
+  r.style.width=r.style.height='140px'; r.style.left=(st.x-70)+'px'; r.style.top=(st.y-70)+'px';
+  r.style.setProperty('color',st.c); r.style.animation='ringG 1.3s forwards';
+  cam.appendChild(r); setTimeout(()=>r.remove(),1400);
+  const h=document.getElementById('hud');
+  h.textContent=st.s+' · '+(st.hot>0.6?'warming':'quiet')+(st.held?' · your beacon':'')+' · scroll to zoom out';
+}
+function step(){
+  for(const st of stars){
+    const cl=CLUST.reduce((a,b)=>d2(st,b)<d2(st,a)?b:a,CLUST[0]);
+    let fx=(cl.x-st.x)*0.00012, fy=(cl.y-st.y)*0.00012;
+    for(const o of stars){ if(o===st)continue;
+      const dx=o.x-st.x, dy=o.y-st.y, d2=dx*dx+dy*dy+620;
+      const pull=(o.hot-0.35)*2200/d2*(d2<40000?1:0);
+      fx+=dx*0.000012*pull; fy+=dy*0.000012*pull; }
+    for(const o of stars){ if(o===st)continue;
+      const dx=st.x-o.x, dy=st.y-o.y, d2=dx*dx+dy*dy+200, rep=40/d2;
+      fx+=dx*rep*0.02; fy+=dy*rep*0.02; }
+    const t=performance.now()/1000;
+    fx+=Math.sin(t*0.7+st.x)*0.006; fy+=Math.cos(t*0.6+st.y)*0.006;
+    const damp= (st===focus)?0.86:0.93;
+    st.vx=(st.vx+fx)*damp; st.vy=(st.vy+fy)*damp;
+    st.x+=st.vx; st.y+=st.vy;
+    st.x=Math.max(10,Math.min(990,st.x)); st.y=Math.max(10,Math.min(990,st.y));
+  }
+}
+function draw(){
+  cam.style.transform=`translate(${-camX*zoom}px,${-camY*zoom}px) scale(${zoom})`;
+  for(const st of stars){
+    const near=Math.abs(st.x-camX)<170/zoom, show=(near||st.held||st===focus||zoom>1.4);
+    st.el.style.transform=`translate(${st.x*zoom}px,${st.y*zoom}px)`;
+    st.lbl.style.opacity=show?1:0;
+    st.lbl.style.transform=`translate(${st.x*zoom}px,${st.y*zoom-18}px)`;
+  }
+}
+function camStep(){ camX+=(tcamX-camX)*0.12; camY+=(tcamY-camY)*0.12; zoom+=(tzoom-zoom)*0.15; }
+const loop=()=>{step();camStep();draw();requestAnimationFrame(loop);};
+[...stars].forEach(mkStar); loop();
+const q=document.getElementById('q'),sugg=document.getElementById('sugg');
+q.addEventListener('input',()=>{
+  const term=q.value.trim().toUpperCase();
+  if(!term){sugg.style.display='none';return;}
+  const hits=stars.filter(s=>s.s.includes(term)).slice(0,6);
+  sugg.innerHTML=''; hits.forEach(hit=>{
+    const r=document.createElement('div'); r.className='r';
+    r.textContent=hit.s+(hit.held?'  ·  beacon':"")+(hit.hot>0.6?'  ·  warming':'');
+    r.onclick=()=>{ q.value=hit.s; sugg.style.display='none'; select(hit); };
+    sugg.appendChild(r); });
+  sugg.style.display=hits.length?'block':'none';
+});
+q.addEventListener('keydown',e=>{ if(e.key==='Enter'){ const hit=stars.find(s=>s.s.startsWith(q.value.trim().toUpperCase())); if(hit)select(hit); sugg.style.display='none'; q.blur(); }});
+document.addEventListener('click',e=>{ if(!e.target.closest('.search'))sugg.style.display='none'; });
+document.querySelectorAll('.dock .bc').forEach(bc=>{ bc.onclick=()=>{ const st=stars.find(s=>s.s===bc.dataset.sym); if(st)select(st); }; });
+sky.addEventListener('wheel',e=>{ e.preventDefault(); tzoom=Math.max(0.4,Math.min(9,tzoom*(e.deltaY<0?1.22:0.82))); },{passive:false});
+let drag=false,dx=0,dy=0;
+sky.addEventListener('mousedown',e=>{drag=true;dx=e.clientX;dy=e.clientY;});
+window.addEventListener('mousemove',e=>{ if(drag){const k=1/zoom;tcamX-=(e.clientX-dx)*k;tcamY-=(e.clientY-dy)*k;dx=e.clientX;dy=e.clientY;} });
+window.addEventListener('mouseup',()=>drag=false);
+function d2(a,b){return (a.x-b.x)**2+(a.y-b.y)**2;}
+</script>
+</body></html>

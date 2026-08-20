@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C-A · Living Sky — Immersive Dynamic Mood Map</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body{ height:100%; }
+  body{
+    background:#07090F; color:#E8EAF0; overflow:hidden;
+    font-family:system-ui,-apple-system,sans-serif;
+  }
+  /* ── top bar ── */
+  .topbar{ position:fixed; top:0; left:0; right:0; height:52px; z-index:50;
+           background:rgba(9,12,20,0.85); display:flex; justify-content:center;
+           padding:0 20px; }
+  .wrap{ display:flex; align-items:center; gap:14px; width:100%; }
+  .brand{ font-size:15px; font-weight:800; letter-spacing:.5px; color:#E8EAF0; }
+  .brand span{ color:#9CE3A0; }
+  .search{ flex:1; max-width:420px; position:relative; }
+  .search input{ width:100%; padding:9px 12px; background:rgba(16,20,32,0.6);
+                 border:1px solid rgba(140,160,255,0.4); color:#E8EAF0; font-size:13px;
+                 placeholder:#5A6A8A; border-radius:0; }
+  .search input:focus{ box-shadow:0 0 0 2px rgba(140,160,255,0.25) inset; }
+  .sugg{ position:absolute; left:0; right:0; top:40px; background:rgba(10,13,22,0.96);
+         border:1px solid rgba(140,160,255,0.3); display:none; z-index:60; }
+  .sugg .r{ display:flex; justify-content:space-between; padding:9px 12px; font-size:12px; }
+  .sugg .r:hover{ background:rgba(30,40,70,0.4); }
+  .sugg .r .s{ color:#E8EAF0; font-weight:600; }
+  .sugg .r .d{ color:rgba(180,190,215,0.7); font-size:11px; }
+  .right{ margin-left:auto; display:flex; gap:8px; align-items:center; }
+  .right .btn{ padding:7px 14px; font-size:12px; background:rgba(20,26,40,0.5);
+               border:1px solid rgba(255,255,255,0.18); color:rgba(205,210,230,0.85); }
+  .right .full{ background:rgba(60,120,255,0.16); border-color:rgba(120,170,255,0.4); color:#CFE4FF; }
+
+  /* ── sky canvas ── */
+  .sky{ position:fixed; top:52px; left:0; right:0; bottom:0; overflow:hidden; z-index:1;
+        background: radial-gradient(ellipse 900px 600px at 24% 20%, rgba(40,48,90,0.28) 0%, transparent 62%),
+                    radial-gradient(ellipse 700px 500px at 78% 74%, rgba(70,40,120,0.20) 0%, transparent 62%),
+                    linear-gradient(180deg,#07090F 0%, #0A0D16 60%, #0C0F1A 100%); }
+  .cam{ position:absolute; inset:0; transform-origin:0 0; }
+  .star{ position:absolute; width:14px; height:14px; border-radius:50%; transition:transform .06s linear; }
+  .star.held{ box-shadow:0 0 14px currentColor; }
+  .star.warm{ box-shadow:0 0 22px currentColor; animation:warmpulse 1.6s infinite; }
+  @keyframes warmpulse{ 0%,100%{opacity:1}50%{opacity:.55} }
+  .lbl{ position:absolute; font-size:10px; color:rgba(214,220,240,0.92); text-shadow:0 0 8px rgba(150,160,255,0.3); }
+  .lbl.held{ color:#FFF; font-weight:700; }
+  .ring{ position:absolute; border:2px solid currentColor; border-radius:50%; pointer-events:none; }
+  @keyframes ringG{ from{transform:scale(.4);opacity:.9} to{transform:scale(2.6);opacity:0} }
+  .trail{ position:absolute; pointer-events:none; }
+
+  /* orbit path to target */
+  svg{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+
+  /* hud bottom-left: memory / status */
+  .hud{ position:fixed; left:18px; bottom:16px; z-index:30; background:rgba(10,13,20,0.7);
+        border:1px solid rgba(255,255,255,0.12); padding:10px 14px; font-size:11px;
+        color:rgba(195,205,225,0.85); border-radius:0; font-family:monospace; }
+  .hud b{ color:#9CE3A0; }
+  /* beacons rail (your coins) */
+  .rail{ position:fixed; right:16px; top:66px; z-index:30; width:150px;
+         background:rgba(10,13,20,0.72); border:1px solid rgba(255,255,255,0.12); }
+  .rail .h{ padding:8px 10px; font-size:10px; color:rgba(195,205,225,0.85); letter-spacing:1px; }
+  .rail .it{ display:flex; gap:8px; padding:7px 10px; align-items:center; cursor:pointer; }
+  .rail .it:hover{ background:rgba(30,40,70,0.35); }
+  .rail .it .d{ width:8px; height:8px; border-radius:50%; background:currentColor; box-shadow:0 0 8px currentColor; }
+  .rail .it .n{ font-size:11px; color:rgba(214,220,240,0.92); font-weight:600; }
+  .rail .it .st{ font-size:9px; color:rgba(170,180,205,0.7); margin-left:auto; }
+</style>
+</head>
+<body>
+<div class="topbar"><div class="wrap">
+  <span class="brand">✦ <span>MOOD SKY</span></span>
+  <div class="search">
+    <input id="q" placeholder="Find a star… try “SOL”, “PEP”, “JON”" autocomplete="off">
+    <div class="sugg" id="sugg"></div>
+  </div>
+  <div class="right">
+    <div class="btn" id="bLabels">✎ labels</div>
+    <div class="btn" id="bZoomIn">+</div>
+    <div class="btn" id="bZoomOut">−</div>
+    <div class="btn full" id="bFull">⛺ fullscreen</div>
+  </div>
+</div></div>
+
+<div class="sky" id="sky"><div class="cam" id="cam"></div></div>
+
+<div class="hud" id="hud"></div>
+
+<!-- your held coins = beacons (click to fly) -->
+<div class="rail">
+  <div class="h">◓ YOUR BEACONS</div>
+  <div class="it" data-sym="SOL"><span class="d" style="color:#FFD24A"></span><span class="n">SOL</span><span class="st">→</span></div>
+  <div class="it" data-sym="PEPE"><span class="d" style="color:#C7A2FF"></span><span class="n">PEPE</span><span class="st">→</span></div>
+  <div class="it" data-sym="JON"><span class="d" style="color:#FF6FA8"></span><span class="n">JON</span><span class="st">→</span></div>
+</div>
+
+<script>
+/* =============================================================
+   MOOD SKY ENGINE — tiny physics sim, camera, search-snap, rings.
+   Each star: world pos, vel, mass, heat (attractor). Organic drift.
+   Search flies the camera and pins the found star.
+   ============================================================= */
+const sky=document.getElementById('sky'), cam=document.getElementById('cam');
+const W=()=>sky.clientWidth, H=()=>sky.clientHeight;
+
+/* world is a fixed unit-space [0..1000]^2 */
+const SEED=[
+  {s:'SOL',c:'#FFD24A',hot:.9,  held:1},
+  {s:'PEPE',c:'#C7A2FF',hot:.65, held:1},
+  {s:'JON',c:'#FF6FA8',hot:.8,  held:1},
+  {s:'ETH',c:'#49D6FF',hot:.5},
+  {s:'BTC',c:'#FFB04A',hot:.6},
+  {s:'DOGE',c:'#8FE6A0',hot:.5},
+  {s:'WIF',c:'#C7A2FF',hot:.55},
+  {s:'DEGEN',c:'#8FE6A0',hot:.7},
+  {s:'PENG',c:'#FF9E9E',hot:.75},
+  {s:'MOG',c:'#49D6FF',hot:.4},
+  {s:'TUBE',c:'#8FE6A0',hot:.45},
+  {s:'SAVA',c:'#FF9E9E',hot:.6},
+  {s:'LILY',c:'#49D6FF',hot:.35},
+  {s:'COOL',c:'#C7A2FF',hot:.5},
+  {s:'MINT',c:'#8FE6A0',hot:.5},
+  {s:'GULF',c:'#FF9E9E',hot:.55},
+  {s:'RANA',c:'#FFD24A',hot:.4},
+  {s:'KEEK',c:'#49D6FF',hot:.45},
+  {s:'BEAM',c:'#8FE6A0',hot:.4},
+  {s:'OMAT',c:'#C7A2FF',hot:.5},
+  {s:'JORD',c:'#FF6FA8',hot:.6},
+  {s:'MOON',c:'#FFD24A',hot:.5},
+  {s:'LUXE',c:'#49D6FF',hot:.5},
+  {s:'GOAT',c:'#8FE6A0',hot:.6},
+];
+
+/* cluster anchors form semantic constellations (majors / memes / fresh) */
+const CLUST=[
+  {x:260,y:260},{x:720,y:220},{x:300,y:760},{x:760,y:700},{x:500,y:460}
+];
+const stars=SEED.map((sd,i)=>{
+  const cl=CLUST[i%CLUST.length];
+  return {
+    s:sd.s, c:sd.c, hot:sd.hot, held:sd.held||0,
+    x:cl.x+(Math.random()*160-80), y:cl.y+(Math.random()*160-80),
+    vx:0, vy:0, r: (sd.held?9:7)*(0.8+sd.hot*0.5),
+    el:null, lbl:null, labelOn:false
+  };
+});
+let labelsOn=true, focus=null, focusEl=null;
+let camX=500,camY=500,zoom=1.0, tcamX=camX,tcamY=camY,tzoom=zoom;
+
+function mkStar(st){
+  const el=document.createElement('div');
+  el.className='star'+(st.held?' held':'')+((st.hot>0.7)?' warm':'');
+  el.style.background=st.c; el.style.setProperty('color',st.c);
+  cam.appendChild(el); st.el=el;
+  const lb=document.createElement('div'); lb.className='lbl'+(st.held?' held':'');
+  lb.textContent=st.s; lb.style.setProperty('color',st.c);
+  cam.appendChild(lb); st.lbl=lb;
+}
+
+/* search snap: fly to star, pin it, ring it */
+function findStar(q){
+  const term=q.trim().toUpperCase(); if(!term) return;
+  const st=stars.find(s=>s.s.startsWith(term));
+  if(!st) return;
+  select(st);
+}
+function select(st){
+  focus=st; tcamX=st.x; tcamY=st.y; tzoom=Math.max(tzoom,2.2);
+  st.held=1; st.el.className='star held'+(st.hot>0.7?' warm':'');
+  ring(st); easeLabel(st);
+  const hud=document.getElementById('hud');
+  hud.innerHTML='<b>'+st.s+'</b> locked · pinned to view · ✎ tap again to release';
+  hud.style.opacity=1;
+}
+function ring(st){
+  const r=document.createElement('div');
+  r.className='ring'; r.style.width=r.style.height='120px';
+  r.style.left=(st.x-60)+'px'; r.style.top=(st.y-60)+'px';
+  r.style.setProperty('color',st.c);
+  r.style.animation='ringG 1.4s forwards';
+  cam.appendChild(r); setTimeout(()=>r.remove(),1500);
+}
+function easeLabel(st){ /* give held labels a little pop */
+  if(st.lbl){ st.lbl.style.transition='transform .3s'; st.lbl.style.transform='translateY(-2px)'; }
+}
+
+/* camera orbit: path line behind camera during travel */
+let pathEl=null;
+function drawPathTo(x,y){
+  if(pathEl){pathEl.remove();pathEl=null;}
+  const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('d',`M ${camX} ${camY} C ${camX+(x-camX)*0.3} ${camY+(y-camY)*0.1}, ${camX+(x-camX)*0.7} ${camY+(y-camY)*0.9}, ${x} ${y}`);
+  p.setAttribute('stroke','rgba(140,170,255,0.18)'); p.setAttribute('fill','none');
+  p.setAttribute('stroke-dasharray','6 6');
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.className='trail'; svg.appendChild(p); cam.appendChild(svg); pathEl=svg;
+  setTimeout(()=>{if(pathEl){pathEl.remove();pathEl=null;}},1600);
+}
+
+/* physics step */
+function step(){
+  for(const st of stars){
+    /* soft cluster gravity */
+    const cl=CLUST.reduce((a,b)=> dist2(st,b)<dist2(st,a)?b:a, CLUST[0]);
+    let fx=(cl.x-st.x)*0.00012, fy=(cl.y-st.y)*0.00012;
+    /* heat attractor: hot coins pull neighbors */
+    for(const o of stars){ if(o===st) continue;
+      const dx=o.x-st.x, dy=o.y-st.y, d2=dx*dx+dy*dy+600;
+      const pull=(o.hot-0.35)*2200/d2*(d2<40000?1:0);
+      fx+=dx*0.000012*pull; fy+=dy*0.000012*pull;
+    }
+    /* soft repulsion so they don't stack */
+    for(const o of stars){ if(o===st) continue;
+      const dx=st.x-o.x, dy=st.y-o.y, d2=dx*dx+dy*dy+200;
+      const rep=40/d2;
+      fx+=dx*rep*0.02; fy+=dy*rep*0.02;
+    }
+    /* turbulence (living feel) */
+    const t=performance.now()/1000;
+    fx+=Math.sin(t*0.7+st.x)*0.006; fy+=Math.cos(t*0.6+st.y)*0.006;
+    /* integrate + damp. pinned star barely moves */
+    const damp= st===focus? 0.86 : 0.93;
+    st.vx=(st.vx+fx)*damp; st.vy=(st.vy+fy)*damp;
+    st.x+=st.vx; st.y+=st.vy;
+    st.x=Math.max(10,Math.min(990,st.x)); st.y=Math.max(10,Math.min(990,st.y));
+  }
+}
+function draw(){
+  cam.style.transform=`translate(${-camX*zoom}px, ${-camY*zoom}px) scale(${zoom})`;
+  for(const st of stars){
+    const x=st.x*zoom, y=st.y*zoom;
+    st.el.style.transform=`translate(${x}px,${y}px)`;
+    const near = Math.abs(st.x-camX)<180/zoom;
+    const show = (labelsOn && (near||st.held||st===focus));
+    st.lbl.style.transition='opacity .4s';
+    st.lbl.style.opacity = show?1:0;
+    const lx=st.x*zoom, ly=st.y*zoom;
+    st.lbl.style.transform=`translate(${lx}px,${ly-18}px)`;
+  }
+}
+/* camera easing */
+function camStep(){
+  const k=0.12, kz=0.15;
+  camX+=(tcamX-camX)*k; camY+=(tcamY-camY)*k; zoom+=(tzoom-zoom)*kz;
+  drawPathTo(tcamX,tcamY);
+}
+const loop=()=>{ step(); camStep(); draw(); requestAnimationFrame(loop); };
+
+/* bootstrap + controls */
+[...stars].forEach(mkStar);
+loop();
+
+const q=document.getElementById('q'), sugg=document.getElementById('sugg');
+q.addEventListener('input',()=>{
+  const term=q.value.trim().toUpperCase();
+  if(!term){ sugg.style.display='none'; return; }
+  const hits=stars.filter(s=>s.s.includes(term)).slice(0,5);
+  sugg.innerHTML=''; hits.forEach(h=>{
+    const r=document.createElement('div'); r.className='r';
+    r.innerHTML=`<span class="s">${h.s}</span><span class="d">${h.held?'you hold':'discovered'} · ${h.hot>0.7?'warming':'cooling'}</span>`;
+    r.onclick=()=>{ q.value=h.s; sugg.style.display='none'; select(h); };
+    sugg.appendChild(r);
+  });
+  sugg.style.display = hits.length? 'block':'none';
+});
+q.addEventListener('keydown',e=>{ if(e.key==='Enter'){ findStar(q.value); q.blur(); sugg.style.display='none'; } });
+document.addEventListener('click',e=>{ if(!e.target.closest('.search')) sugg.style.display='none'; });
+
+document.getElementById('bLabels').onclick=()=>{ labelsOn=!labelsOn; };
+document.getElementById('bZoomIn').onclick=()=>{ tzoom=Math.min(tzoom*1.5,8); };
+document.getElementById('bZoomOut').onclick=()=>{ tzoom=Math.max(tzoom/1.5,0.4); };
+document.getElementById('bFull').onclick=()=>{
+  if(document.fullscreenElement) document.exitFullscreen();
+  else document.documentElement.requestFullscreen();
+};
+document.querySelectorAll('.rail .it').forEach(it=>{
+  it.onclick=()=>{ const st=stars.find(s=>s.s===it.dataset.sym); if(st) select(st); };
+});
+sky.addEventListener('wheel',e=>{ e.preventDefault(); tzoom=Math.max(0.4,Math.min(8, tzoom*(e.deltaY<0?1.2:0.83))); },{passive:false});
+let drag=false,dx=0,dy=0;
+sky.addEventListener('mousedown',e=>{drag=true;dx=e.clientX;dy=e.clientY;});
+window.addEventListener('mousemove',e=>{ if(drag){ const k=1/zoom; tcamX-=(e.clientX-dx)*k; tcamY-=(e.clientY-dy)*k; dx=e.clientX;dy=e.clientY; } });
+window.addEventListener('mouseup',()=>drag=false);
+function dist2(a,b){return (a.x-b.x)**2+(a.y-b.y)**2;}
+</script>
+</body></html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C-B · Command Sky — Search-First Dynamic Mood Map</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body{ height:100%; }
+  body{ background:#07090F; color:#E8EAF0; overflow:hidden;
+        font-family:system-ui,-apple-system,sans-serif; }
+  .topbar{ position:fixed; top:0; left:0; right:0; height:56px; z-index:50;
+           background:rgba(9,12,20,0.88); display:flex; align-items:center; padding:0 20px; }
+  .brand{ font-size:15px; font-weight:800; letter-spacing:.5px; }
+  .brand span{ color:#8FB4FF; }
+  .search{ flex:1; max-width:560px; position:relative; margin-left:20px; }
+  .search input{ width:100%; padding:11px 14px; background:rgba(14,18,30,0.55);
+                 border:1px solid rgba(140,160,255,0.5); color:#E8EAF0; font-size:14px;
+                 border-radius:0; }
+  .sugg{ position:absolute; left:0; right:0; top:42px; background:rgba(10,14,24,0.97);
+         border:1px solid rgba(140,160,255,0.35); z-index:60; }
+  .sugg .r{ padding:10px 14px; font-size:12px; display:flex; justify-content:space-between; }
+  .sugg .r:hover{ background:rgba(30,42,72,0.4); }
+  .sugg .r .s{ font-weight:600; color:#fff; }
+  .sugg .r .dir{ color:#8FB4FF; font-size:11px; }
+  .sugg .r .meta{ color:rgba(170,180,205,0.7); font-size:10px; }
+  .sky{ position:fixed; top:56px; left:0; right:0; bottom:0; z-index:1;
+        background: radial-gradient(ellipse 820px 560px at 22% 24%, rgba(40,48,90,0.26) 0%, transparent 60%),
+                    radial-gradient(ellipse 620px 460px at 80% 72%, rgba(70,40,120,0.2) 0%, transparent 60%),
+                    linear-gradient(180deg,#07090F,#0A0D16 60%,#0C0F1A); overflow:hidden; }
+  .cam{ position:absolute; inset:0; transform-origin:0 0; }
+  .star{ position:absolute; width:13px; height:13px; border-radius:50%; transition:transform .06s linear; }
+  .star.held{ width:16px; height:16px; }
+  .lbl{ position:absolute; font-size:10px; color:rgba(214,220,240,0.92);
+        text-shadow:0 0 8px rgba(150,160,255,0.3); }
+  .lbl.held{ font-weight:700; color:#fff; }
+  .ring{ position:absolute; border:2px solid currentColor; border-radius:50%; pointer-events:none; }
+  @keyframes ringG{ from{transform:scale(.4);opacity:.9} to{transform:scale(2.6);opacity:0} }
+  /* sitting compass hud bottom-left */
+  .hud{ position:fixed; left:16px; bottom:18px; z-index:30; background:rgba(10,13,20,0.72);
+        border:1px solid rgba(255,255,255,0.12); padding:10px 14px; font-size:11px;
+        color:rgba(195,205,225,0.85); font-family:monospace; }
+  .hud b{ color:#8FB4FF; }
+  .hint{ position:fixed; bottom:18px; right:16px; z-index:30; font-size:11px;
+         color:rgba(180,190,215,0.7); background:rgba(10,13,20,0.6); padding:8px 12px;
+         border:1px solid rgba(255,255,255,0.1); }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <span class="brand">✦ <span>MOOD SKY</span> · command</span>
+  <div class="search">
+    <input id="q" placeholder="Type a coin → the sky flies to it" autocomplete="off">
+    <div class="sugg" id="sugg"></div>
+  </div>
+</div>
+
+<div class="sky" id="sky"><div class="cam" id="cam"></div></div>
+<div class="hud" id="hud"></div>
+<div class="hint" id="hint">◓ search-first · type to travel · ESC to drift free</div>
+
+<script>
+const sky=document.getElementById('sky'),cam=document.getElementById('cam');
+const SEED=[
+  {s:'SOL',c:'#FFD24A',hot:.9,held:1},{s:'PEPE',c:'#C7A2FF',hot:.65,held:1},
+  {s:'JON',c:'#FF6FA8',hot:.8,held:1},{s:'ETH',c:'#49D6FF',hot:.5},
+  {s:'BTC',c:'#FFB04A',hot:.6},{s:'DOGE',c:'#8FE6A0',hot:.5},
+  {s:'WIF',c:'#C7A2FF',hot:.55},{s:'DEGEN',c:'#8FE6A0',hot:.7},
+  {s:'PENG',c:'#FF9E9E',hot:.75},{s:'MOG',c:'#49D6FF',hot:.4},
+  {s:'TUBE',c:'#8FE6A0',hot:.45},{s:'SAVA',c:'#FF9E9E',hot:.6},
+  {s:'LILY',c:'#49D6FF',hot:.35},{s:'COOL',c:'#C7A2FF',hot:.5},
+  {s:'MINT',c:'#8FE6A0',hot:.5},{s:'GULF',c:'#FF9E9E',hot:.55},
+  {s:'RANA',c:'#FFD24A',hot:.4},{s:'KEEK',c:'#49D6FF',hot:.45},
+  {s:'BEAM',c:'#8FE6A0',hot:.4},{s:'OMAT',c:'#C7A2FF',hot:.5},
+  {s:'JORD',c:'#FF6FA8',hot:.6},{s:'MOON',c:'#FFD24A',hot:.5},
+  {s:'LUXE',c:'#49D6FF',hot:.5},{s:'GOAT',c:'#8FE6A0',hot:.6},
+];
+const CLUST=[{x:260,y:260},{x:720,y:220},{x:300,y:760},{x:760,y:700},{x:500,y:460}];
+const stars=SEED.map((sd,i)=>{const cl=CLUST[i%CLUST.length];
+  return {s:sd.s,c:sd.c,hot:sd.hot,held:sd.held||0,
+    x:cl.x+Math.random()*160-80,y:cl.y+Math.random()*160-80,vx:0,vy:0,
+    r:(sd.held?9:7)*(0.8+sd.hot*0.5),el:null,lbl:null};});
+let focus=null, labelsOn=false;
+let camX=500,camY=500,zoom=0.8,tcamX=camX,tcamY=camY,tzoom=zoom;
+function mkStar(st){
+  const el=document.createElement('div'); el.className='star'+(st.held?' held':'');
+  el.style.background=st.c; el.style.setProperty('color',st.c); cam.appendChild(el); st.el=el;
+  const lb=document.createElement('div'); lb.className='lbl'+(st.held?' held':''); lb.textContent=st.s;
+  lb.style.setProperty('color',st.c); cam.appendChild(lb); st.lbl=lb;
+}
+function select(st,fast){
+  focus=st; tcamX=st.x; tcamY=st.y; tzoom=Math.max(tzoom,2.0);
+  st.el.className='star held'; st.lbl.className='lbl held';
+  if(!fast){ const r=document.createElement('div'); r.className='ring';
+    r.style.width=r.style.height='120px'; r.style.left=(st.x-60)+'px'; r.style.top=(st.y-60)+'px';
+    r.style.setProperty('color',st.c); r.style.animation='ringG 1.3s forwards';
+    cam.appendChild(r); setTimeout(()=>r.remove(),1400); }
+  const h=document.getElementById('hud');
+  h.innerHTML='<b>'+st.s+'</b> locked · constellation: '+( (st.hot>0.6)?'warming (hot)':'quiet' )+
+    (st.held?' · <b>you hold</b>':'')+' · <b>ESC</b> to release';
+}
+function step(){
+  for(const st of stars){
+    const cl=CLUST.reduce((a,b)=>d2(st,b)<d2(st,a)?b:a,CLUST[0]);
+    let fx=(cl.x-st.x)*0.00012, fy=(cl.y-st.y)*0.00012;
+    for(const o of stars){ if(o===st)continue;
+      const dx=o.x-st.x, dy=o.y-st.y, d2=dx*dx+dy*dy+600;
+      const pull=(o.hot-0.35)*2200/d2*(d2<40000?1:0);
+      fx+=dx*0.000012*pull; fy+=dy*0.000012*pull; }
+    for(const o of stars){ if(o===st)continue;
+      const dx=st.x-o.x, dy=st.y-o.y, d2=dx*dx+dy*dy+200, rep=40/d2;
+      fx+=dx*rep*0.02; fy+=dy*rep*0.02; }
+    const t=performance.now()/1000;
+    fx+=Math.sin(t*0.7+st.x)*0.006; fy+=Math.cos(t*0.6+st.y)*0.006;
+    const damp= (st===focus)?0.86:0.93;
+    st.vx=(st.vx+fx)*damp; st.vy=(st.vy+fy)*damp;
+    st.x+=st.vx; st.y+=st.vy;
+    st.x=Math.max(10,Math.min(990,st.x)); st.y=Math.max(10,Math.min(990,st.y));
+  }
+}
+function draw(){
+  cam.style.transform=`translate(${-camX*zoom}px,${-camY*zoom}px) scale(${zoom})`;
+  for(const st of stars){
+    const near=Math.abs(st.x-camX)<170/zoom, show=(labelsOn||near||st.held||st===focus);
+    st.el.style.transform=`translate(${st.x*zoom}px,${st.y*zoom}px)`;
+    st.lbl.style.opacity=show?1:0;
+    st.lbl.style.transform=`translate(${st.x*zoom}px,${st.y*zoom-18}px)`;
+  }
+}
+function camStep(){
+  camX+=(tcamX-camX)*0.12; camY+=(tcamY-camY)*0.12; zoom+=(tzoom-zoom)*0.15;
+}
+const loop=()=>{step();camStep();draw();requestAnimationFrame(loop);};
+[...stars].forEach(mkStar); loop();
+const q=document.getElementById('q'),sugg=document.getElementById('sugg');
+function dir(h){ const dx=h.x-camX, dy=h.y-camY;
+  const a=(Math.atan2(dy,dx)*180/Math.PI+360)%360;
+  const card= a<22.5||a>=337.5?'E': a<67.5?'SE':a<112.5?'S':a<157.5?'SW':a<202.5?'W':a<247.5?'NW':a<292.5?'N':'NE';
+  const far=Math.hypot(dx,dy)>220;
+  return card+(far?' · far':' · close');
+}
+q.addEventListener('input',()=>{
+  const term=q.value.trim().toUpperCase(); const h=document.getElementById('hint');
+  if(!term){sugg.style.display='none'; return;}
+  const hits=stars.filter(s=>s.s.includes(term)).slice(0,6);
+  sugg.innerHTML=''; hits.forEach(hit=>{
+    const r=document.createElement('div'); r.className='r';
+    r.innerHTML=`<span class="s">${hit.s}</span>`+
+      `<span class="dir">${dir(hit)}</span>`+
+      `<span class="meta">${hit.hot>0.6?'warming':'quiet'}${hit.held?' · you hold':''}</span>`;
+    r.onclick=()=>{ q.value=hit.s; sugg.style.display='none'; select(hit); };
+    sugg.appendChild(r);
+  });
+  sugg.style.display = hits.length?'block':'none';
+});
+q.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){ const term=q.value.trim().toUpperCase(); const hit=stars.find(s=>s.s.startsWith(term)); if(hit)select(hit); sugg.style.display='none'; q.blur(); }
+  if(e.key==='Escape'){ focus=null; tzoom=0.8; document.getElementById('hud').innerHTML='<b>free</b> · drifting · search or <b>+</b>/<b>−</b> to move'; }
+});
+document.addEventListener('click',e=>{ if(!e.target.closest('.search'))sugg.style.display='none'; });
+sky.addEventListener('wheel',e=>{ e.preventDefault(); tzoom=Math.max(0.4,Math.min(8,tzoom*(e.deltaY<0?1.2:0.83))); },{passive:false});
+let drag=false,dx=0,dy=0;
+sky.addEventListener('mousedown',e=>{drag=true;dx=e.clientX;dy=e.clientY;});
+window.addEventListener('mousemove',e=>{ if(drag){const k=1/zoom;tcamX-=(e.clientX-dx)*k;tcamY-=(e.clientY-dy)*k;dx=e.clientX;dy=e.clientY;} });
+window.addEventListener('mouseup',()=>drag=false);
+function d2(a,b){return (a.x-b.x)**2+(a.y-b.y)**2;}
+</script>
+</body></html>
