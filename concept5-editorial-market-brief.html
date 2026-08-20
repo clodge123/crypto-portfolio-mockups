@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1300, initial-scale=1">
+<title>Concept 1 — Editorial Market Brief (The Anti-Dashboard)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: radial-gradient(ellipse 900px 700px at 25% 30%, rgba(240,238,230,.55) 0%, transparent 70%),
+                linear-gradient(180deg, #0F0F13 0%, #14141C 60%, #171720 100%);
+    color: #EEEDE9;
+    font-family: Georgia, 'Times New Roman', serif;
+    min-height: 100vh; padding: 20px;
+  }
+  .page { max-width: 1280px; margin: 0 auto; }
+  h1 { font-size: 26px; font-family: Georgia, serif; letter-spacing: .5px; }
+  .subtitle { color: rgba(200,199,193,.65); font-size: 13px; margin-top: 4px; font-family: sans-serif; }
+  .note { color: #D8C27A; font-size: 11px; margin-top: 4px; font-family: sans-serif; }
+
+  .section { margin: 50px 0; }
+  .section h2 { font-size: 20px; font-family: Georgia, serif; }
+  .section .tagline { color: rgba(200,199,193,.5); font-size: 12px; margin: 6px 0 20px; font-family: sans-serif; }
+
+  .pf { display:inline-block; width: 400px; margin: 0 26px 30px 0;
+        background: rgba(15,15,20,.55); border-radius: 28px; padding: 0;
+        box-shadow: 0 0 0 2px rgba(255,255,255,.04) inset, 0 16px 44px rgba(0,0,0,.5); }
+  .pl { text-align:center; color: rgba(200,199,193,.55); font-size: 10px; margin-top: 10px; font-family: sans-serif; }
+
+  .sbar { display:flex; justify-content:space-between; padding: 14px 18px; align-items:center; }
+  .sbar .t { font-size: 15px; font-weight: 700; font-family: Georgia, serif; color: #F2F1ED; letter-spacing: .5px; }
+  .sbar .d { font-size: 10px; color: rgba(180,180,175,.5); font-family: sans-serif; }
+  .sbar .dot { width: 8px; height: 8px; background: #C7C25A; border-radius: 50%; box-shadow: 0 0 10px #C7C25A; }
+
+  /* header block */
+  .brief { padding: 20px; }
+  .brief .kline { font-size: 10px; letter-spacing: 2px; color: rgba(180,180,175,.55); font-family: sans-serif; }
+  .brief h3 { font-size: 25px; color: #F8F7F2; font-family: Georgia, serif; font-weight: 700; line-height: 1.2; margin-top: 10px;}
+  .brief .lead { font-size: 13px; color: rgba(215,214,207,.8); font-family: sans-serif; line-height: 1.7; margin-top: 12px; }
+  .brief .rule { height: 1px; background: rgba(255,255,255,.08); margin: 16px 0; }
+
+  .art { padding: 0 18px 6px 18px; }
+  .art .cat { font-size: 9px; letter-spacing: 1.5px; color: #C8A86A; font-family: sans-serif; }
+  .art .cat.price { color: #E09B7A; }
+  .art .cat.whale { color: #D07A97; }
+  .art .cat.gov { color: #8A9AC8; }
+  .art h4 { font-size: 17px; color: #F6F5F0; font-family: Georgia, serif; line-height: 1.35; }
+  .art p { font-size: 12px; color: rgba(210,209,203,.75); font-family: sans-serif; line-height: 1.6; margin-top: 6px; }
+  .art .meta { display:flex; justify-content:space-between; margin-top: 8px; font-size: 9px;
+               color: rgba(170,170,165,.5); font-family: sans-serif;}
+  .art .meta b { color: #D8C27A; }
+
+  .divider { height: 1px; background: rgba(255,255,255,.07); margin: 10px 18px; }
+
+  /* SHARE / brief card (desktop) */
+  .share { width: 530px; background: #12121A; border: 1px solid rgba(255,255,255,.10); border-radius: 18px; padding: 28px; margin-bottom: 30px;
+           box-shadow: 0 0 0 3px rgba(255,255,255,.04) inset, 0 16px 44px rgba(0,0,0,.4);}
+  .share .brand { font-size: 13px; letter-spacing: 2px; color: #C8C25A; font-family: sans-serif; font-weight: 700;}
+  .share .big { font-size: 24px; color: #F8F7F2; font-family: Georgia, serif; font-weight: 700; line-height: 1.25; margin-top: 16px; }
+  .share .sub { font-size: 14px; color: rgba(215,214,207,.8); font-family: sans-serif; line-height: 1.7; margin-top: 8px; }
+  .share .foot-note { font-size: 10px; color: rgba(170,170,165,.5); margin-top: 16px; font-family: sans-serif; }
+  .share .cta { display:block; margin-top: 18px; text-align:center; padding: 13px;
+               background: rgba(20,20,28,.35); border:1px solid rgba(200,190,90,.35); border-radius: 12px;
+               color: #E8DFA0; font-size: 13px; font-family: sans-serif; font-weight: 700;}
+</style>
+</head><body>
+<div class="page">
+  <h1>�‍Concept 1 — Editorial Market Brief</h1>
+  <div class="subtitle">Big serif headlines, calm whitespace, one gorgeous story at a time. Bloomberg's discipline + Apple News' calm.</div>
+  <div class="note">✦ sharing feels classy, not nerdy — it "reads" like a premium newsletter</div>
+
+  <div class="section">
+    <h2>Home Feed (editorial brief)</h2>
+    <div class="tagline">Fade-in reveals per article; subtle ink-like underline on hover</div>
+    <div class="pf">
+      <div class="sbar"><span class="t">The Market Brief</span><span class="d">Wed · 8:42 PM</span></div>
+      <div class="brief">
+        <div class="kline">— TODAY'S PORTFOLIO BRIEF —</div>
+        <h3>3 things moved<br>while you were away</h3>
+        <div class="lead">Two whale clusters, one governance vote closing, and SOL touched a local high. Nothing critical, one watch.</div>
+        <div class="rule"></div>
+      </div>
+
+      <div class="art">
+        <div class="cat whale">WHALE MOVEMENT</div>
+        <h4>JON — $4.2M sweep, 11 wallets</h4>
+        <p>A tight cluster of wallets accumulated in under eight minutes. Early accumulation pattern; no exit signs yet.</p>
+        <div class="meta"><b>WATCH</b><span>2m ago</span></div>
+      </div>
+      <div class="divider"></div>
+
+      <div class="art">
+        <div class="cat price">PRICE</div>
+        <h4>SOL touches $184, a local max</h4>
+        <p>The strongest intraday push since the last high. Momentum index is up; Sydney session very active.</p>
+        <div class="meta"><b>↗ +6.4%</b><span>11m ago</span></div>
+      </div>
+      <div class="divider"></div>
+
+      <div class="art">
+        <div class="cat gov">GOVERNANCE</div>
+        <h4>PEPE Proposal #14 nears quorum</h4>
+        <p>Vause at 61% for, 22% against. Closes in 34 hours; early lean is approval.</p>
+        <div class="meta"><b>34h ETA</b><span>1h ago</span></div>
+      </div>
+      <div class="divider"></div>
+
+      <div class="art" style="opacity:.5">
+        <div class="cat" style="color:rgba(180,180,175,.5)">NEWS</div>
+        <h4 style="color:rgba(240,239,233,.6)">ETH dev milestone passes</h4>
+        <p style="color:rgba(190,190,185,.5)">Reference implementation merged; no flags.</p>
+        <div class="meta"><span>26m ago</span></div>
+      </div>
+    </div>
+    <div class="pl">📱 The Market Brief — calm editorial feed</div>
+  </div>
+
+  <div class="section">
+    <h2>Share Page (the classy shareable)</h2>
+    <div class="tagline">a beautiful one-page brief anyone can open</div>
+    <div class="share">
+      <div class="brand">THE MARKET BRIEF</div>
+      <div class="big">JON — a $4.2M whale sweep<br>just moved your portfolio</div>
+      <div class="sub">AI detected 11 wallets accumulating under 8 minutes on Solana. Tracked: SOL · ETH · PEPE · JON · DEGEN · PENG · WIF.</div>
+      <div class="foot-note">— Portfolio brief for solana:watchlist, generated 2 minutes ago.</div>
+      <div class="cta">Create your own brief — free</div>
+    </div>
+    <div class="pl">share card — desktop</div>
+  </div>
+
+</div>
+</body></html>

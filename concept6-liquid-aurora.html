@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1300, initial-scale=1">
+<title>Concept 6 — Liquid Aurora (The Live Market Mood Ring)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* Animated aurora blobs behind everything — the mood of the market */
+  body {
+    background: #0C0F16;
+    color: #EEF0F7;
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    min-height: 100vh; padding: 20px; overflow-x: hidden;
+  }
+
+  /* ─── ANIMATED AURORA LAYER (full-viewport) ─── */
+  .aurora { position: fixed; inset: 0; z-index: 0; overflow: hidden;
+            filter: saturate(1.25) blur(2px); }
+  .aurora .blob { position: absolute; width: 560px; height: 560px; border-radius: 50%; opacity: .5; }
+  .aurora .blob.b1 { background: radial-gradient(circle, rgba(54,240,158,.34) 0%, transparent 70%);
+                     left: 4%; top: 6%; animation: drift1 26s infinite ease-in-out; }
+  .aurora .blob.b2 { background: radial-gradient(circle, rgba(90,120,255,.4) 0%, transparent 70%);
+                     left: 44%; top: 30%; animation: drift2 31s infinite ease-in-out; }
+  .aurora .blob.b3 { background: radial-gradient(circle, rgba(255,110,190,.30) 0%, transparent 70%);
+                     left: 70%; top: 58%; animation: drift3 22s infinite ease-in-out; }
+  .aurora .blob.b4 { background: radial-gradient(circle, rgba(255,180,90,.26) 0%, transparent 70%);
+                     left: 22%; top: 62%; animation: drift4 29s infinite ease-in-out; }
+
+  @keyframes drift1 { 0%,100% { transform:translate(0,0) scale(1); }
+                      33%     { transform:translate(120px,60px) scale(1.12); }
+                      66%     { transform:translate(-80px,140px) scale(.9); } }
+  @keyframes drift2 { 0%,100% { transform:translate(0,0) scale(1); }
+                      50%     { transform:translate(-160px,-90px) scale(1.18); } }
+  @keyframes drift3 { 0%,100% { transform:translate(0,0) scale(1); }
+                      40%     { transform:translate(140px,-110px) scale(1.1); }
+                      80%     { transform:translate(40px,80px) scale(.85); } }
+  @keyframes drift4 { 0%,100% { transform:translate(0,0) scale(1); }
+                      60%     { transform:translate(-120px,60px) scale(1.15); } }
+
+  .content { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; }
+  h1 { font-size: 26px; letter-spacing: 1px; }
+  .subtitle { color: rgba(205,210,225,.7); font-size: 13px; margin-top: 4px; }
+  .note { color: #9EFF8C; font-size: 11px; margin-top: 4px; text-shadow: 0 0 14px rgba(120,255,140,.35); }
+
+  .section { margin: 48px 0; }
+  .section h2 { font-size: 20px; }
+  .section .tagline { color: rgba(205,210,225,.55); font-size: 12px; margin: 6px 0 18px; }
+
+  .pf { display:inline-block; width: 400px; margin: 0 24px 30px 0;
+        background: rgba(12,16,24,.35); border-radius: 28px; padding: 0;
+        box-shadow: 0 0 0 2px rgba(255,255,255,.06) inset, 0 16px 44px rgba(0,0,0,.4);
+        overflow: hidden; backdrop-filter: blur(6px); }
+  .pl { text-align:center; color: rgba(205,210,225,.6); font-size: 10px; margin-top: 10px; }
+
+  .sbar { display:flex; justify-content:space-between; padding: 14px 18px; align-items:center;
+          background: rgba(12,16,24,.4); }
+  .sbar .t { font-size: 12px; font-weight: 700; color: #EFF1F7; }
+  .sbar .tm { font-size: 9px; color: rgba(200,205,220,.5); }
+  .sbar .mood { display:flex; align-items:center; gap:6px; font-size: 9px; color:#8FE695; }
+  .sbar .mood i { width:8px;height:8px;border-radius:50%;background:#8FE695;box-shadow:0 0 10px #8FE695;
+                  animation:moodbl 3.2s infinite; }
+  @keyframes moodbl{0%,100%{opacity:1}50%{opacity:.4}}
+
+  /* ─── FLOATING GLASS CARDS ─── */
+  .card { margin: 12px 14px; background: rgba(235,238,248,0.05);
+          border: 1px solid rgba(255,255,255,.12); border-radius: 20px; padding: 14px 16px;
+          box-shadow: 0 0 0 3px rgba(255,255,255,.05) inset, 0 12px 36px rgba(0,0,0,.25),
+                      inset 0 1px 0 rgba(255,255,255,.07); }
+
+  .csheen { /* glass reflection sweep via ::before is unreliable; use gradient */
+  }
+  .chdr{display:flex;align-items:center;}
+  .icon{width:26px;height:26px;border-radius:12px;background:rgba(255,255,255,.1);
+        text-align:center;font-size:12px;color:rgba(255,255,255,.85);line-height:26px;
+        border:1px solid rgba(255,255,255,.18);}
+  .sym{font-size:12px;font-weight:700;color:rgba(245,247,252,.95);margin-left:8px;}
+  .tag{font-size:9px;padding:2px 10px;background:rgba(255,255,255,.09);color:rgba(225,228,240,.8);
+       border-radius:12px;margin-left:8px;}
+  .tm{flex:1;text-align:right;font-size:9px;color:rgba(200,205,220,.5);}
+
+  .title{font-size:15px;font-weight:600;color:#F4F6FA;margin-top:9px;line-height:1.3;}
+  .body{font-size:12px;color:rgba(215,220,235,.82);margin-top:6px;line-height:1.5;}
+
+  .big{font-size:27px;font-weight:800;color:#F7F9FB;}
+  .chg{font-size:12px;font-weight:700;}
+  .chg.up{color:#7CFF9C;}.chg.dn{color:#FF7A7A;}
+
+  .halo{height:4px;border-radius:3px;margin-bottom:10px;}
+  .halo.h-price{background:linear-gradient(90deg,#7CFF9C,#32D9A0);box-shadow:0 2px 10px rgba(120,255,150,.5);}
+  .halo.h-whale{background:linear-gradient(90deg,#FF6FA8,#FF4D91);box-shadow:0 2px 10px rgba(255,110,170,.5);}
+  .halo.h-news{background:linear-gradient(90deg,#58BBFF,#3F8EFF);box-shadow:0 2px 10px rgba(90,180,255,.5);}
+  .halo.h-gov{background:linear-gradient(90deg,#A79AFF,#8E7EFF);box-shadow:0 2px 10px rgba(160,140,255,.5);}
+
+  .gl-btn{display:inline-block;padding:6px 18px;margin-top:12px;
+          background:rgba(120,200,150,.12);border:1px solid rgba(140,220,170,.4);
+          border-radius:20px;color:#B0FFC8;font-size:11px;font-weight:700;
+          box-shadow:0 0 16px rgba(140,220,170,.3);}
+
+  .met{display:flex;gap:9px;margin-top:11px;}
+  .met .m{flex:1;background:rgba(20,26,38,.35);border:1px solid rgba(255,255,255,.08);
+          border-radius:11px;padding:8px 10px;}
+  .met .m .k{font-size:8px;color:rgba(200,205,220,.55);}
+  .met .m .v{font-size:12px;font-weight:700;color:#F0F3F8;}
+
+  .foot{display:flex;justify-content:space-between;margin-top:11px;font-size:9px;color:rgba(200,205,220,.5);}
+  .foot a{color:#AEDBFF;}
+
+  /* share card */
+  .share{width:530px;background:rgba(235,238,248,.04);border:1px solid rgba(255,255,255,.12);
+         border-radius:22px;padding:26px;margin-bottom:30px;box-shadow:0 16px 44px rgba(0,0,0,.3);
+         backdrop-filter:blur(8px);}
+  .share .top{display:flex;align-items:center;gap:8px;}
+  .share .brand{font-size:13px;font-weight:800;color:#E9F2FA;}
+  .share .live{font-size:9px;padding:3px 10px;border-radius:12px;background:rgba(120,220,150,.16);
+               color:#9AFFB4;border:1px solid rgba(120,220,150,.35);}
+  .share .big{font-size:23px;font-weight:800;color:#F7F9FB;margin-top:14px;line-height:1.25;}
+  .share .sub{font-size:14px;color:rgba(215,220,235,.8);margin-top:8px;line-height:1.6;}
+  .share .sig{display:flex;gap:12px;margin-top:16px;}
+  .share .sig .c{flex:1;background:rgba(30,38,54,.3);border:1px solid rgba(255,255,255,.1);
+                 border-radius:12px;padding:10px 12px;}
+  .share .sig .c .k{font-size:8px;color:rgba(200,205,220,.55);}
+  .share .sig .c .v{font-size:13px;font-weight:700;color:#F2F5FA;}
+  .share .halo{height:4px;margin-top:8px;background:linear-gradient(90deg,#FF6FA8,#FF4D91);
+               box-shadow:0 2px 10px rgba(255,110,170,.5);}
+  .share .cta{display:block;margin-top:18px;text-align:center;padding:13px;
+              background:rgba(120,200,150,.12);border:1px solid rgba(140,220,170,.4);
+              border-radius:12px;color:#B0FFC8;font-size:13px;font-weight:700;
+              box-shadow:0 0 20px rgba(140,220,170,.3);}
+</style>
+</head><body>
+  <div class="aurora">
+    <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div>
+  </div>
+<div class="content">
+  <h1>�Concept 6 — Liquid Aurora (Live Market Mood)</h1>
+  <div class="subtitle">Floating glass cards above a drifting aurora — the background is the market's live mood ring (bull=warn, bear=cold).</div>
+  <div class="note">� the feed feels *alive* — subtle but continuously breathing</div>
+
+  <div class="section">
+    <h2>Home Feed (animated aurora + floating glass)</h2>
+    <div class="tagline">track the aurora drift — it's the living market sentiment</div>
+    <div class="pf">
+      <div class="sbar"><span class="t">Portfolio Aurora</span><span class="mood"><i/>WARN</span></div>
+
+      <div class="card">
+        <div class="halo h-whale"></div>
+        <div class="chdr"><div class="icon">🃏</div><div class="sym">JON</div><div class="tag">WHALE MOVE</div><div class="tm">2m</div></div>
+        <div class="title">$4.2M sweep — 11-wallet cluster</div>
+        <div class="body">Coordinated accumulation on Solana; 38% of recent volume. No exit signs.</div>
+        <div class="met"><div class="m"><div class="k">VOL</div><div class="v">$4.2M</div></div><div class="m"><div class="k">WALLETS</div><div class="v">11</div></div></div>
+        <div class="foot"><span>· <a>open on-chain</a></span><span><a>share</a></span></div>
+      </div>
+
+      <div class="card">
+        <div class="halo h-price"></div>
+        <div class="chdr"><div class="icon">◆</div><div class="sym">SOL</div><div class="tag">PRICE</div><div class="tm">11m</div></div>
+        <div class="big">$184.20</div>
+        <div class="chg up">▲ +6.4% <span style="font-size:9px;color:rgba(200,205,220,.5)">24h</span></div>
+        <div class="foot"><span>local max</span><span><a>share</a></span></div>
+      </div>
+
+      <div class="card">
+        <div class="halo h-news"></div>
+        <div class="chdr"><div class="icon">📰</div><div class="sym">ETH</div><div class="tag">NEWS</div><div class="tm">26m</div></div>
+        <div class="title">EIP-7XXX reaches review milestone</div>
+        <div class="body">Reference impl merged; 3 auditors assigned. No flags.</div>
+        <div class="foot"><span>· <a>read source</a></span><span><a>share</a></span></div>
+      </div>
+
+      <div class="card">
+        <div class="halo h-gov"></div>
+        <div class="chdr"><div class="icon">🏛</div><div class="sym">PEPE</div><div class="tag">GOVERNANCE</div><div class="tm">1h</div></div>
+        <div class="title">Proposal #14 — treasury rebalance</div>
+        <div class="body">Vause 61% for / 22% against. Closes in 34h.</div>
+        <div class="foot"><span>· quorum nearing</span><span><a>share</a></span></div>
+      </div>
+
+      <div class="card" style="text-align:center; padding:18px 16px;">
+        <div class="gl-btn">+ Track a new token</div>
+      </div>
+    </div>
+    <div class="pl">📱 Portfolio Aurora — floating glass feed</div>
+  </div>
+
+  <div class="section">
+    <h2>Share Page (live aurora shareable)</h2>
+    <div class="tagline">the background keeps breathing right on the shared page</div>
+    <div class="share">
+      <div class="top"><span class="brand">Portfolio Aurora</span><span class="live">● LIVE</span></div>
+      <div class="halo"></div>
+      <div class="big">JON just moved — $4.2M whale sweep on Solana</div>
+      <div class="sub">AI detected 11 wallets accumulating in the last 8 minutes. Watchlist: SOL · ETH · PEPE · JON · DEGEN · PENG · WIF.</div>
+      <div class="sig">
+        <div class="c"><div class="k">VOLUME</div><div class="v">$4.2M</div></div>
+        <div class="c"><div class="k">WALLETS</div><div class="v">11</div></div>
+        <div class="c"><div class="k">URGENCY</div><div class="v">WATCH</div></div>
+      </div>
+      <div class="cta">Create your own — free</div>
+    </div>
+    <div class="pl">share card — desktop (aurora animates behind)</div>
+  </div>
+</div>
+</body></html>

@@ -1,0 +1,8 @@
+total 1796
+drwxrwxr-x 2 glman123 glman123   4096 Aug 19 19:55 .
+drwxrwxr-x 4 glman123 glman123   4096 Aug 19 19:55 ..
+-rw-rw-r-- 1 glman123 glman123 660676 Aug 19 19:55 c4.png
+-rw-rw-r-- 1 glman123 glman123 522500 Aug 19 19:55 c5.png
+-rw-rw-r-- 1 glman123 glman123 311648 Aug 19 19:55 c6.png
+-rw-rw-r-- 1 glman123 glman123 327220 Aug 19 19:55 c7.png
+-rw-rw-r-- 1 glman123 glman123      0 Aug 19 19:55 _ls.txt

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1300, initial-scale=1">
+<title>Concept 4 — Night-Sky Constellation (Your Portfolio As A Star Map)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: radial-gradient(ellipse 900px 600px at 20% 20%, rgba(40,48,90,0.35) 0%, transparent 65%),
+                radial-gradient(ellipse 700px 500px at 80% 70%, rgba(70,40,120,0.25) 0%, transparent 65%),
+                linear-gradient(180deg, #080A10 0%, #0A0D16 55%, #0C0F1A 100%);
+    color: #E8EAF0;
+    font-family: system-ui, -apple-system, 'Segeo UI', sans-serif;
+    min-height: 100vh; padding: 20px;
+  }
+  .page { max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: 26px; color: #E8EAF0; letter-spacing: 1px;
+       text-shadow: 0 0 18px rgba(150,160,255,0.25); }
+  .subtitle { color: rgba(190,195,215,0.7); font-size: 13px; margin-top: 4px; }
+  .note { color: #A99BFF; font-size: 11px; margin-top: 4px;
+          text-shadow: 0 0 14px rgba(140,120,255,0.3); }
+  .section { margin: 48px 0; }
+  .section h2 { font-size: 20px; color: #D8DCEC; }
+  .section .tagline { color: rgba(190,195,215,0.55); font-size: 12px; margin: 4px 0 18px; }
+
+  /* ─── PHONE FRAME ─── */
+  .pf { display:inline-block; width: 400px; margin: 0 24px 30px 0;
+        background: rgba(6,8,14,0.5); border-radius: 26px; padding: 0;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.06) inset, 0 14px 40px rgba(0,0,0,0.5); }
+  .pl { text-align:center; color: rgba(190,195,215,0.6); font-size: 10px; margin-top: 10px; }
+
+  /* ─── STATUS BAR ─── */
+  .sbar { display:flex; justify-content:space-between; padding: 12px 16px; align-items:center; }
+  .sbar .t { font-size:12px; color:rgba(190,195,215,0.8); font-weight:600; }
+  .sbar .tm { font-size:10px; color:rgba(150,155,180,0.5); }
+  .sbar .dot { width:8px;height:8px;background:#9BE39B;border-radius:50%;box-shadow:0 0 12px #9BE39B; }
+
+  /* ─── CONSTELLATION HEADER (the hero) ─── */
+  .const { position:relative; height: 150px; background: radial-gradient(ellipse 200px 140px at 40% 45%, rgba(30,32,70,0.5) 0%, transparent 100%); }
+  .const svg { position:absolute; inset:0; width:100%; height:100%; }
+  .cstar { position:absolute; }
+  .cstar::before { content:''; position:absolute; inset:-6px; background:currentColor; border-radius:50%;
+                   box-shadow:0 0 14px currentColor; animation:pulse 2.4s infinite; }
+
+  @keyframes pulse {
+    0%   { transform:scale(1);   opacity:.9; }
+    50%  { transform:scale(1.8); opacity:.35; }
+    100% { transform:scale(1);   opacity:.9; }
+  }
+
+  /* token stars */
+  .st{position:absolute;width:9px;height:9px;border-radius:50%;}
+  .st.s1{background:#FFD24A;box-shadow:0 0 14px #FFD24A;left:34%;top:22%;animation:twinkle 2.8s infinite;}
+  .st.s2{background:#49D6FF;box-shadow:0 0 14px #49D6FF;left:58%;top:18%;animation:twinkle 3.4s infinite;}
+  .st.s3{background:#FF6FA8;box-shadow:0 0 14px #FF6FA8;left:72%;top:44%;animation:twinkle 3.1s infinite;}
+  .st.s4{background:#7BFF9E;box-shadow:0 0 14px #7BFF9E;left:46%;top:58%;animation:twinkle 2.6s infinite;}
+  .st.s5{background:#C7A2FF;box-shadow:0 0 14px #C7A2FF;left:24%;top:52%;animation:twinkle 3.7s infinite;}
+  .st.s6{background:#FFD24A;box-shadow:0 0 14px #FFD24A;left:60%;top:70%;animation:twinkle 2.9s infinite;}
+  .st.s7{background:#49D6FF;box-shadow:0 0 14px #49D6FF;left:84%;top:20%;animation:twinkle 3.2s infinite;}
+  @keyframes twinkle{0%,100%{opacity:1}50%{opacity:.35}}
+
+  /* pulsing alert ring on whale star */
+  .alertring{position:absolute;left:46%;top:58%;width:20px;height:20px;border:1.5px solid #FF6FA8;border-radius:50%;
+             animation:ring 2.2s infinite;}
+  @keyframes ring{0%{transform:scale(.6);opacity:.9}100%{transform:scale(2.2);opacity:0}}
+
+  .clabel{position:absolute;font-size:9px;color:rgba(200,205,225,.75);}
+  .clabel.l1{left:31%;top:9%;}.clabel.l2{left:55%;top:5%;}.clabel.l3{left:69%;top:32%;}
+  .clabel.l4{left:43%;top:52%;}.clabel.l5{left:15%;top:44%;}.clabel.l6{left:57%;top:64%;}.clabel.l7{left:83%;top:7%;}
+
+  /* ─── FILTER CHIPS ─── */
+  .chips{display:flex;gap:8px;padding:8px 14px;flex-wrap:wrap;}
+  .chip{padding:5px 14px;font-size:10px;color:rgba(180,185,205,.65);border:1px solid rgba(255,255,255,.12);
+        border-radius:20px;background:rgba(14,16,26,.5);}
+  .chip.sel{background:rgba(90,120,255,.18);border-color:rgba(130,150,255,.5);color:#C8CFFF;}
+
+  /* ─── CARDS ─── */
+  .card{margin:10px 14px;background:rgba(16,19,30,.55);border:1px solid rgba(255,255,255,.10);
+        border-radius:16px;padding:12px 14px;position:relative;
+        box-shadow:0 6px 22px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.05);}
+  .card .glowbar{height:3px;border-radius:2px;margin-bottom:10px;}
+  .card.c-price .glowbar{background:#7BFF9E;box-shadow:0 0 10px #7BFF9E;}
+  .card.c-whale .glowbar{background:#FF6FA8;box-shadow:0 0 10px #FF6FA8;}
+  .card.c-news  .glowbar{background:#49D6FF;box-shadow:0 0 10px #49D6FF;}
+  .card.c-gov   .glowbar{background:#C7A2FF;box-shadow:0 0 10px #C7A2FF;}
+
+  .chdr{display:flex;align-items:center;}
+  .icon{width:24px;height:24px;border-radius:8px;background:rgba(80,90,130,.35);text-align:center;
+        font-size:11px;color:rgba(210,215,235,.8);line-height:24px;border:1px solid rgba(255,255,255,.15);}
+  .sym{font-size:12px;font-weight:700;color:rgba(240,242,250,.95);margin-left:8px;}
+  .tag{font-size:9px;padding:2px 9px;background:rgba(255,255,255,.06);color:rgba(210,215,235,.75);
+       border-radius:10px;margin-left:8px;}
+  .tm{flex:1;text-align:right;font-size:9px;color:rgba(160,165,190,.55);}
+
+  .title{font-size:15px;font-weight:600;color:#F4F5FA;margin-top:8px;line-height:1.3;}
+  .body{font-size:12px;color:rgba(205,210,230,.8);margin-top:6px;line-height:1.5;}
+
+  .big{font-size:26px;font-weight:800;color:#F6F7FB;}
+  .chg{font-size:12px;font-weight:700;}
+  .chg.up{color:#7BFF9E;}.chg.dn{color:#FF7A6E;}
+
+  .mini{display:flex;align-items:center;gap:10px;margin-top:8px;}
+  .mini .spark{width:90px;height:34px;background:linear-gradient(180deg,#0E1120 0%,#0E1120 100%);position:relative;}
+  .mini .spark b{position:absolute;bottom:4px;height:1px;background:#7BFF9E;box-shadow:0 0 6px #7BFF9E;}
+  .mini .spark b:nth-child(1){left:0;width:14%;}
+  .mini .spark b:nth-child(2){left:16%;width:16%;}
+  .mini .spark b:nth-child(3){left:34%;width:20%;}
+  .mini .spark b:nth-child(4){left:58%;width:24%;}
+  .mini .spark b:nth-child(5){left:86%;width:12%;}
+
+  .met{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+  .met .m{flex:1;padding:8px;background:rgba(10,12,20,.4);border-radius:10px;
+          border:1px solid rgba(255,255,255,.08);}
+  .met .m .k{font-size:8px;color:rgba(170,175,200,.55);}
+  .met .m .v{font-size:12px;font-weight:700;color:#EDF0F8;}
+
+  .foot{display:flex;justify-content:space-between;margin-top:10px;font-size:9px;color:rgba(160,165,190,.5);}
+  .foot a{color:#A6D9FF;}
+
+  .divider{height:1px;background:rgba(255,255,255,.06);margin:12px 14px;}
+
+  /* ─── SHARE PAGE (desktop card) ─── */
+  .share{width:520px;background:linear-gradient(180deg,#0B0E18 0%,#0D1020 100%);
+         border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:24px;margin-bottom:30px;
+         box-shadow:0 0 0 3px rgba(255,255,255,.05) inset,0 16px 44px rgba(0,0,0,.5);}
+  .share .top{display:flex;align-items:center;gap:8px;}
+  .share .brand{font-size:13px;font-weight:800;color:#D9DDF0;letter-spacing:.5px;}
+  .share .brand span{color:#9CE3A0;}
+  .share .live{font-size:9px;padding:3px 10px;border-radius:12px;background:rgba(120,200,130,.15);
+               color:#8FE695;border:1px solid rgba(120,200,130,.35);}
+  .share .big-t{font-size:22px;font-weight:800;color:#F6F7FB;margin-top:14px;line-height:1.25;}
+  .share .sub-t{font-size:14px;color:rgba(200,205,225,.78);margin-top:6px;line-height:1.5;}
+  .share .sig{display:flex;gap:12px;margin-top:16px;}
+  .share .sig .c{flex:1;background:rgba(14,16,26,.4);border:1px solid rgba(255,255,255,.09);
+                 border-radius:12px;padding:10px 12px;}
+  .share .sig .c .k{font-size:8px;color:rgba(170,175,200,.55);}
+  .share .sig .c .v{font-size:13px;font-weight:700;color:#EFF2F8;}
+  .share .cta{display:block;margin-top:18px;text-align:center;padding:12px;
+              background:linear-gradient(135deg,rgba(90,110,255,.25),rgba(110,200,150,.2));
+              border:1px solid rgba(120,160,255,.4);border-radius:12px;
+              color:#D0E4FF;font-size:13px;font-weight:700;box-shadow:0 0 18px rgba(90,110,255,.25);}
+</style>
+</head><body>
+<div class="page">
+  <h1>🧠 CONCEPT 4 — Night-Sky Constellation</h1>
+  <div class="subtitle">Your portfolio as a star map. Tokens = stars, moves = glowing arcs. Alerts = pulse rings.</div>
+  <div class="note">✦ the one crypto/finance app that looks like no other → strong share-page hook</div>
+
+  <div class="section">
+    <h2>Home Feed (animated constellation + signal cards)</h2>
+    <div class="tagline">Stars twinkle, alert ring pulses, new signal gives a soft flash-in on the card</div>
+    <div class="pf">
+      <div class="sbar"><span class="t">✦ Portfolio Sky</span><span class="tm">Wed · 8:42 PM</span></div>
+      <div class="const">
+        <div class="st s1"></div><div class="clabel l1">SOL</div>
+        <div class="st s2"></div><div class="clabel l2">ETH</div>
+        <div class="st s3"></div><div class="clabel l3">PEPE</div>
+        <div class="st s4"></div><div class="clabel l4">JON</div>
+        <div class="alertring" style="left:46%;top:58%"></div>
+        <div class="clabel l5" style="left:15%;top:44%">DEGEN</div>
+        <div class="clabel l6" style="left:57%;top:64%">PENG</div>
+        <div class="clabel l7" style="left:83%;top:7%">WIF</div>
+        <svg><line x1="34%" y1="22%" x2="58%" y2="18%" stroke="rgba(255,255,255,.10)"/></svg>
+      </div>
+      <div class="chips">
+        <div class="chip sel">All</div><div class="chip">Alerts</div><div class="chip">Price</div><div class="chip">Whales</div>
+      </div>
+
+      <div class="card c-whale">
+        <div class="glowbar"></div>
+        <div class="chdr"><div class="icon">🃏</div><div class="sym">JON</div><div class="tag">WHALE MOVE</div><div class="tm">2m</div></div>
+        <div class="title">Whale swept $4.2M SOL — under 8 min</div>
+        <div class="body">Buy cluster of 11 wallets appeared on DexScreener. 38% of volume since the move. Likely coordinated accumulation.</div>
+        <div class="met"><div class="m"><div class="k">VOL</div><div class="v">$4.2M</div></div><div class="m"><div class="k">WALLETS</div><div class="v">11</div></div><div class="m"><div class="k">RISK</div><div class="v">WATCH</div></div></div>
+        <div class="foot">· <a>open on-chain</a> · <a>share</a></div>
+      </div>
+
+      <div class="card c-price">
+        <div class="glowbar"></div>
+        <div class="chdr"><div class="icon">◆</div><div class="sym">SOL</div><div class="tag">PRICE</div><div class="tm">11m</div></div>
+        <div class="big">$184.20</div>
+        <div class="chg up">▲ +6.4% <span style="font-size:9px;color:rgba(160,165,190,.5)">24h</span></div>
+        <div class="mini"><div class="spark"><b></b><b></b><b></b><b></b><b></b></div>
+          <div><div style="font-size:9px;color:rgba(170,175,200,.55)">Local max ·<br>momentum building</div></div></div>
+        <div class="foot">· <a>history</a> · <a>share</a></div>
+      </div>
+
+      <div class="card c-news">
+        <div class="glowbar"></div>
+        <div class="chdr"><div class="icon">📰</div><div class="sym">ETH</div><div class="tag">NEWS</div><div class="tm">26m</div></div>
+        <div class="title">EIP-7XXX hits review milestone</div>
+        <div class="body">Core devs merged reference impl; 3 auditors assigned. Momentum index up for the week. No risk flags.</div>
+        <div class="foot">· <a>read source</a> · <a>share</a></div>
+      </div>
+
+      <div class="card c-gov">
+        <div class="glowbar"></div>
+        <div class="chdr"><div class="icon">🏛</div><div class="sym">PEPE</div><div class="tag">GOVERNANCE</div><div class="tm">1h</div></div>
+        <div class="title">Proposal #14 — treasury rebalance</div>
+        <div class="body">Vause reaches quorum at 61%. Vote closes in 34h. Early signals suggest leaning approval.</div>
+        <div class="met"><div class="m"><div class="k">FOR</div><div class="v">61%</div></div><div class="m"><div class="k">VS</div><div class="v">22%</div></div><div class="m"><div class="k">ETA</div><div class="v">34h</div></div></div>
+        <div class="foot">· <a>vause</a> · <a>share</a></div>
+      </div>
+    </div>
+    <div class="pl">📱 Portfolio Sky — live feed</div>
+  </div>
+
+  <div class="section">
+    <h2>Share Page (the viral artifact)</h2>
+    <div class="tagline">what a stranger sees on X / Google — zero login, beautiful, personal</div>
+    <div class="share">
+      <div class="top"><span class="brand">✦ PORTFOLIO SKY</span><span class="live">● LIVE</span></div>
+      <div class="big-t">JON just moved — $4.2M whale sweep on Solana</div>
+      <div class="sub-t">Crypto AI Portfolio detected 11 wallets cluster behind the move in the last 8 minutes. Watchlist: SOL · ETH · PEPE · JON · DEGEN · PENG · WIF.</div>
+      <div class="sig">
+        <div class="c"><div class="k">VOLUME</div><div class="v">$4.2M</div></div>
+        <div class="c"><div class="k">WALLETS</div><div class="v">11</div></div>
+        <div class="c"><div class="k">URGENCY</div><div class="v">WATCH</div></div>
+      </div>
+      <div class="cta">✦ Create your own portfolio sky — free</div>
+    </div>
+    <div class="pl">share card — desktop</div>
+  </div>
+
+</div>
+</body></html>
