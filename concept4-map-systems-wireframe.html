@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1300, initial-scale=1">
+<title>Night-Sky Constellation — Map System Wireframes</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: radial-gradient(ellipse 900px 600px at 22% 16%, rgba(40,48,90,0.32) 0%, transparent 65%),
+                radial-gradient(ellipse 700px 500px at 82% 72%, rgba(70,40,120,0.22) 0%, transparent 65%),
+                linear-gradient(180deg, #080A10 0%, #0A0D16 55%, #0C0F1A 100%);
+    color:#E8EAF0; font-family: system-ui, -apple-system, 'Segeo UI', sans-serif;
+    padding:20px;
+  }
+  .page{ max-width:1280px; margin:0 auto; }
+  h1{ font-size:25px; letter-spacing:1px; text-shadow:0 0 16px rgba(150,160,255,0.25); }
+  .subtitle{ color:rgba(190,195,215,0.72); font-size:13px; margin-top:4px; }
+  .note{ color:#A99BFF; font-size:11px; margin-top:4px; }
+
+  .section{ margin:14px 0; }
+  .section h2{ font-size:20px; color:#D8DCEC; margin-top:34px; }
+  .section .tagline{ color:rgba(190,195,215,0.55); font-size:12px; margin:4px 0 14px; }
+
+  /* PHONE FRAME (square — per the earlier decision) */
+  .pf{ display:inline-block; width:380px; margin:0 20px 26px 0;
+       background:rgba(7,9,15,0.55); padding:0; border-radius:0;
+       box-shadow:0 0 0 2px rgba(255,255,255,0.06) inset, 0 14px 38px rgba(0,0,0,0.5); }
+  .pl{ text-align:center; color:rgba(190,195,215,0.6); font-size:10px; margin-top:10px; }
+
+  .sbar{ display:flex; justify-content:space-between; padding:11px 14px; align-items:center; }
+  .sbar .t{ font-size:11px; color:rgba(190,195,215,0.82); font-weight:600; }
+  .sbar .tm{ font-size:9px; color:rgba(150,155,180,0.5); }
+
+  /* ===== the sky canvas inside each phone ===== */
+  .sky{ position:relative; height:300px; overflow:hidden;
+        background: radial-gradient(ellipse 230px 190px at 42% 40%, rgba(30,32,70,0.5) 0%, transparent 100%); }
+  .sky .grid{ position:absolute; inset:0; opacity:.16;
+              background-image: linear-gradient(rgba(120,130,255,0.12) 1px, transparent 26px),
+                                linear-gradient(90deg, rgba(120,130,255,0.12) 1px, transparent 26px); }
+
+  /* ◓ generic star */
+  .st{ position:absolute; width:8px; height:8px; border-radius:50%; }
+  .mine{ border:1.5px solid rgba(255,255,255,0.85); }  /* your coins */
+  .hl{ box-shadow:0 0 12px currentColor; }
+  .label{ position:absolute; font-size:8px; color:rgba(210,215,235,0.85); }
+
+  /* �⟩ axis legend for semantic sky */
+  .axisX{ position:absolute; bottom:6px; left:10px; font-size:7px; color:rgba(160,165,195,0.5); }
+  .axisY{ position:absolute; top:40%; left:2px; font-size:7px; transform:rotate(-90deg); origin:left center; color:rgba(160,165,195,0.5); }
+
+  /* �⟩ zoom chips */
+  .zchips{ position:absolute; right:8px; top:6px; display:flex; gap:3px; }
+  .zchip{ font-size:8px; padding:2px 8px; border:1px solid rgba(255,255,255,0.2);
+          color:rgba(200,205,225,0.7); background:rgba(14,17,28,0.5); }
+
+  /* �– B: semantic zone shading */
+  .zone{ position:absolute; border:1px dashed rgba(150,150,255,0.25); }
+  .zonel{ position:absolute; font-size:7px; color:rgba(200,205,255,0.75); }
+
+  /* �� great captions under phones */
+  .capA{ color:#C7A2FF; } .capB{ color:#7BFFBE; } .capC{ color:#FF9E9E; }
+
+  /* ===== zoom-flow strip ===== */
+  .zoomrow{ display:flex; justify-content:center; align-items:center; gap:6px; margin-top:8px; }
+  .zframe{ width:280px; height:210px; position:relative; background:rgba(7,9,15,0.5);
+           padding:8px; border-radius:0; border:1px solid rgba(255,255,255,0.08); }
+  .zframe .zt{ text-align:center; font-size:9px; color:rgba(205,210,230,0.85); }
+  .zframe .zl{ font-size:7px; color:rgba(160,165,195,0.6); position:absolute; bottom:4px; left:6px; }
+  .ar{ color:#8FB4FF; font-size:20px; }
+</style>
+</head><body>
+<div class="page">
+  <h1>🧠 NIGHT-SKY CONSTELLATION — MAP SYSTEM WIREFRAMES</h1>
+  <div class="subtitle">Three ways to place tokens as stars. Same phone frame, same square corners — different sky logic.</div>
+  <div class="note">A = Rigid Coordinate Sky (real atlas) · B = Semantic Market-Space (data-encoded) · C = Dynamic Mood Sky (living sim)</div>
+
+  <!-- ─────────────────────────────────────────────── -->
+  <div class="section">
+    <h2>Option A — Rigid Coordinate Sky</h2>
+    <div class="tagline">Every token has ONE fixed home, forever, for everyone. A navigable crypto atlas. Your coins = a glowing constellation inside the shared sky.</div>
+    <div class="pf">
+      <div class="sbar"><span class="t">✦ Sky Atlas</span><span class="tm">galaxy view · <b>SOL</b></span></div>
+      <div class="sky">
+        <div class="grid"></div>
+        <!-- your coin (bright + ringed) -->
+        <div class="st mine hl" style="background:#FFD24A; left:26%; top:34%; box-shadow:0 0 14px #FFD24A;"></div>
+        <div class="label" style="left:27%; top:24%;">SOL ⌁ you</div>
+        <div class="st mine hl" style="background:#7BFF9E; left:52%; top:18%; box-shadow:0 0 14px #7BFF9E;"></div>
+        <div class="label" style="left:53%; top:9%;">JON ⌁ you</div>
+        <div class="st mine hl" style="background:#C7A2FF; left:70%; top:52%; box-shadow:0 0 14px #C7A2FF;"></div>
+        <div class="label" style="left:71%; top:43%;">PEPE ⌁ you</div>
+        <!-- neighbors -->
+        <div class="st" style="background:#49D6FF; left:14%; top:60%;"></div>
+        <div class="label" style="left:14%; top:70%;">DEGEN</div>
+        <div class="st" style="background:#49D6FF; left:82%; top:24%;"></div>
+        <div class="st" style="background:#8FE6A0; left:40%; top:64%;"></div>
+        <div class="st" style="background:#C7A2FF; left:60%; top:78%;"></div>
+        <div class="st" style="background:#FF8E9E; left:88%; top:70%;"></div>
+        <div class="label" style="left:78%; top:60%;">WIF</div>
+        <!-- constellation lines connecting your coins -->
+        <svg style="position:absolute;inset:0;width:100%;height:100%;">
+          <line x1="99" y1="102" x2="198" y2="54" stroke="rgba(255,255,255,0.18)"/>
+          <line x1="198" y1="54" x2="266" y2="156" stroke="rgba(255,255,255,0.18)"/>
+          <line x1="266" y1="156" x2="99" y2="102" stroke="rgba(255,255,255,0.18)"/>
+        </svg>
+        <div class="zchips"><div class="zchip">⇧ zoom</div><div class="zchip">☁ 4k stars</div></div>
+      </div>
+      <div class="sbar"><span class="t" style="color:#C7A2FF;">A · stable atlas</span><span class="tm">pan ↕ ↔ pinch</span></div>
+    </div>
+    <div class="pl capA">A — same address = same sky spot, forever. Map-like, memorable, shared.</div>
+  </div>
+
+  <!-- �────────────────────────────────────────────── -->
+  <div class="section">
+    <h2>Option B — Semantic Market-Space</h2>
+    <div class="tagline">Position means something: X = market cap/liquidity, Y = age/risk. You're reading market structure through the stars — your coins glow inside their neighborhoods.</div>
+    <div class="pf">
+      <div class="sbar"><span class="t">✦ Market Sky</span><span class="tm">structure view</span></div>
+      <div class="sky">
+        <div class="grid"></div>
+        <!-- zones -->
+        <div class="zone" style="left:8%; top:6%; width:34%; height:26%;"></div>
+        <div class="zonel" style="left:9%; top:9%;">MAJORS</div>
+        <div class="zone" style="left:58%; top:16%; width:34%; height:22%;"></div>
+        <div class="zonel" style="left:60%; top:19%;">MEME ZONE</div>
+        <div class="zone" style="left:12%; top:56%; width:36%; height:36%;"></div>
+        <div class="zonel" style="left:13%; top:66%;">FRESH LAUNCHES</div>
+        <!-- your coins sit INSIDE their zones -->
+        <div class="st mine hl" style="background:#7BFF9E; left:22%; top:14%; box-shadow:0 0 14px #7BFF9E;"></div>
+        <div class="label" style="left:23%; top:5%;">SOL ⌁ you (major)</div>
+        <div class="st mine hl" style="background:#C7A2FF; left:72%; top:30%; box-shadow:0 0 14px #C7A2FF;"></div>
+        <div class="label" style="left:73%; top:21%;">PEPE ⌁ you (meme)</div>
+        <div class="st mine hl" style="background:#FF6FA8; left:62%; top:24%; box-shadow:0 0 14px #FF6FA8;"></div>
+        <div class="label" style="left:62%; top:34%;">JON ⌁ you (meme)</div>
+        <div class="st" style="background:#49D6FF; left:26%; top:22%;"></div>
+        <div class="st" style="background:#49D6FF; left:14%; top:18%;"></div>
+        <div class="st" style="background:#49D6FF; left:68%; top:18%;"></div>
+        <div class="st" style="background:#49D6FF; left:84%; top:26%;"></div>
+        <div class="st" style="background:#8FE6A0; left:20%; top:70%;"></div>
+        <div class="st" style="background:#8FE6A0; left:36%; top:80%;"></div>
+        <div class="label" style="left:15%; top:70%;">DEGEN</div>
+        <div class="axisX">more mature ← mcap / liquidity → fresh speculative</div>
+        <div class="axisY">risky / new ↑ · aged / stable ↓</div>
+        <div class="zchips"><div class="zchip">⇧ zoom</div><div class="zchip">⣡ clusters</div></div>
+      </div>
+      <div class="sbar"><span class="t" style="color:#7BFFBE;">B · market telescope</span><span class="tm">✧ zones form naturally</span></div>
+    </div>
+    <div class="pl capB">B — positions encode data. You SEE market structure; coins drift as stats move.</div>
+  </div>
+
+  <!-- �────────────────────────────────────────────── -->
+  <div class="section">
+    <h2>Option C — Dynamic Mood Sky</h2>
+    <div class="tagline">A living simulation: gravity pulls, momentum pushes, hot tokens attract. The whole sky breathes with the market. Gorgeous shareable; hard to navigate by memory.</div>
+    <div class="pf">
+      <div class="sbar"><span class="t">✦ Living Sky</span><span class="tm">mood view</span></div>
+      <div class="sky">
+        <div class="grid"></div>
+        <!-- clustered / drifting stars -->
+        <div class="st" style="background:#49D6FF; left:20%; top:26%;"></div>
+        <div class="st" style="background:#49D6FF; left:30%; top:18%;"></div>
+        <div class="st" style="background:#49D6FF; left:26%; top:36%;"></div>
+        <div class="st" style="background:#49D6FF; left:18%; top:12%;"></div>
+        <div class="st mine hl" style="background:#7BFF9E; left:52%; top:28%; box-shadow:0 0 14px #7BFF9E;"></div>
+        <div class="label" style="left:53%; top:19%;">SOL ⌁ you</div>
+        <div class="st" style="background:#8FE6A0; left:58%; top:44%;"></div>
+        <div class="st" style="background:#8FE6A0; left:68%; top:52%;"></div>
+        <div class="st" style="background:#C7A2FF; left:66%; top:36%;"></div>
+        <div class="st mine hl" style="background:#FF6FA8; left:76%; top:64%; box-shadow:0 0 14px #FF6FA8;"></div>
+        <div class="label" style="left:77%; top:55%;">JON ⌁ you</div>
+        <div class="st" style="background:#FF8E9E; left:12%; top:66%;"></div>
+        <div class="st" style="background:#FF8E9E; left:20%; top:72%;"></div>
+        <div class="st" style="background:#FF8E9E; left:14%; top:80%;"></div>
+        <!-- motion trails -->
+        <svg style="position:absolute;inset:0;width:100%;height:100%;">
+          <path d="M76 78 C 96 58, 112 40, 114 84" stroke="rgba(120,255,170,0.12)" fill="none"/>
+          <path d="M288 192 C 284 166, 300 140, 282 120" stroke="rgba(255,110,110,0.12)" fill="none"/>
+        </svg>
+        <div class="zchips"><div class="zchip">✧ alive</div><div class="zchip">⥢ drift</div></div>
+      </div>
+      <div class="sbar"><span class="t" style="color:#FF9E9E;">C · living organism</span><span class="tm">✧ shifts in real time</span></div>
+    </div>
+    <div class="pl capC">C — alive &amp; magical but positions never stabilize. Best as share card / idle.</div>
+  </div>
+
+  <!-- �────────────────────────────────────────────── -->
+  <div class="section">
+    <h2>The Zoom Journey (the part you described)</h2>
+    <div class="tagline">Galaxy → your constellation → the star. Same camera, three stops. You can see your constellation as a beacon even zoomed all the way out.</div>
+    <div class="zoomrow">
+      <div class="zframe">
+        <div class="zt">1 · THE GALAXY</div>
+        <div id="z1" style="position:absolute; inset:16px 8px; width:250px; height:150px; background:radial-gradient(ellipse 120px 90px at 30% 30%, rgba(30,32,70,0.45) 0%, transparent 100%);">
+          <!-- many faint constellations -->
+          <svg width="250" height="150" style="position:absolute;">
+            <g stroke="rgba(255,255,255,0.10)">
+              <line x1="30" y1="30" x2="60" y2="20"/><line x1="60" y1="20" x2="55" y2="50"/><line x1="55" y1="50" x2="30" y2="30"/>
+              <line x1="170" y1="90" x2="200" y2="80"/><line x1="200" y1="80" x2="195" y2="110"/><line x1="195" y1="110" x2="170" y2="90"/>
+            </g>
+            <circle cx="30" cy="30" r="2.5" fill="rgba(255,255,255,0.25)"/><circle cx="60" cy="20" r="2" fill="rgba(255,255,255,0.25)"/><circle cx="55" cy="50" r="2" fill="rgba(255,255,255,0.25)"/>
+            <circle cx="170" cy="90" r="2" fill="rgba(255,255,255,0.2)"/><circle cx="200" cy="80" r="2" fill="rgba(255,255,255,0.2)"/><circle cx="195" cy="110" r="2" fill="rgba(255,255,255,0.2)"/>
+          </svg>
+          <!-- YOUR CONSTELLATION = bright beacon even far away -->
+          <circle cx="130" cy="70" r="6" fill="#FFE08A" style="filter:drop-shadow(0 0 6px #FFD24A)"/>
+          <circle cx="160" cy="55" r="5" fill="#7BE09E" style="filter:drop-shadow(0 0 5px #7BFF9E)"/>
+          <circle cx="112" cy="40" r="5" fill="#E08AF0" style="filter:drop-shadow(0 0 5px #C7A2FF)"/>
+        </div>
+        <div class="zl">you see YOUR stars glowing from far away → "there's my pocket"</div>
+      </div>
+      <div class="ar">➞</div>
+      <div class="zframe">
+        <div class="zt">2 · YOUR CONSTELLATION</div>
+        <div style="position:absolute; bottom:10px; left:0; right:0; text-align:center;">
+          <div class="st mine hl" style="background:#C7A2FF; left:34%; top:26%; box-shadow:0 0 12px #C7A2FF;"></div>
+          <div class="st mine hl" style="background:#7BFF9E; left:62%; top:36%; box-shadow:0 0 12px #7BFF9E;"></div>
+          <div class="st mine hl" style="background:#FF6FA8; left:50%; top:62%; box-shadow:0 0 12px #FF6FA8;"></div>
+          <div class="st" style="background:#49D6FF; left:20%; top:54%;"></div>
+          <div class="st" style="background:#8FE6A0; left:80%; top:60%;"></div>
+          <svg style="position:absolute; width:300px; height:150px;">
+            <line x1="95" y1="40" x2="175" y2="54" stroke="rgba(255,255,255,0.2)"/>
+            <line x1="175" y1="54" x2="140" y2="93" stroke="rgba(255,255,255,0.2)"/>
+            <line x1="140" y1="93" x2="95" y2="40" stroke="rgba(255,255,255,0.2)"/>
+          </svg>
+        </div>
+        <div class="zl">default landing · your coins + nearby neighbors</div>
+      </div>
+      <div class="ar">➞</div>
+      <div class="zframe">
+        <div class="zt">3 · THE STAR</div>
+        <div style="position:absolute; top:34px; left:0; right:0; text-align:center;">
+          <div class="st" style="background:#FFD24A; left:47%; top:8%; width:26px; height:26px; box-shadow:0 0 26px #FFD24A; border-radius:50%;"></div>
+          <div style="position:absolute; top:70px; left:0; width:100%; text-align:left; padding:0 14px;">
+            <div style="font-size:13px; font-weight:700; color:#E8EAF0;">SOL ✦ 184.20</div>
+            <div style="font-size:9px; color:rgba(160,165,195,0.7); margin-top:4px;">+6.4% · momentum up · you hold</div>
+            <div style="height:1px; background:rgba(255,255,255,0.1); margin-top:8px;"></div>
+            <div style="font-size:8px; color:rgba(190,195,215,0.7); margin-top:8px;">✎ tap ➞ token detail · ✎ swipe away to drift back out</div>
+          </div>
+        </div>
+        <div class="zl">one star fills view → into the token screen</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body></html>
