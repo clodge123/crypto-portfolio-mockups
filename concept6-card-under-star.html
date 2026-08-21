@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1300, initial-scale=1">
+<title>Card-Under-the-Star — Unified Feed × Detail Anatomy (Night Sky)</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body{
+    background: radial-gradient(ellipse 900px 620px at 22% 18%, rgba(42,52,96,.4) 0%, transparent 66%),
+                radial-gradient(ellipse 720px 500px at 82% 72%, rgba(74,44,128,.28) 0%, transparent 66%),
+                linear-gradient(180deg, #07090F 0%, #0A0D16 55%, #0C0F1A 100%);
+    color:#E9EAF2; font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    min-height:100vh; padding:16px;
+  }
+  .page{ width:100%; margin:0 auto; }
+  h1{ font-size:24px; letter-spacing:1px; color:#E9EAF2; text-shadow:0 0 18px rgba(160,170,255,.28); }
+  .subtitle{ color:rgba(195,200,220,.72); font-size:13px; margin-top:4px; }
+  .note{ color:#A99BFF; font-size:11px; margin-top:4px; text-shadow:0 0 14px rgba(150,125,255,.3); }
+
+  .stage{ margin:30px 0 8px; }
+  .stage h2{ font-size:17px; color:#DADEEF; }
+  .stage .sep{ color:rgba(195,200,220,.55); font-size:12px; margin:4px 0 10px; }
+
+  /* ─────────── PHONE FRAME ─────────── */
+  .pf{ display:inline-block; position:relative; width:410px; margin:0 26px 30px 0;
+       background:#0A0D16; border-radius:0; box-shadow:0 0 0 3px rgba(255,255,255,.05) inset, 0 14px 40px rgba(0,0,0,.5); }
+  .pfcap{ text-align:center; color:rgba(195,200,220,.6); font-size:10px; margin-top:8px; }
+
+  /* status bar */
+  .sbar{ display:flex; justify-content:space-between; padding:10px 14px; align-items:center;
+        font-family:ui-monospace, Consolas, monospace; font-size:11px; }
+  .sbar .t{ color:rgba(195,200,220,.85); font-weight:600; }
+  .sbar .tm{ color:rgba(150,155,180,.5); }
+  .sbar .dot{ width:8px;height:8px;background:#9BE39B;box-shadow:0 0 12px #9BE39B; }
+
+  /* �────────── THE SKY (pinned top) �────────── */
+  .sky{ position:relative; height:132px; border-bottom:1px solid rgba(120,130,175,.35);
+        background: radial-gradient(ellipse 240px 120px at 45% 45%, rgba(36,40,90,.6) 0%, transparent 100%); }
+  .st{ position:absolute; width:9px;height:9px;border-radius:50%; }
+  .st.s1{ background:#FFD24A;box-shadow:0 0 12px #FFD24A;left:30%;top:26%;animation:tw 2.8s infinite; }
+  .st.s2{ background:#49D6FF;box-shadow:0 0 12px #49D6FF;left:56%;top:20%;animation:tw 3.4s infinite; }
+  .st.s3{ background:#FF6FA8;box-shadow:0 0 12px #FF6FA8;left:70%;top:48%;animation:tw 3.1s infinite; }
+  .st.s4{ background:#8FE6A0;box-shadow:0 0 12px #8FE6A0;left:46%;top:58%;animation:tw 2.6s infinite; }
+  .st.s5{ background:#C7A2FF;box-shadow:0 0 12px #C7A2FF;left:22%;top:54%;animation:tw 3.7s infinite; }
+  .st.s6{ background:#FFB04A;box-shadow:0 0 12px #FFB04A;left:61%;top:72%;animation:tw 2.9s infinite; }
+  .st.s7{ background:#FF9E9E;box-shadow:0 0 12px #FF9E9E;left:82%;top:30%;animation:tw 3.2s infinite; }
+  .st.beacon{ width:13px;height:13px; background:#FFD24A; box-shadow:0 0 18px #FFD24A, 0 0 0 2px rgba(255,210,74,.4); animation:tw 2.2s infinite; }
+  @keyframes tw{0%,100%{opacity:1}50%{opacity:.3}}
+  .alertring{ position:absolute;left:46%;top:58%;width:20px;height:20px;border:1.5px solid #FF6FA8; animation:ring 2.2s infinite; }
+  @keyframes ring{0%{transform:scale(.6);opacity:.9}100%{transform:scale(2.3);opacity:0}}
+  .clabel{ position:absolute;font-size:8.5px;color:rgba(205,210,230,.8); }
+  .clabel.a{left:25%;top:12%;}.clabel.b{left:53%;top:7%;}.clabel.c{left:66%;top:36%;}
+  .clabel.d{left:41%;top:54%;}.clabel.e{left:11%;top:46%;}.clabel.f{left:57%;top:66%;}
+  .clabel.g{left:78%;top:22%;}
+  .skyhint{ position:absolute; right:8px; top:6px; font-size:8px; color:rgba(150,155,180,.6);
+            font-family:ui-monospace, Consolas, monospace; }
+  .skyfilter{ position:absolute; left:8px; bottom:5px; font-size:8px; color:#DFD9FF; font-family:ui-monospace, Consolas, monospace; }
+
+  /* galaxy filter chips (chain select) */
+  .chips{ display:flex; gap:6px; padding:7px 12px; flex-wrap:wrap; }
+  .chip{ font-size:10.5px; padding:3px 9px; background:rgba(20,24,40,.5); color:rgba(205,210,230,.85); cursor:pointer;
+         border:1px solid rgba(90,100,140,.3); }
+  .chip.on{ background:rgba(80,120,180,.35); color:#fff; border-color:#7FA7E0; }
+
+  /* �────────── FEED / CARD AREA (scrolls) ─────────── */
+  .feed{ height:250px; overflow:hidden; position:relative; }
+  .cards{ position:absolute; top:0; }
+
+  .card{ width:384px; margin:8px 12px 8px; background:rgba(12,16,26,.72); border:1px solid rgba(120,130,175,.35);
+         border-radius:0; padding:11px 13px; animation:rise .5s; }
+  @keyframes rise{from{transform:translateY(22px);opacity:.4}to{transform:none;opacity:1}}
+  .c_hdr{ display:flex; justify-content:space-between; align-items:center; }
+  .c_tok{ font-size:12px; color:#DFD9FF; font-weight:600; }
+  .c_tag{ font-size:8.5px; padding:2px 7px; border:1px solid rgba(130,140,180,.35); color:rgba(195,200,220,.85); }
+  .c_ttl{ font-size:11.5px; color:#F2F3FA; margin-top:8px; line-height:1.35; }
+  .c_body{ font-size:10.5px; color:rgba(185,192,214,.82); line-height:1.5; margin-top:6px; }
+  .c_met{ display:flex; gap:8px; margin-top:9px; }
+  .m_box{ flex:1; background:rgba(16,20,32,.55); padding:6px 9px; }
+  .m_box .mv{ font-size:12px; color:#E9F2A0; font-family:ui-monospace, Consolas, monospace; }
+  .m_box .mk{ font-size:8.5px; color:rgba(150,155,180,.65); margin-top:2px; }
+  .c_foot{ display:flex; justify-content:space-between; margin-top:9px;
+           font-family:ui-monospace, Consolas, monospace; font-size:8.5px; }
+  .c_foot .u{ color:#FF6FA8; } .c_foot .sub{ color:rgba(255,210,74,.75); }
+  .c_foot .info{ color:rgba(150,155,180,.6); }
+  .chartbar{ height:22px; background:rgba(20,26,42,.5); border-top:1px solid rgba(90,100,140,.2); margin-top:8px;
+             display:flex; align-items:flex-end; gap:2px; padding:3px 4px; }
+  .bar{ width:5px; background:linear-gradient(180deg,#49D6FF,#8E94B4); }
+
+  /* �────────── DETAIL SHEET (deep-dive overlay) ─────────── */
+  .sheet{ position:absolute; left:0; right:0; bottom:0; height:0; overflow:hidden; background:#0C101A;
+          border-top:1px solid rgba(120,130,175,.4); transition:height .45s; }
+  .sheet.open{ height:230px; }
+  .sh_in{ padding:12px 14px; }
+  .sh_hdr{ display:flex; justify-content:space-between; align-items:center; }
+  .sh_hdr b{ color:#DFD9FF; } .sh_x{ color:rgba(150,155,180,.6); cursor:pointer; font-size:10px;
+            font-family:ui-monospace, Consolas, monospace; }
+  .sh_row{ display:flex; justify-content:space-between; padding:6px 4px; border-top:1px solid rgba(90,100,140,.25);
+           font-size:10.5px; }
+  .sh_row span:first-child{ color:rgba(185,192,214,.75); } .sh_row span:last-child{ color:#E9F2A0; font-family:ui-monospace, Consolas, monospace; }
+
+  /* controls */
+  .ctrls{ display:flex; gap:14px; align-items:center; flex-wrap:wrap; padding:8px 4px; }
+  .btn{ font-size:12px; padding:5px 13px; background:rgba(30,34,60,.55); color:#DFE3F2;
+        border:1px solid rgba(130,140,180,.3); cursor:pointer; }
+  .btn.on{ background:rgba(90,110,160,.55); color:#fff; }
+  .side{ flex:1; padding:0 22px; }
+  .scard{ background:rgba(10,13,22,.6); padding:14px; border:1px solid rgba(120,130,175,.3); margin-top:14px; }
+  .scard h3{ font-size:14px; color:#DADEEF; } .scard h3.sig{ color:#FF6FA8; }
+  .scard p{ font-size:12.5px; color:rgba(190,196,218,.82); line-height:1.55; margin-top:6px; }
+</style>
+</head><body>
+<div class="page">
+  <h1>CARD-UNDER-THE-STAR — UNIFIED FEED × DETAIL ANATOMY</h1>
+  <div class="subtitle">One page. Sky pinned top, cards live below. Select a star on the sky → its card swaps beneath (no navigation). Select a galaxy/chain → feed filters. Tap "DEEP-DIVE" on a card → detail sheet slides up.</div>
+  <div class="note">This is §13.1 of the rebuild plan. Interact: click the chips to filter, click a star dot in the sky, hit DEEP-DIVE on a card. Shows feed mode ↔ detail mode on one surface.</div>
+
+  <div class="stage">
+    <h2>The Unified Page</h2>
+    <div class="sep">Wode A (feed) · Wode B (detail) · Wode C (deep-dive) all on the same scroll surface</div>
+
+    <div class="pf" id="pf">
+      <div class="sbar">
+        <span class="t">GALAXY&nbsp;<span id="sbtag" style="color:#C7C3E8">ALL</span></span>
+        <span style="display:flex;gap:5px;align-items:center"><span class="tm">LIVE</span><span class="dot"></span></span>
+      </div>
+
+      <div class="sky" id="skybox">
+        <span class="skyhint" id="skyhint">TAP A ★ → CARD BELOW</span>
+        <span class="st s1"  data-t="SOL"></span>
+        <span class="st s2"  data-t="ETH"></span>
+        <span class="st s3"  data-t="JON"></span>
+        <span class="st s4"  data-t="DOGE"></span>
+        <span class="st s5"  data-t="PEPE"></span>
+        <span class="st beacon" style="left:62%;top:14%" data-t="PENG"></span>
+        <span class="st s7"  data-t="DEGEN"></span>
+        <span class="alertring"></span>
+        <span class="clabel a">SOL</span><span class="clabel b">ETH</span><span class="clabel c">JON</span>
+        <span class="clabel d">DOGE</span><span class="clabel e">PEPE</span><span class="clabel f">PENG</span><span class="clabel g">DEGEN</span>
+        <span class="skyfilter" id="skyfilter">GALAXY: <span id="gname">SOL - Solana</span></span>
+      </div>
+
+      <div class="chips" id="chips">
+        <span class="chip on"     data-f="ALL">ALL</span>
+        <span class="chip"        data-f="SOL">SOL</span>
+        <span class="chip"        data-f="ETH">ETH</span>
+        <span class="chip"        data-f="JON">JON</span>
+        <span class="chip"        data-f="DOGE">DOGE</span>
+        <span class="chip"        data-f="PEPE">PEPE</span>
+        <span class="chip"        data-f="DEGEN">DEGEN</span>
+        <span class="chip"        data-f="ALRT">ALERTS</span>
+      </div>
+
+      <div class="feed">
+        <div class="cards" id="cards"></div>
+      </div>
+
+      <div class="sheet" id="sheet"><div class="sh_in">
+        <div class="sh_hdr"><b id="shtok">DOGE</b><span class="sh_x" id="shx">CLOSE ✕</span></div>
+        <div class="sh_row"><span>Market Cap</span><span id="sh1">$23.4B</span></div>
+        <div class="sh_row"><span>24h Vol</span><span id="sh2">$1.8B</span></div>
+        <div class="sh_row"><span>Momentum</span><span id="sh3">+3.2% / 24h</span></div>
+        <div class="sh_row"><span>Sentiment</span><span id="sh4">0.74 BULLISH</span></div>
+        <div class="sh_row"><span>On-chain Whale</span><span id="sh5">3 moves / 12h</span></div>
+      </div></div>
+    </div>
+
+    <div class="side">
+      <div class="scard"><h3>Why it's one page</h3>
+      <p>The *feed* and the *detail page* are identical DOM — the only difference is scroll depth and whether a star is selected. Scroll down = feed mode. Tap a star = detail mode (card slides under the sky, sky becomes the nav rail). Hit DEEP-DIVE on a card = the sheet extends the same page to full detail.</p></div>
+      <div class="scard"><h3 class="sig">What "signal thresholds" means here</h3>
+      <p>Notice the cards — some are *urg*, some *info*. The thresholds decide *which* events become cards at all, and which rise to *alert* color vs *watch*. In this build the rule engine (T2 rules-first + T3 adaptive) pre-decides: a 10× volume blip → PUMP card; a 5% supply move → RUGPULL-risk alert; only ambiguous cases touch the LLM for the *why*. That's what keeps it instant + cheap.</p></div>
+      <div class="scard"><h3>Interact</h3>
+      <p>Tap a *star dot* in the sky → the card for that token appears beneath (Wode B, no navigation). Tap the *chips* to filter the feed. Hit *DEEP-DIVE* on any card → detail sheet slides up (Wode C). Tap *✕* to close it.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const cardsEl = document.getElementById('cards');
+
+  // ── mock card dataset: token keyed ──
+  const DATA = {
+    ALL: [
+      {t:'SOL', tag:'PUMP · ALERT',  ttl:'Solana volume 10× vs 2h baseline — open interest spiking.',
+        body:'Solana pumping hard. Delegate volume up 940%, momentum lead over L1 peers widening.',
+        m1:'+9.4% 2h', m2:'$2.1B vol', foot:'IGNITION · 12s', u:'alert'},
+      {t:'ETH', tag:'WATCH', ttl:'ETH basis widening after ETF inflows normalize.',
+        body:'Ethereum cooling from the ETF pump; basis wide but momentum flattening.',
+        m1:'+1.2% 4h', m2:'$1.4B vol', foot:'RING · done', u:'info'},
+      {t:'JON', tag:'DePIN · INFO', ttl:'JON reward schedule halving in 3 days.',
+        body:'DePIN usage steady; network fee revenue trending with device count.',
+        m1:'+0.4%', m2:'$0.09B vol', foot:'quiet', u:'info'},
+      {t:'PEPE', tag:'RUGPULL RISK · ALERT', ttl:'Top-1 whale drained 4% of LP in last hour.',
+        body:'Loss of liquidity detected — token basis inverting vs liquidity curve. Sentiment negative.',
+        m1:'-6.8%', m2:'$0.31B vol', foot:'TREMBLE · 8s', u:'alert'},
+      {t:'DOGE', tag:'ALERT', ttl:'3 whale moves in 12h — DEX spread widening.',
+        body:'Large holder repositioning; spread vs CEX tightening after moves.',
+        m1:'+3.2%', m2:'$1.8B vol', foot:'RING', u:'alert'},
+      {t:'PENG', tag:'WATCH', ttl:'PENG community proposal passed — governance momentum.',
+        body:'DAO PASS; on-chain votes up; base in consolidation.',
+        m1:'+0.8%', m2:'$0.22B vol', foot:'BLOOM', u:'info'},
+      {t:'DEGEN', tag:'INFO', ttl:'DEGEN memes cooling after weekly wipe.',
+        body:'Weekly meme wipe done — heat normalized toward baseline.',
+        m1:'-1.1%', m2:'$0.05B vol', foot:'quiet', u:'info'}
+    ],
+    SOL:[{t:'SOL', tag:'PUMP · ALERT', ttl:'Solana volume 10× vs 2h baseline — open interest spiking.', body:'Solana pumping hard. Delegate volume up 940%, momentum lead widening.', m1:'+9.4% 2h', m2:'$2.1B vol', foot:'IGNITION · 12s', u:'alert'}],
+    ETH:[{t:'ETH', tag:'WATCH', ttl:'ETH basis widening after ETF inflows normalize.', body:'Ethereum cooling from the ETF pump; basis wide but momentum flattening.', m1:'+1.2% 4h', m2:'$1.4B vol', foot:'RING · done', u:'info'}],
+    JON:[{t:'JON', tag:'DePIN · INFO', ttl:'JON reward schedule halving in 3 days.', body:'DePIN usage steady; network fee revenue trending.', m1:'+0.4%', m2:'$0.09B vol', foot:'quiet', u:'info'}],
+    PEPE:[{t:'PEPE', tag:'RUGPULL RISK · ALERT', ttl:'Top-1 whale drained 4% of LP in last hour.', body:'Loss of liquidity detected — basis inverting. Sentiment negative.', m1:'-6.8%', m2:'$0.31B vol', foot:'TREMBLE · 8s', u:'alert'}],
+    DOGE:[{t:'DOGE', tag:'ALERT', ttl:'3 whale moves in 12h — DEX spread widening.', body:'Large holder repositioning; spread vs CEX tightening.', m1:'+3.2%', m2:'$1.8B vol', foot:'RING', u:'alert'}],
+    DEGEN:[{t:'DEGEN', tag:'INFO', ttl:'DEGEN memes cooling after weekly wipe.', body:'Weekly meme wipe done — heat normalized.', m1:'-1.1%', m2:'$0.05B vol', foot:'quiet', u:'info'}],
+    ALRT:[
+      {t:'SOL', tag:'PUMP · ALERT', ttl:'Solana volume 10× vs 2h baseline.', body:'Solana pumping hard. Delegate volume up 940%.', m1:'+9.4%', m2:'$2.1B vol', foot:'IGNITION · 12s', u:'alert'},
+      {t:'PEPE', tag:'RUGPULL RISK · ALERT', ttl:'Top-1 whale drained 4% of LP.', body:'Loss of liquidity detected.', m1:'-6.8%', m2:'$0.31B vol', foot:'TREMBLE · 8s', u:'alert'},
+      {t:'DOGE', tag:'ALERT', ttl:'3 whale moves in 12h.', body:'Large holder repositioning.', m1:'+3.2%', m2:'$1.8B vol', foot:'RING', u:'alert'}
+    ]
+  };
+
+  const SHEET = {
+    SOL:['$58.9B','$2.1B','+9.4% / 2h','0.81 BULLISH','4 whale moves / 12h'],
+    ETH:['$512B','$1.4B','+1.2% / 4h','0.66 NEUTRAL','0 moves'],
+    JON:['$9.4B','$0.09B','+0.4%','0.58 NEUTRAL','1 move / 7d'],
+    PEPE:['$0.78B','$0.31B','-6.8%','0.22 BEARISH','1 top-whale drain'],
+    DOGE:['$23.4B','$1.8B','+3.2% / 24h','0.74 BULLISH','3 moves / 12h'],
+    PENG:['$0.45B','$0.22B','+0.8%','0.55 NEUTRAL','DAO PASS'],
+    DEGEN:['$0.12B','$0.05B','-1.1%','0.45 NEUTRAL','1 weekly wipe']
+  };
+  const URG = {alert:['#FF6FA8','#FF9E9E'], info:['#C7A2FF','rgba(150,155,180,.6)']};
+
+  let curFilter='ALL', curSel=null, sheetOpen=false;
+
+  function cardHTML(c){
+    const c1=URG[c.u][0], c2=URG[c.u][1];
+    return '<div class="card" data-t="'+c.t+'">'
+      +'<div class="c_hdr"><span class="c_tok">'+c.t+'</span><span class="c_tag" style="color:'+c1+';border-color:'+c1+'66">'+c.tag+'</span></div>'
+      +'<div class="c_ttl">'+c.ttl+'</div><div class="c_body">'+c.body+'</div>'
+      +'<div class="c_met"><div class="m_box"><div class="mv" style="color:'+(c.u==='alert'?'#FF9E9E':'#E9F2A0')+'">'+c.m1+'</div><div class="mk">DELTA</div></div>'
+      +'<div class="m_box"><div class="mv">'+c.m2+'</div><div class="mk">VOLUME</div></div></div>'
+      +'<div class="chartbar">'+Array.from({length:18},(_,i)=>'<div class="bar" style="height:'+(10+Math.abs(Math.sin(i*1.3+ (c.u==='alert'?4:0)))*28)+'px;background:'+c1+'"></div>').join('')+'</div>'
+      +'<div class="c_foot"><span class="'+c.u+'">'+c.foot+'</span><span><a href="#" data-dd="'+c.t+'" style="color:#8FB4FF">DEEP-DIVE ›</a></span></div>'
+    +'</div>';
+  }
+
+  function render(){
+    const list = curSel ? (DATA[curSel]||DATA['ALL']) : (DATA[curFilter]||DATA['ALL']);
+    cardsEl.innerHTML = list.map(cardHTML).join('');
+    document.getElementById('sbtag').textContent = curSel||curFilter||'ALL';
+    const c = DATA[curFilter==='ALL'?'ALL':curFilter];
+    document.getElementById('gname').textContent = curFilter==='ALRT'?'ALERTS' : (curFilter==='ALL'?'— all galaxies —':curFilter);
+  }
+
+  // chip filter
+  document.getElementById('chips').addEventListener('click', e=>{
+    const ch=e.target.closest('.chip'); if(!ch)return;
+    document.querySelectorAll('#chips .chip').forEach(x=>x.classList.remove('on'));
+    ch.classList.add('on');
+    curFilter = ch.dataset.f; curSel=null; closeSheet();
+    document.getElementById('skybox').querySelectorAll('.st').forEach(s=>{
+      s.style.display = (curFilter==='ALL'||curFilter==='ALRT'||s.dataset.t===curFilter) ? '' : 'none';
+    });
+    render();
+  });
+
+  // tap a star → detail mode (card under the star)
+  document.getElementById('skybox').addEventListener('click', e=>{
+    const st=e.target.closest('.st'); if(!st)return;
+    const t=st.dataset.t;
+    curSel = t; closeSheet();
+    document.getElementById('skyhint').textContent='PICKED '+t+' · tap ✕ or another ★';
+    document.querySelectorAll('#chips .chip').forEach(x=>x.classList.remove('on'));
+    render();
+    document.getElementById('cards').scrollTop=0;
+    cardsEl.firstElementChild && cardsEl.firstElementChild.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+
+  // deep-dive sheet
+  document.addEventListener('click', e=>{
+    const dd=e.target.closest('[data-dd]');
+    if(dd){
+      e.preventDefault();
+      const t=dd.dataset.dd;
+      openSheet(t);
+    }
+  });
+  document.getElementById('shx').addEventListener('click', closeSheet);
+
+  function openSheet(t){
+    const s=SHEET[t]||SHEET['DOGE'];
+    document.getElementById('shtok').textContent=t;
+    ['sh1','sh2','sh3','sh4','sh5'].forEach((id,i)=>document.getElementById(id).textContent=s[i]);
+    document.getElementById('sheet').classList.add('open'); sheetOpen=true;
+  }
+  function closeSheet(){ document.getElementById('sheet').classList.remove('open'); sheetOpen=false; }
+
+  // init
+  render();
+})();
+</script>
+</body></html>
