@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1320, initial-scale=1">
+<title>Template Library — One Token, Every Shape (Night Sky)</title>
+<style>
+  * { margin:0;padding:0;box-sizing:border-box; }
+  body{
+    background: radial-gradient(ellipse 900px 620px at 22% 14%, rgba(42,52,96,.38) 0%, transparent 66%),
+                radial-gradient(ellipse 780px 560px at 84% 78%, rgba(78,46,132,.26) 0%, transparent 66%),
+                linear-gradient(180deg,#07090F 0%, #0A0D16 58%, #0C0F1A 100%);
+    color:#E9EAF2; font-family:system-ui,-apple-system,'Segoe UI',sans-serif; min-height:100vh; padding:16px;
+  }
+  h1{font-size:23px;letter-spacing:.5px;text-shadow:0 0 18px rgba(160,170,255,.28)}
+  .sub{color:rgba(195,200,220,.7);font-size:13px;margin:6px 0 2px;max-width:900px;line-height:1.45}
+  .note{color:#A99BFF;font-size:11.5px;margin-top:4px;max-width:900px}
+
+  /* ── token picker ── */
+  .pick{display:flex;gap:8px;align-items:center;margin:18px 0 4px;flex-wrap:wrap}
+  .plabel{font-size:11px;color:rgba(195,200,220,.75);font-family:ui-monospace,Consolas,monospace}
+  .pchip{font-size:11.5px;padding:4px 10px;border:1px solid rgba(110,120,160,.35);color:rgba(215,220,240,.9);
+         cursor:pointer;background:rgba(20,24,40,.5)}
+  .pchip.on{background:rgba(90,110,180,.4);color:#fff;border-color:#7FA7E0}
+
+  /* ── hero-beats sequence strip ── */
+  .hsec{margin:18px 0 4px}
+  .h2{font-size:16px;color:#DADEEF}.hsep{color:rgba(195,200,220,.55);font-size:12px;margin:2px 0 10px}
+  .strip{display:flex;gap:10px;padding:12px;background:rgba(9,12,20,.55);border:1px solid rgba(120,130,175,.3);flex-wrap:wrap}
+  .slot{flex:1;min-width:200px}
+  .slotcap{font-size:9.5px;color:rgba(150,155,180,.6);font-family:ui-monospace,Consolas,monospace;margin-bottom:6px}
+  .herobeat{font-size:10px;color:#8FB4FF;margin:8px 0 0;line-height:1.5}
+
+  /* ── gallery grid ── */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(236px,1fr));gap:16px;margin-top:16px}
+  .tcell{background:rgba(9,12,20,.6);border:1px solid rgba(120,130,175,.32);padding:0;border-radius:0}
+  .thead{padding:8px 12px;display:flex;justify-content:space-between;align-items:center;
+         border-bottom:1px solid rgba(120,130,175,.28)}
+  .tname{font-size:12.5px;color:#DFD9FF;font-weight:600}
+  .twhen{font-size:9px;color:rgba(150,155,180,.65);font-family:ui-monospace,Consolas,monospace}
+  .tbody{padding:12px}
+
+  /* ═════════ template primitives ═════════ */
+  .u_accent{width:100%;display:flex;gap:6px;align-items:center;font-family:ui-monospace,Consolas,monospace;font-size:10px}
+  .urg_dot{width:7px;height:7px;border-radius:50%}
+  .tok{font-size:11px;color:#DFD9FF;font-weight:600}
+  .mono{font-family:ui-monospace,Consolas,monospace}
+
+  /* pulses */
+  .sparkline{height:34px;display:flex;align-items:flex-end;gap:2px;justify-content:space-between;margin-top:8px}
+  .sl{width:3px;background:currentColor;border-radius:1px}
+
+  /* 1 PULSE */
+  .pulse_hero{font-family:ui-monospace,Consolas,monospace;font-size:26px;font-weight:700}
+  .pulse_hero.up{color:#E9F2A0}.pulse_hero.dn{color:#FF9E9E}
+  .gauge{height:4px;background:linear-gradient(90deg,#1A2240 0%,#2A3858 45%,#FF6FA8 100%);margin-top:8px;border-radius:0}
+  .pulse_met{display:flex;justify-content:space-between;font-family:ui-monospace,Consolas,monospace;font-size:9px;color:rgba(160,168,196,.75);margin-top:8px}
+
+  /* 2 ALERT */
+  .alert_strip{border:1px solid #FF6FA8 55;padding:9px 11px;display:flex;gap:9px;align-items:center;
+               box-shadow:0 0 14px rgba(255,111,168,.16);background:linear-gradient(90deg,rgba(48,16,66,.5),rgba(20,12,26,.5))}
+  .a_ico{font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#FF6FA8}
+  .a_body{flex:1;font-size:10.5px;color:rgba(230,234,248,.92);line-height:1.4}
+  .a_count{font-family:ui-monospace,Consolas,monospace;font-size:10px;color:#FF9E9E}
+  .a_chip{font-size:8.5px;padding:2px 7px;border:1px solid #FF6FA8;color:#FF6FA8}
+
+  /* 3 STORY */
+  .story_ttl{font-size:13px;color:#F5F6F9;line-height:1.35}
+  .story_body{font-size:10.5px;color:rgba(190,198,220,.82);line-height:1.5;margin-top:6px}
+  .story_fnote{display:flex;gap:7px;font-family:ui-monospace,Consolas,monospace;font-size:8.5px;color:rgba(150,158,184,.7);margin-top:8px;flex-wrap:wrap}
+  .panelstat{border:1px solid rgba(120,130,175,.35);padding:8px 10px;margin-top:8px;display:flex;justify-content:space-between;align-items:center;background:rgba(18,24,40,.55)}
+  .panelstat b{font-size:15px;font-family:ui-monospace,Consolas,monospace;color:#E9F2A0}
+  .panelstat span{font-size:8.5px;color:rgba(150,158,184,.7)}
+
+  /* 4 WATCH */
+  .watch_card{padding:8px 10px;border:1px dashed rgba(140,150,190,.4);display:flex;gap:8px;align-items:center}
+  .watch_dot{width:6px;height:6px;border-radius:50%;background:#C7A2FF;box-shadow:0 0 8px #C7A2FF}
+  .watch_txt{flex:1;font-size:10px;color:rgba(205,212,232,.85)}
+  .watch_cnt{font-family:ui-monospace,Consolas,monospace;font-size:9px;color:rgba(150,158,184,.65)}
+
+  /* 5 IDLE */
+  .idle{display:flex;gap:6px;padding:6px 9px;background:rgba(10,14,22,.28);align-items:center}
+  .idle .sparkline{height:14px}
+  .idle_txt{font-size:9.5px;color:rgba(170,178,202,.7);flex:1;line-height:1.35}
+
+  /* 6 PAIR */
+  .pair{display:flex;gap:0;border:1px solid rgba(120,130,175,.35)}
+  .pl{flex:1;padding:9px 10px}
+  .psep{width:1px;background:linear-gradient(180deg,rgba(255,111,168,.6),rgba(73,214,255,.5))}
+  .pl .tok{font-size:10px;margin-bottom:5px}
+  .pl .mono{font-size:14px}
+  .pair_gap{font-size:8.5px;color:rgba(190,198,220,.8);margin-top:7px}
+  .vsbadge{position:relative;font-size:8px;color:rgba(150,158,184,.7);font-family:ui-monospace,Consolas,monospace}
+
+  /* 7 GALAXY CLUSTER */
+  .glyph{height:52px;background:radial-gradient(ellipse 90px 44px at 30% 40%,rgba(40,30,80,.7),transparent 100%);
+         display:flex;justify-content:space-evenly;align-items:center}
+  .gdot{width:8px;height:8px;border-radius:50%}
+  .gdot.hot{background:#FFD24A;box-shadow:0 0 10px #FFD24A}
+  .gdot.warm{background:#FF9E9E;box-shadow:0 0 7px #FF9E9E}
+  .gdot.cool{background:#49D6FF;box-shadow:0 0 6px #49D6FF}
+  .gdot.idl{background:rgba(90,100,130,.7)}
+  .glyphcap{font-size:8.5px;color:rgba(160,168,196,.8);margin-top:4px}
+  .glyphmet{display:flex;gap:6px;font-family:ui-monospace,Consolas,monospace;font-size:8.5px;color:rgba(150,158,184,.7);margin-top:6px}
+
+  .urgg{display:flex;gap:8px;margin:14px 0 2px;font-family:ui-monospace,Consolas,monospace;font-size:9.5px;flex-wrap:wrap}
+  .urgg span{display:flex;gap:4px;align-items:center;color:rgba(170,178,202,.75)}
+</style>
+</head><body>
+<h1>THE CARD TEMPLATE LIBRARY</h1>
+<div class="sub">One token pushed through every shape · §14 (locked: 7 families, cluster card in v1, hero beats first screen, off-spec LLM requests allowed). Every family is a coded shell with LLM-filled slots — the layout can never break.</div>
+<div class="note">Pick a token to re-fill all templates (chip row below). The *sequence strip* on top shows hero-beats: the top-conviction event is always forced into the first screen, then the rotation interleaves the rest.</div>
+
+<div class="pick">
+  <span class="plabel">RENDER ALL AS:</span>
+  <span class="pchip on"  data-t="SOL">SOL</span>
+  <span class="pchip"     data-t="DOGE">DOGE</span>
+  <span class="pchip"     data-t="PEPE">PEPE</span>
+  <span class="pchip"     data-t="ETH">ETH</span>
+  <span class="pchip"     data-t="JON">JON</span>
+</div>
+
+<!-- ═════ HERO-BEATS strip ␖════ -->
+<div class="hsec">
+  <div class="h2">Hero Beats — the feed, sequenced</div>
+  <div class="hsep">Slot 1 is always the hero (top-conviction). Slot 2+ rotate so no template repeats side-by-side.</div>
+  <div class="strip">
+    <div class="slot"><div class="slotcap">SLOT 1 · HERO (always)</div><div id="heroInst"></div></div>
+    <div class="slot"><div class="slotcap">SLOT 2</div><div id="slot2"></div></div>
+    <div class="slot"><div class="slotcap">SLOT 3</div><div id="slot3"></div></div>
+    <div class="slot"><div class="slotcap">SLOT 4</div><div id="slot4"></div></div>
+  </div>
+  <div class="herobeat">*Hero beats* = the feed reads the event queue, ranks by conviction, and force-promotes the #1 event into the hero slot. Off-spec LLM requests can *replace* a family's body with a one-off special case — still a coded variant, never freeform layout.</div>
+</div>
+
+<!-- ␞════ gallery �ˆ═ -->
+<div class="h2" style="margin-top:22px">The 7 Families</div>
+<div class="hsep">Each is a coded component. The LLM chooses the family by signal type (1:1) and fills the slots.</div>
+<div class="urgg">
+  <span><span class="urg_dot" style="background:#FF6FA8"></span>critical</span>
+  <span><span class="urg_dot" style="background:#FF9E9E"></span>alert</span>
+  <span><span class="urg_dot" style="background:#FFB04A"></span>watch</span>
+  <span><span class="urg_dot" style="background:#8FE6A0"></span>ok</span>
+  <span><span class="urg_dot" style="background:#C7A2FF"></span>info</span>
+</div>
+
+<div class="grid" id="gallery">
+  <div class="tcell"><div class="thead"><span class="tname">PULSE · momentum</span><span class="twhen">PUMP·VOLUME·IGNITION</span></div>
+    <div class="tbody"><div id="t1"></div></div></div>
+
+  <div class="tcell"><div class="thead"><span class="tname">ASTERT strip</span><span class="twhen">whale·rugp·alrt</span></div>
+    <div class="tbody"><div id="t2"></div></div></div>
+
+  <div class="tcell"><div class="thead"><span class="tname">STORY · narrative</span><span class="twhen">social·mooz·diverge</span></div>
+    <div class="tbody"><div id="t3"></div></div></div>
+
+  <div class="tcell"><div class="thead"><span class="tname">WATCH probe</span><span class="twhen">low-confidence</span></div>
+    <div class="tbody"><div id="t4"></div></div></div>
+
+  <div class="tcell"><div class="thead"><span class="tname">IDLE · atmospheric</span><span class="twhen">info tier</span></div>
+    <div class="tbody"><div id="t5"></div></div></div>
+
+  <div class="tcell"><div class="thead"><span class="tname">PAIR · duology</span><span class="twhen">diverge·echo</span></div>
+    <div class="tbody"><div id="t6"></div></div></div>
+
+  <div class="tcell"><div class="thead"><span class="tname">GALAXY · cluster</span><span class="twhen">v1 ✅ whole sky</span></div>
+    <div class="tbody"><div id="t7"></div></div></div>
+</div>
+
+<script>
+(function(){
+  const TOK = {
+    SOL:{c:'#FFD24A', glow:'#FFD24A', nm:'Solana', up:'+9.4% 2h', conv:98},
+    DOGE:{c:'#8FE6A0', glow:'#8FE6A0', nm:'Dogecoin', up:'+3.2% 24h', conv:86},
+    PEPE:{c:'#C7A2FF', glow:'#C7A2FF', nm:'Pepe', up:'-6.8%', conv:58},
+    ETH:{c:'#49D6FF', glow:'#49D6FF', nm:'Ethereum', up:'+1.2% 4h', conv:66},
+    JON:{c:'#FF6FA8', glow:'#FF6FA8', nm:'Jawn', up:'+0.4%', conv:41}
+  };
+  let cur='SOL';
+
+  const el=id=>document.getElementById(id);
+
+  function sparkHTML(list,color){
+    const mx=Math.max(...list);
+    return '<div class="sparkline" style="color:'+color+'">'+list.map(v=>'<div class="sl" style="height:'+Math.round(14+ v/mx*20)+'px"></div>').join('')+'</div>';
+  }
+
+  // ── 1 PULSE
+  function t1(t){
+    const T=TOK[t], up=T.up[0]!=='-';
+    return '<div class="u_accent"><span class="urg_dot" style="background:'+(up?'#8FE6A0':'#FF6FA8')+'"></span><span class="tok">'+t+'</span><span class="mono" style="color:rgba(150,158,184,.6)">'+(up?'IGNITION':'COOL OFF')+'</span></div>'
+      +'<div class="pulse_hero '+(up?'up':'dn')+'">'+T.up+'</div>'
+      +'<div class="gauge"></div>'
+      +'<div style="font-size:10.5px;color:rgba(225,232,248,.92);line-height:1.4">'+T.nm+' delegator volume '+(up?'spiking':'cooling')+', momentum lead '+(up?'widening':'flattening')+'.</div>'
+      +'<div class="pulse_met"><span>VOL '+T.up+'</span><span>OI +'+(up?'18':'−4')+'%</span><span>'+(up?'escalating':'fading')+' 62s</span></div>'
+      +sparkHTML([4,6,9,7,14,22,20,34,30,50,44,66,60,82], up?'#E9F2A0':'#FF9E9E');
+  }
+
+  // ── 2 ALERT
+  function t2(t){
+    const T=TOK[t];
+    return '<div class="alert_strip">'
+      +'<span class="a_ico">⫠</span>'
+      +'<span class="a_body">Top whale drained <b style="color:#FF9E9E">4% of LP</b> in the last hour — '+T.nm+' liquidity inverting.</span>'
+      +'<span class="a_chip">RUGPULL-RISK</span>'
+      +'<span class="a_count">12:47</span></div>'
+      +'<div style="font-size:9.5px;color:rgba(150,158,184,.7);margin-top:8px;line-height:1.4">TREMBLE · urgency auto-promotes to top of feed · tAP to expand → Liquidity sheet, holders, basis curve.</div>';
+  }
+
+  // ── 3 STORY
+  function t3(t){
+    const T=TOK[t];
+    return '<div class="story_ttl">'+T.nm+'\u2019s vibe is turning — the narrative is shifting from squeeze to rotation.</div>'
+      +'<div class="story_body">CT chatter is up 3× on rotation language; OI still long but retail mentions of \u201cshakeout\u201d are climbing. The story reads like a market in transition, not a dump.</div>'
+      +'<div class="panelstat"><span>Top stat</span><b style="color:'+T.c+'">'+T.up+'</b></div>'
+      +'<div class="story_fnote"><span>CT +3.1×</span><span>OI +6%</span><span>snt 0.74</span></div>';
+  }
+
+  // ── 4 WATCH
+  function t4(t){
+    const T=TOK[t];
+    return '<div class="watch_card"><span class="watch_dot"></span>'
+      +'<span class="watch_txt">WATCH '+t+' — basis widening, confidence 0.58. Not enough to alert, keeping an eye.</span>'
+      +'<span class="watch_cnt">+'+T.up.slice(1)+'</span></div>'
+      +'<div style="font-size:9px;color:rgba(150,158,184,.65);margin-top:7px;line-height:1.4">Probe card: quiet, compact, no glow. Escalates to <b style="color:#FFB04A">WATCH→ALERT</b> if cross 0.75σ.</div>';
+  }
+
+  // ── 5 IDLE
+  function t5(t){
+    const T=TOK[t];
+    return '<div class="idle">'+sparkHTML([8,9,8,10,9,9,10,9], T.c)
+      +'<span class="idle_txt">'+t+'·'+T.nm+' gentle drift, no heat. The sky keeps it faint so it doesn\u2019t shout.</span></div>'
+      +'<div style="font-size:9px;color:rgba(150,158,184,.6);margin-top:7px">Atmospheric tier — barely-there on purpose (echo arch.). Re-ignite only on a real move.</div>';
+  }
+
+  // ── 6 PAIR
+  function t6(t){
+    const T=TOK[t], other = t==='SOL'?'ETH':'SOL';
+    const O=TOK[other];
+    return '<div class="pair">'
+      +'<div class="pl"><div class="tok">'+t+'</div><div class="mono" style="color:'+T.c+'">'+T.up.slice(0,5)+'</div></div>'
+      +'<div class="psep"></div>'
+      +'<div class="pl"><div class="tok">'+other+'</div><div class="mono" style="color:'+O.c+'">+1.2%</div></div></div>'
+      +'<div class="pair_gap">Pair '+t+'/'+other+' — correlation broke '+(T.up[0]==='-'?'down':'up')+'; the gap reads as a real decouple, not noise.</div>'
+      +'<div class="vsbadge">DIVERGE · which moved: '+t+'</div>';
+  }
+
+  // ── 7 GALAXY CLUSTER
+  function t7(t){
+    const T=TOK[t];
+    return '<div class="glyph">'
+      +'<span class="gdot hot"></span><span class="gdot warm"></span><span class="gdot cool"></span><span class="gdot idl"></span>'
+      +'<span class="gdot warm"></span><span class="gdot cold" style="width:8px;height:8px;border-radius:50%;background:rgba(90,100,130,.7)"></span>'
+      +'<span class="gdot hot"></span><span class="gdot idl"></span><span class="gdot warm"></span></div>'
+      +'<div class="glyphcap">MEME cluster '+t+' — 3 hot · 4 warm · 2 cool · 1 idle. Heat concentrates around '+t+'.</div>'
+      +'<div class="glyphmet"><span>heat '+(T.conv>80?'0.81':'0.44')+'</span><span>breath 1.2m</span><span>+'+T.up.slice(1)+'</span></div>'
+      +'<div style="font-size:9px;color:rgba(150,158,184,.68);margin-top:7px;line-height:1.4"><b style="color:#8FE6A0">SHIPS IN v1.</b> One glyph = a whole community\u2019s sky state, tap-through to its cluster page.</div>';
+  }
+
+  function render(){
+    el('t1').innerHTML=t1(cur);
+    el('t2').innerHTML=t2(cur);
+    el('t3').innerHTML=t3(cur);
+    el('t4').innerHTML=t4(cur);
+    el('t5').innerHTML=t5(cur);
+    el('t6').innerHTML=t6(cur);
+    el('t7').innerHTML=t7(cur);
+    // hero-beats strip
+    el('heroInst').innerHTML = t1(cur).replace('62s','HERO · 1st');
+    el('slot2').innerHTML = t7(cur);
+    el('slot3').innerHTML = t3(cur);
+    el('slot4').innerHTML = t5(cur);
+  }
+
+  document.querySelector('.pick').addEventListener('click', e=>{
+    const ch=e.target.closest('.pchip'); if(!ch)return;
+    document.querySelectorAll('.pchip').forEach(x=>x.classList.remove('on'));
+    ch.classList.add('on'); cur=ch.dataset.t; render();
+  });
+  render();
+})();
+</script>
+</body></html>
